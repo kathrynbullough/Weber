@@ -41,7 +41,7 @@ std::bernoulli_distribution segregator(0.5);
 // parameters (some of these values are changed upon initialization
 // through the command line, see the argv and argc arrays in the 
 // init function down below)
-const int N = 10000; // population size
+const int N = 20000; // population size
 const int N_mate_sample = 10; // number of mates sampled
 const int clutch_size = 10; // number of offspring produced
 
