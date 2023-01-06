@@ -265,38 +265,18 @@ void Survive(std::ofstream &DataFile)
     assert(msurvivors > 0 && msurvivors < popsize);
 }
 
-/*
-Ideas:
-Do a for loop, looping through the current mate sample
-Maybe loop through every other male
-Create two cumulative distributions?
-Compare most likely males from each distribution? As a probability
-
-or
-
-Pick two random males, compare them using the equation (t1-t2)/0.5(t1+t2)
-Is this the right equation? Surely should be (t1-t2)/t1 - this will equal the Weber constant
-Or integrate delta t into po = exp(a * trait * p) ?? (open-ended preferences)
-Instead of using the 'trait' object, create an object that represents delta t - or the Weber constant
-We want it to pick a random male, compare with another random male, then the females pick out of the comparatively best males
-Create a distribution of the liklihood of being chosen again?
-
-Ultimately want to find out if a Weber constant can evolve for the simulated population over time
-Create a varaiable that holds the Weber constant, that we can watch change in the model
-*/
-
 // mate choice - Kathryn suggested new function
 void Choose(double p, int& father)
 {
     // make arrays that hold the values of the sample of assessed males
     double Fitness[N_mate_sample];
     int Candidates[N_mate_sample];
+    
+    // empty vectors with all our k values and male id values of each pair
+    std::vector <double> k_values;
+    std::vector <int> best_male_of_pair;
 
     double sumFitness = 0;
-    double mean_k = 0;                //Create a value for Weber's constant so we can keep track of it - turn this into an average for each generation? Mean and standard deviation?
-                                    //Average of 'web' object over the generation?
-                                    //Could do mean and variance, spit it out in the output
-                                    //Put at the top with all the other values
 
     // check if there are enough other males to choose from
     // otherwise restrict the sample to the amount of individuals present
@@ -304,93 +284,48 @@ void Choose(double p, int& father)
 
     std::uniform_int_distribution <int> msurvivor_sampler(0, msurvivors - 1);
 
-    //Create a focal male to compare random males against - maybe put this in the for loop instead, so it randomizes for each individual?
-    int focal_male = msurvivor_sampler(rng_r);
+    // mate choice among the sample of pairs of males
+    for (int i = 0; i < current_mate_sample; i+=2)
+  {
+    //Generate the pair of random males
+    int id1 = msurvivor_sampler(rng.r);
+    int id2 = msurvivor_sampler(rng.r);
 
-    // mate choice among the sample of males
-    for (int j = 0; j < current_mate_sample; j+=2)      //Loops through every other male?? - not sure this would work for my idea though
-        //Find a way to compare every other male to a random male that isn't in the loop???
-    {
-        // get a random surviving male
-        int random_mate = msurvivor_sampler(rng_r);
+    //Work out their traits and calculate the k value for that pair
+    double trait1 = MaleSurvivors[id1].t_expr;
+    double trait2 = MaleSurvivors[id1].t_expr;
+    double k = (trait1 - trait2) / trait1;
 
-        // obtain both males' ornaments, and calculate the relative difference
-        double trait = MaleSurvivors[random_mate].t_expr;
-        double trait_focal = MaleSurvivors[focal_male].t_expr;
-        double k = (trait_focal - trait) / trait_focal;
-        mean_k += k;     //Keeping track of the mean of k to spit it out in the output - will need to put it at the top with all the other values
-        mean_k /= current_mate_sample;
-        //Can create variance of k too
-        //k should evolve towards a constant if Weber's Law exists???
-        //Or would we rather want to keep track of the k at which the females can't tell the difference (threshold)? - no idea how to do this though
 
-        // value of the preference function
-        double po = 0;
+    //Work out which male is the winner
+    if (trait1 > trait2) {
+        int winner = id1;
+      }
+    else {
+        winner = id2;
+      }
+    //Maybe add in a bit about what to do if the trait values are the same? Not likely but could happen
 
-        //Preferences depending on the relative difference between the two male traits being compared
-        //Not sure whether I could just integrate it into the previous preference functions?
-        switch (pref)
-        {
-            // open-ended preferences - maybe just stick to this, seems like the most likely to be accurate for what we want to do
-        case 0:
-        {
-            po = exp(a * web * p);
-        } break;
+    //Add winner and k value to the vectors
+    best_male_of_pair.push_back(winner);
+    k_values.push_back(k);
 
-        // absolute preferences
-        case 1:
-        {
-            po = exp(-a * (web - p) * (web - p));
-        } break;
+  }
+    
+    //Create the distribution of k values
+    std::discrete_distribution <int> k_value_distribution(
+         k_values.begin()
+         ,k_values.end()
+         );
 
-        // relative preferences
-        case 2:
-        {
-            double reltr = web - meanornsurv;
-            po = exp(-a * (reltr - p) * (reltr - p));
-        } break;
+    // now we are going to sample from this distribution
+    int sampled_pair_idx = k_value_distribution(rng_r);
 
-        // Weber's, created from the open-ended preferences
-        case 3:
-        {
-            po = exp(a * k * p);
-        } break;
-        }
-
-        // prevent the exponential of going to infinity
-        // which would make things really awkward
-        if (po > 100)
-        {
-            po = 100;
-        }
-
-        //Keep the cumulative distribution but make it more relevant to the proportional differences between males rather than their absolute fitness values
-        // No idea how to do this!
-        // make a cumulative distribution of the male's
-        // fitness value
-        Fitness[j] = sumFitness + po;
-        sumFitness = Fitness[j];
-
-        Candidates[j] = random_mate;
-    }
-
-    // sample from the cumulative distribution
-    double r = uniform(rng_r) * sumFitness;
-
-    // by default mate randomly
-    // e.g., if the cumulative distribution is flat
-    father = msurvivor_sampler(rng_r);
-
-    // probability that a male is chosen is proportional
-    // to the size of his share in the cumulative distribution
-    for (int j = 0; j < current_mate_sample; ++j)
-    {
-        if (r <= Fitness[j])
-        {
-            father = Candidates[j];
-            break;
-        }
-    }
+    // now look up the best male of that pair that is in the
+    // corresponding vector
+    int best_male_idx = best_male_of_pair[sampled_pair_idx];
+    
+    //Turn this into the 'father' object somehow to complete the function??
 
     assert(father >= 0 && father < msurvivors);
 
