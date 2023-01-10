@@ -299,7 +299,7 @@ void Choose(double p, int& father)
 
     //Work out which male is the winner
     if (trait1 > trait2) {
-        int winner = id1;
+        int winner = id1;    //Or do we want to declare an empty 'winner' outside of this loop first?
       }
     else {
         winner = id2;
