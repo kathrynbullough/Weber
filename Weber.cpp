@@ -288,29 +288,21 @@ void Choose(double p, int& father)
     for (int i = 0; i < current_mate_sample; i+=2)
   {
     //Generate the pair of random males
-    int id1 = msurvivor_sampler(rng.r);
-    int id2 = msurvivor_sampler(rng.r);
+    int id1 = msurvivor_sampler(rng_r);
+    int id2 = msurvivor_sampler(rng_r);
 
     //Work out their traits and calculate the k value for that pair
     double trait1 = MaleSurvivors[id1].t_expr;
     double trait2 = MaleSurvivors[id1].t_expr;
     double k = (trait1 - trait2) / trait1;
 
-
-    //Work out which male is the winner
-    if (trait1 > trait2) {
-        int winner = id1;    //Or do we want to declare an empty 'winner' outside of this loop first?
-      }
-    else {
-        winner = id2;
-      }
-    //Maybe add in a bit about what to do if the trait values are the same? Not likely but could happen
+    int winner = trait1 > trait2 ? id1 : id2;
 
     //Add winner and k value to the vectors
     best_male_of_pair.push_back(winner);
     k_values.push_back(k);
 
-  }
+  }//End for loop i<current_male_sample
     
     //Create the distribution of k values
     std::discrete_distribution <int> k_value_distribution(
