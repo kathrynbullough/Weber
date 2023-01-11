@@ -268,15 +268,10 @@ void Survive(std::ofstream &DataFile)
 // mate choice - Kathryn suggested new function
 void Choose(double p, int& father)
 {
-    // make arrays that hold the values of the sample of assessed males
-    double Fitness[N_mate_sample];
-    int Candidates[N_mate_sample];
     
     // empty vectors with all our k values and male id values of each pair
     std::vector <double> k_values;
     std::vector <int> best_male_of_pair;
-
-    double sumFitness = 0;
 
     // check if there are enough other males to choose from
     // otherwise restrict the sample to the amount of individuals present
@@ -285,7 +280,7 @@ void Choose(double p, int& father)
     std::uniform_int_distribution <int> msurvivor_sampler(0, msurvivors - 1);
 
     // mate choice among the sample of pairs of males
-    for (int i = 0; i < current_mate_sample; i+=2)
+    for (int i = 0; i < current_mate_sample; i+=2)  //Do we want this to be i+=2 or i++ ?
   {
     //Generate the pair of random males
     int id1 = msurvivor_sampler(rng_r);
@@ -296,6 +291,7 @@ void Choose(double p, int& father)
     double trait2 = MaleSurvivors[id1].t_expr;
     double k = (trait1 - trait2) / trait1;
 
+    //Work out which one is the winner
     int winner = trait1 > trait2 ? id1 : id2;
 
     //Add winner and k value to the vectors
@@ -318,6 +314,7 @@ void Choose(double p, int& father)
     int best_male_idx = best_male_of_pair[sampled_pair_idx];
     
     //Turn this into the 'father' object somehow to complete the function??
+    father = best_male_idx;
 
     assert(father >= 0 && father < msurvivors);
 
