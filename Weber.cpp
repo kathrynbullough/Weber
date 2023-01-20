@@ -61,6 +61,7 @@ const int skip = 10; // n generations interval before data is printed
 double sexlimp = 0; // degree of sex-limited expression in p,t
 double sexlimt = 0;
 int pref = 0;
+int web = 1;
 double meanornsurv = 0;
 
 int popsize = N; // population size between 
@@ -265,9 +266,11 @@ void Survive(std::ofstream &DataFile)
     assert(msurvivors > 0 && msurvivors < popsize);
 }
 
+
 // mate choice - Kathryn suggested new function
-void Choose(double p, int& father)
+void Choose(double p, int& father) 
 {
+  if (web == 1) {
     
     // empty vectors with all our k values and male id values of each pair
     std::vector <double> k_values;
@@ -318,13 +321,9 @@ void Choose(double p, int& father)
 
     assert(father >= 0 && father < msurvivors);
 
-} // end ChooseMates
+  } else {// end ChooseMates-Kathryn 
 
-
-/*
 // mate choice - original code
-void Choose(double p, int &father) 
-{
 	// make arrays that hold the values of the sample of assessed males
 	double Fitness[N_mate_sample];
 	int Candidates[N_mate_sample];
@@ -406,8 +405,8 @@ void Choose(double p, int &father)
 
     assert(father >= 0 && father < msurvivors);
 
-} // end ChooseMates
-*/
+} }// end ChooseMates
+
 
 // produce the next generation
 void NextGen()
