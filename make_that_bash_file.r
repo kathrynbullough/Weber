@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+
+install.packages("remotes")
+remotes::install_github("bramkuijper/simulation.utils")
 
 parameter_object <- list()
 

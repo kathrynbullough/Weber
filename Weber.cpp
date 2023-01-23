@@ -61,7 +61,7 @@ const int skip = 10; // n generations interval before data is printed
 double sexlimp = 0; // degree of sex-limited expression in p,t
 double sexlimt = 0;
 int pref = 0;
-int web = 1;
+int web = 3;
 double meanornsurv = 0;
 
 int popsize = N; // population size between 
@@ -107,7 +107,8 @@ void initArguments(int argc, char *argv[])
 	sexlimp = std::stod(argv[9]);
 	sexlimt = std::stod(argv[10]);
     pref = std::stoi(argv[11]);
-    file_name = argv[12];
+    web = std::stoi(argv[12]);
+    file_name = argv[13];
 } // end initArguments
 
 // mutation function:
