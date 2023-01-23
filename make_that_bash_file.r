@@ -19,3 +19,5 @@ parameter_object$web <- 1
 
 # please be sensible with the amount of parameters
 
+make_batch_file(parameter_list=parameter_object
+                     ,executable_path="./my_simulation.exe")
