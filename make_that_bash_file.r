@@ -25,4 +25,4 @@ parameter_object$web <- 1
 # please be sensible with the amount of parameters
 
 make.batch.file(parameter_list=parameter_object
-                     ,executable_path="./my_simulation.exe")
+                     ,executable_path="./Weber.exe")
