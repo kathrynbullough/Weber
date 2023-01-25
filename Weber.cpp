@@ -146,6 +146,7 @@ void WriteParameters(std::ofstream &DataFile)
 		<< "biast:;" <<  biast << ";"<< std::endl
 		<< "sexlimp:;" <<  sexlimp << ";"<< std::endl
 		<< "sexlimt:;" <<  sexlimt << ";"<< std::endl
+    << "web:;" <<  web << ";"<< std::endl
 		<< "seed:;" << seed << ";"<< std::endl;
 }
 
