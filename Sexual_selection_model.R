@@ -280,3 +280,6 @@ par(mfrow=c(1,1))
 #  1 or 2   0 or very low    very low     0 up to 0.5        0.05    0.05    0.4        0.4        1                 1  
 
 
+sims_output <- read.delim("sims_output.csv", sep=" ", header=T)
+
+

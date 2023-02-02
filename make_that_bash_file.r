@@ -17,7 +17,7 @@ parameter_object$sdmu_t <- 0.4
 parameter_object$sex_limited_p <- 1.0
 parameter_object$sex_limited_t <- 1.0
 parameter_object$pref_type <- 0
-parameter_object$web <- 0
+parameter_object$web <- 1
 
 #purlease continue adding all the parameters, except for the output file
 # (this will be done by the function itself)
@@ -25,4 +25,4 @@ parameter_object$web <- 0
 # please be sensible with the amount of parameters
 
 make.batch.file(parameter_list=parameter_object
-                     ,executable_path="./Weber.exe",n_replicates=10)
+                     ,executable_path="./Weber.exe",n_replicates=3)
