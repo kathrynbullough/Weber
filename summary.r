@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 library("simulation.utils")
 
 all.bloody.data <- summarize.sims(simulations_path="."
