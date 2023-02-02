@@ -1,6 +1,7 @@
 #!/usr/bin/env Rscript
 
 library("simulation.utils")
+library("readr")
 
 all.bloody.data <- summarize.sims(simulations_path="."
         ,simulation_file_pattern="output_fisher\\d.csv"
@@ -9,4 +10,4 @@ all.bloody.data <- summarize.sims(simulations_path="."
         )
 
 # some shizzle like this to get the file on disk
-write_delim(file="output.csv", x=all.bloody.data)
+write_delim(file="sims_output.csv", x=all.bloody.data)
