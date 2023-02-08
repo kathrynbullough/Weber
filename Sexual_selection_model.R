@@ -3,9 +3,9 @@
 
 library("tidyverse")
 library("patchwork")
+library("ggplot2")
 
-# obtain the final line of the actual simulation data
-# of each file
+# obtain the final line of the actual simulation data of each file
 get_last_line_number <- function(file_name)
 {
     # get all the lines
@@ -43,19 +43,25 @@ sim_data <- read_delim(file=file.name,
 
 print(head(sim_data))
 
+#Plot mean t
 plot_mean_t <- ggplot(data=sim_data
-        ,mappping=aes(x=generation
-                ,y=mean_t)) + 
+        ,mapping=aes(x=generation
+                ,y=mean_t)) +
     geom_line(mapping=aes(x=generation,y=mean_t))
 
-## plot mean p in a separate graph
+#Plot mean p in a separate graph
 plot_mean_p <- ggplot(data=sim_data
-        ,mappping=aes(x=generation
-                ,y=mean_p)) + geom_line(mapping=aes(x=generation,y=mean_p))
+        ,mapping=aes(x=generation
+                ,y=mean_p)) +
+      geom_line(mapping=aes(x=generation,y=mean_p))
 
-plot_mean_t / plot_mean_p
+#Plot dynamics between p and t
+plot_p_t <- ggplot(data=sim_data, aes(x=mean_p, y=mean_t)) + geom_point(size=1) +
+    geom_path(mapping=aes(x=mean_p,y=mean_t))
 
-ggsave(file=paste0("graph_",basename(file.name),".pdf"))
+plot_mean_t / plot_mean_p / plot_p_t
+
+ggsave(file=paste0("web_graph_",basename(file.name),".pdf"))
     
 stop()
 
@@ -281,5 +287,47 @@ par(mfrow=c(1,1))
 
 
 sims_output <- read.delim("sims_output.csv", sep=" ", header=T)
+plot(sims_output$file,sims_output$mean_p)
+
+sims_output_web <- read.delim("sims_output_web.csv", sep=" ", header=T)
+plot(sims_output_web$file,sims_output_web$mean_p)
+
+#   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
+#  1         0               0            0.3                 0.05    0.05    0.4        0.4        1                 1  
+
+sims_output_fish <- read.delim("sims_output_fish.csv", sep=" ", header=T)
+plot(sims_output_fish$file,sims_output_fish$mean_p)
+
+sims_output_web2 <- read.delim("sims_output_web2.csv", sep=" ", header=T)
+plot(sims_output_web2$file,sims_output_web2$mean_t)
 
 
+#   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
+#  1         0.01          varies            0.01             0.05    0.05    0.4        0.4        1                 1  
+
+var_c<-read.delim("sims_output_c2.csv", sep=" ", header=T)
+
+plot_c <- ggplot(var_c) + 
+          geom_point(aes(x=c.,y=mean_p,colour="p")) + 
+          geom_point(aes(x=c.,y=mean_t,colour="t"))
+plot_c
+
+#   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
+#  1         0.01             0.01        varies             0.05    0.05    0.4        0.4        1                 1  
+
+var_bias<-read.delim("sims_output_bias.csv", sep=" ", header=T)
+
+plot_bias <- ggplot(var_bias) + 
+  geom_point(aes(x=biast.,y=mean_t,colour="t")) + 
+  geom_point(aes(x=biast.,y=mean_p,colour="p"))
+plot_bias
+
+#   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
+#  1         0.001             0.001        varies             0.05    0.05    0.4        0.4        1                 1  
+
+var_bias2<-read.delim("sims_output_bias2.csv", sep=" ", header=T)
+
+plot_bias2 <- ggplot(var_bias2) + 
+  geom_point(aes(x=biast.,y=mean_t,colour="t")) + 
+  geom_point(aes(x=biast.,y=mean_p,colour="p"))
+plot_bias2
