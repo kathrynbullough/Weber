@@ -294,7 +294,7 @@ void Choose(double p, int& father)
     //Work out their traits and calculate the k value for that pair
     double trait1 = MaleSurvivors[id1].t_expr;
     double trait2 = MaleSurvivors[id2].t_expr;
-    double k = (trait1 - trait2) / trait1;
+    double k = exp(a * p * (trait1 - trait2) / trait1);
 
     //Work out which one is the winner
     int winner = trait1 > trait2 ? id1 : id2;
