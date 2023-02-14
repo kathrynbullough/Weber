@@ -45,8 +45,8 @@ const int N = 5000; // population size
 const int N_mate_sample = 10; // number of mates sampled
 const int clutch_size = 10; // number of offspring produced
 
-const double init_t = 0.0; // initial value for ornament
-const double init_p = 0.0; // initial value for preference
+double init_t = 0.0; // initial value for ornament
+double init_p = 0.0; // initial value for preference
 double a = 1.0; // choice slope
 double b = 0.5; // cost of preference 
 double c = 0.5; // cost of trait
@@ -108,7 +108,9 @@ void initArguments(int argc, char *argv[])
 	sexlimt = std::stod(argv[10]);
     pref = std::stoi(argv[11]);
     web = std::stoi(argv[12]);
-    file_name = argv[13];
+    init_t = std::stod(argv[13]);
+    init_p = std::stod(argv[14]);
+    file_name = argv[15];
 } // end initArguments
 
 // mutation function:
@@ -147,6 +149,8 @@ void WriteParameters(std::ofstream &DataFile)
 		<< "sexlimp:;" <<  sexlimp << ";"<< std::endl
 		<< "sexlimt:;" <<  sexlimt << ";"<< std::endl
     << "web:;" <<  web << ";"<< std::endl
+    << "init_t:;" <<  init_t << ";"<< std::endl
+    << "init_p:;" <<  init_p << ";"<< std::endl
 		<< "seed:;" << seed << ";"<< std::endl;
 }
 
