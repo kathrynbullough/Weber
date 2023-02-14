@@ -353,6 +353,17 @@ plot_cbulk <- ggplot(var_cbulk) +
   geom_point(aes(x=c.,y=mean_t,colour="t"))
 plot_cbulk
 
+#Start with initial t value of 5
+var_ct<-read.delim("sims_output_t.csv", sep=" ", header=T)
+
+plot_ct <- ggplot(var_ct) + 
+  geom_point(aes(x=c.,y=mean_p,colour="p")) + 
+  geom_point(aes(x=c.,y=mean_t,colour="t"))
+plot_ct
+
+#Start with initial t value of 8
+
+
 #   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
 #  1         0.01             0.01        varies             0.05    0.05    0.4        0.4        1                 1  
 
