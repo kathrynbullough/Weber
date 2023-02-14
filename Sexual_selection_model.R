@@ -312,6 +312,47 @@ plot_c <- ggplot(var_c) +
           geom_point(aes(x=c.,y=mean_t,colour="t"))
 plot_c
 
+var_c2<-read.delim("sims_output_c3.csv", sep=" ", header=T)
+
+plot_c2 <- ggplot(var_c2) + 
+  geom_point(aes(x=c.,y=mean_p,colour="p")) + 
+  geom_point(aes(x=c.,y=mean_t,colour="t"))
+plot_c2
+
+var_c3<-read.delim("sims_output_c4.csv", sep=" ", header=T)
+
+plot_c3 <- ggplot(var_c3) + 
+  geom_point(aes(x=c.,y=mean_p,colour="p")) + 
+  geom_point(aes(x=c.,y=mean_t,colour="t"))
+plot_c3
+
+var_ctest<-read.delim("c_test.csv", sep=" ", header=T)
+
+sum <- summarySE(var_ctest, measurevar="t", groupvars=c("supp","dose"))
+plot_ctest <- ggplot(var_ctest) + 
+  geom_point(aes(x=c.,y=mean_p,colour="p")) + 
+  geom_point(aes(x=c.,y=mean_t,colour="t")) +
+  geom_errorbar(width = 0.2)
+plot_ctest
+
+#   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
+#  1         0.001          varies            0.01             0.05    0.05    0.4        0.4        1                 1  
+
+var_c4<-read.delim("sims_output_c5.csv", sep=" ", header=T)
+
+plot_c4 <- ggplot(var_c4) + 
+  geom_point(aes(x=c.,y=mean_p,colour="p")) + 
+  geom_point(aes(x=c.,y=mean_t,colour="t"))
+plot_c3
+
+#Five replicates all in one
+var_cbulk<-read.delim("sims_output_cbulk.csv", sep=" ", header=T)
+
+plot_cbulk <- ggplot(var_cbulk) + 
+  geom_point(aes(x=c.,y=mean_p,colour="p")) + 
+  geom_point(aes(x=c.,y=mean_t,colour="t"))
+plot_cbulk
+
 #   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
 #  1         0.01             0.01        varies             0.05    0.05    0.4        0.4        1                 1  
 
@@ -331,3 +372,23 @@ plot_bias2 <- ggplot(var_bias2) +
   geom_point(aes(x=biast.,y=mean_t,colour="t")) + 
   geom_point(aes(x=biast.,y=mean_p,colour="p"))
 plot_bias2
+
+#Five replicates all in one
+var_biasbulk<-read.delim("sims_output_biasbulk.csv", sep=" ", header=T)
+
+plot_biasbulk <- ggplot(var_biasbulk) + 
+  geom_point(aes(x=biast.,y=mean_t,colour="t")) + 
+  geom_point(aes(x=biast.,y=mean_p,colour="p"))
+plot_biasbulk
+
+#   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
+#  0         0.001          varies            0.01             0.05    0.05    0.4        0.4        1                 1  
+
+#Five replicates all in one
+var_a<-read.delim("sims_output_a.csv", sep=" ", header=T)
+
+plot_a <- ggplot(var_a) + 
+  geom_point(aes(x=c.,y=mean_p,colour="p")) + 
+  geom_point(aes(x=c.,y=mean_t,colour="t"))
+plot_a
+
