@@ -1,0 +1,6 @@
+# Weber function
+
+# Current parameters that seem to work:
+#   a       b                  c             biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
+#  1         0.001          varies(0-0.1)      0.01             0.05    0.05    0.1        0.1        1                 1  
+#Starting with various initial t values
