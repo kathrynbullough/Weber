@@ -34,6 +34,7 @@ std::mt19937 rng_r(seed);
 
 // allocate a uniform [0,1] random number distribution
 std::uniform_real_distribution <double> uniform(0.0,1.0);
+std::uniform_real_distribution <double> uniform_mutation(0.0,0.4);
 std::bernoulli_distribution segregator(0.5);
 
 
@@ -50,7 +51,7 @@ double init_p = 0.0; // initial value for preference
 double a = 1.0; // choice slope
 double b = 0.5; // cost of preference 
 double c = 0.5; // cost of trait
-double biast = 0; // mutation bias 
+double biast = 0; // mutation bias: 0.5 means no bias. > 0.5 means bias towards reduction in tratt.
 
 double mu_p 	  = 0.05;            // mutation rate preference
 double mu_t 	  = 0.05;            // mutation rate ornament
@@ -117,14 +118,15 @@ void initArguments(int argc, char *argv[])
 // mutate an allele G given a particular mutation rate mu
 // a standard deviation of the mutational effect distribution
 // of sdmu and a certain mutational bias
-void mutate(double &G, double mu, double sdmu, double bias=0.0)
+void mutate(double &G, double mu, double sdmu, double bias=0.5)
 {
-    // normal distribution with as mean value the bias
-    // and as sd sdmu
-    std::normal_distribution <double> mutational_effect_distribution(bias, sdmu);
 
-    G+=uniform(rng_r) < mu ? 
-        mutational_effect_distribution(rng_r) : 0.0;
+    if (uniform(rng_r) < mu)
+    {
+        double effect = uniform_mutation(rng_r);
+
+        G+= uniform(rng_r) < bias ? -effect : effect;
+    }
 }
 
 // write the parameters to the DataFile
@@ -195,9 +197,9 @@ void Create_Kid(int mother, int father, Individual &kid)
 
     // inherit ornament
 	kid.t[0] = FemaleSurvivors[mother].t[segregator(rng_r)];
-    mutate(kid.t[0], mu_t, sdmu_t, -biast);
+    mutate(kid.t[0], mu_t, sdmu_t, biast);
 	kid.t[1] = MaleSurvivors[father].t[segregator(rng_r)];
-    mutate(kid.t[1], mu_t, sdmu_t, -biast);
+    mutate(kid.t[1], mu_t, sdmu_t, biast);
 
     // inherit preference
 	kid.p[0] = FemaleSurvivors[mother].p[segregator(rng_r)];
@@ -267,9 +269,10 @@ void Survive(std::ofstream &DataFile)
     // take the average of the surviving male trait value
     meanornsurv /= msurvivors;
 
-    // TODO
-    assert(fsurvivors > 0 && fsurvivors < popsize);
-    assert(msurvivors > 0 && msurvivors < popsize);
+    assert(fsurvivors > 0);
+    assert(fsurvivors < popsize);
+    assert(msurvivors > 0);
+    assert(msurvivors < popsize);
 }
 
 
