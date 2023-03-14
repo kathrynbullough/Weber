@@ -10,4 +10,4 @@ all.bloody.data <- summarize.sims(simulations_path="."
         )
 
 # some shizzle like this to get the file on disk
-write_delim(file="sims_output_bias.csv", x=all.bloody.data)
+write_delim(file="sims_output_pom.csv", x=all.bloody.data)

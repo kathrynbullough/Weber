@@ -59,9 +59,15 @@ plot_mean_p <- ggplot(data=sim_data
 plot_p_t <- ggplot(data=sim_data, aes(x=mean_p, y=mean_t)) + geom_point(size=1) +
     geom_path(mapping=aes(x=mean_p,y=mean_t))
 
-plot_mean_t / plot_mean_p / plot_p_t
+#Plot covarience over time
+plot_cov <- ggplot(data=sim_data
+                   ,mapping=aes(x=generation
+                                ,y=covpt)) +
+  geom_line(mapping=aes(x=generation,y=covpt))
 
-ggsave(file=paste0("web_graph_",basename(file.name),".pdf"))
+plot_mean_t / plot_mean_p / plot_p_t / plot_cov
+
+ggsave(file=paste0("model_graph_",basename(file.name),".pdf"))
     
 stop()
 
@@ -354,7 +360,7 @@ plot_cbulk <- ggplot(var_cbulk) +
 plot_cbulk
 
 #Start with initial t value of 5
-var_ct<-read.delim("sims_output_t.csv", sep=" ", header=T)
+var_ct<-read.delim("sims_output_tt.csv", sep=" ", header=T)
 
 plot_ct <- ggplot(var_ct) + 
   geom_point(aes(x=c.,y=mean_p,colour="p")) + 
@@ -362,7 +368,30 @@ plot_ct <- ggplot(var_ct) +
 plot_ct
 
 #Start with initial t value of 8
+var_ct2<-read.delim("sims_output_tt2.csv", sep=" ", header=T)
 
+plot_ct2 <- ggplot(var_ct2) + 
+  geom_point(aes(x=c.,y=mean_p,colour="p")) + 
+  geom_point(aes(x=c.,y=mean_t,colour="t"))
+plot_ct2
+
+#   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
+#  1         0.001          varies            0.01             0.05    0.05    0.1        0.1        1                 1  
+
+#Start with initial t value of 8
+var_ct3<-read.delim("sims_output_t8.csv", sep=" ", header=T)
+
+plot_ct3 <- ggplot(var_ct3) + 
+  geom_point(aes(x=c.,y=mean_p,colour="p")) + 
+  geom_point(aes(x=c.,y=mean_t,colour="t"))
+plot_ct3
+
+testtt<-read.delim("testtt.csv", sep=" ", header=T)
+
+plot_testtt <- ggplot(testtt) + 
+  geom_point(aes(x=c.,y=mean_p,colour="p")) + 
+  geom_point(aes(x=c.,y=mean_t,colour="t"))
+plot_testtt
 
 #   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
 #  1         0.01             0.01        varies             0.05    0.05    0.4        0.4        1                 1  
@@ -402,4 +431,96 @@ plot_a <- ggplot(var_a) +
   geom_point(aes(x=c.,y=mean_p,colour="p")) + 
   geom_point(aes(x=c.,y=mean_t,colour="t"))
 plot_a
+
+#   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
+#  1         0.0125          0.5         varies             0.05    0.05    0.05        0.05        1                 1  
+
+pom<-read.delim("sims_output_pom.csv", sep=" ", header=T)
+
+plot_pom <- ggplot(pom) + 
+  geom_point(aes(x=biast.,y=mean_t,colour="t")) + 
+  geom_point(aes(x=biast.,y=mean_p,colour="p"))
+plot_pom
+
+pomlil<-read.delim("sims_output_pomlil.csv", sep=" ", header=T)
+
+plot_pomlil <- ggplot(pomlil) + 
+  geom_point(aes(x=biast.,y=mean_t,colour="t")) + 
+  geom_point(aes(x=biast.,y=mean_p,colour="p"))
+plot_pomlil
+
+#TRY PICKING A REASONABLE BIAS VALUE AND VARYING C AROUND IT - 0.5 MIGHT BE TOO BIG
+
+
+#   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
+#  1         0.0125          0.1         varies             0.05    0.05    0.05        0.05        1                 1  
+
+pom2<-read.delim("sims_output_pom2.csv", sep=" ", header=T)
+
+plot_pom2 <- ggplot(pom2) + 
+  geom_point(aes(x=biast.,y=mean_t,colour="t")) + 
+  geom_point(aes(x=biast.,y=mean_p,colour="p"))
+plot_pom2
+
+#   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
+#  1         0.0125          0.05         varies             0.05    0.05    0.05        0.05        1                 1  
+
+pom3<-read.delim("sims_output_pom3.csv", sep=" ", header=T)
+
+plot_pom3 <- ggplot(pom3) + 
+  geom_point(aes(x=biast.,y=mean_t,colour="t")) + 
+  geom_point(aes(x=biast.,y=mean_p,colour="p"))
+plot_pom3
+
+
+# Original pom values
+
+pompom<-read.delim("sims_output_pompom.csv", sep=" ", header=T)
+plot_pompom <- ggplot(pompom) + 
+  geom_point(aes(x=file,y=mean_t,colour="t")) + 
+  geom_point(aes(x=file,y=mean_p,colour="p"))
+plot_pompom
+
+#Original pom values starting with p=3
+
+pomp<-read.delim("sims_output_pomp.csv", sep=" ", header=T)
+plot_pomp <- ggplot(pomp) + 
+  geom_point(aes(x=file,y=mean_t,colour="t")) + 
+  geom_point(aes(x=file,y=mean_p,colour="p"))
+plot_pomp
+
+#   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
+#  1         0.0125          varies         0.005             0.05    0.05    0.05        0.05        1                 1  
+
+pomc<-read.delim("sims_output_pom_c.csv", sep=" ", header=T)
+
+plot_pomc <- ggplot(pomc) + 
+  geom_point(aes(x=c.,y=mean_t,colour="t")) + 
+  geom_point(aes(x=c.,y=mean_p,colour="p"))
+plot_pomc
+
+#   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
+#  1         0.001            0.5         0.008             0.05    0.05    0.05        0.05        1                 1  
+#Starting with p=3
+#(from Fawcett paper)
+
+faw<-read.delim("sims_output_faw.csv", sep=" ", header=T)
+plot_faw <- ggplot(faw) + 
+  geom_point(aes(x=file,y=mean_t,colour="t")) + 
+  geom_point(aes(x=file,y=mean_p,colour="p"))
+plot_faw
+
+#New mutation function:
+#   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
+#  1         0.001            0.5         0.9              0.05    0.05    0.05        0.05        1                 1  
+#Starting with p=3
+
+mutfaw<-read.delim("sims_output_mutfaw.csv", sep=" ", header=T)
+plot_mutfaw <- ggplot(mutfaw) + 
+  geom_point(aes(x=file,y=mean_t,colour="t")) + 
+  geom_point(aes(x=file,y=mean_p,colour="p"))
+plot_mutfaw
+
+
+
 
