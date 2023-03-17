@@ -277,7 +277,7 @@ void Survive(std::ofstream &DataFile)
 
 
 // mate choice - Kathryn suggested new function
-void Choose(double p, int& father) 
+void Choose(double p, int &father) 
 {
   if (web == 1) {
     
