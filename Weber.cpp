@@ -377,6 +377,12 @@ void Choose(double p, int &father)
                 double reltr = trait - meanornsurv;
                 po = exp(-a*(reltr - p)*(reltr - p));
             } break;
+            
+            // Weber preferences
+            case 3:
+            {
+                po = a * pow(p,-1) * log(trait);
+            } break;
         }
 
         // prevent the exponential of going to infinity
