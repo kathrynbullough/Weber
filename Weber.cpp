@@ -277,7 +277,7 @@ void Survive(std::ofstream &DataFile)
 
 
 // mate choice - Kathryn suggested new function
-void Choose(double p, int& father) 
+void Choose(double p, int &father) 
 {
   if (web == 1) {
     
@@ -376,6 +376,12 @@ void Choose(double p, int& father)
             {
                 double reltr = trait - meanornsurv;
                 po = exp(-a*(reltr - p)*(reltr - p));
+            } break;
+            
+            // Weber preferences
+            case 3:
+            {
+                po = a * pow(p,-1) * log(trait);
             } break;
         }
 
