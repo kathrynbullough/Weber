@@ -230,6 +230,7 @@ void Survive(std::ofstream &DataFile)
     // functions
     meanornsurv = 0;
     
+    //Not too sure what some of these values should be
     double sump = 0;
     double ? = ;
     double ? = ;
@@ -244,13 +245,13 @@ void Survive(std::ofstream &DataFile)
 		double t_expr = Females[i].t_expr[trait_idx];
    
    sump += pow(?[trait_idx]*p_expr,1/?);
-   w = exp(-b*pow(sump,?*?));
+   w[trait_idx} = exp(-b*pow(sump,?*?));
 
 		//w = exp(-b*p_expr*p_expr + (1-sexlimt)*(-c)*t_expr*t_expr);
 
         // if individuals survive
         // take stats and add them to pool of survivors
-        if (uniform(rng_r) < w)
+        if (uniform(rng_r) < w[trait_idx])
         {
             FemaleSurvivors[fsurvivors++] = Females[i];
         }
