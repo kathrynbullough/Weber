@@ -67,9 +67,137 @@ plot_cov <- ggplot(data=sim_data
 
 plot_mean_t / plot_mean_p / plot_p_t / plot_cov
 
-ggsave(file=paste0("model_graph_web_",basename(file.name),".pdf"))
+ggsave(file=paste0("model_graph_",basename(file.name),".pdf"))
     
 stop()
+
+
+plot(data$generation,data$mean_t)
+plot(data$generation,data$mean_p)
+plot(data$generation,data$surviving_males)
+plot(data$meanmrs,data$mean_p)
+plot(data$generation,data$covpt)
+plot(data$mean_t,data$mean_p)
+
+mod1<-glm(data$meanmrs~data$mean_t*data$mean_p*data$covpt)
+summary(mod1)
+abline(mod1)
+
+
+data2 <- read.delim("output_fisher_TEST2.csv", sep=";", header=T)
+plot(data2$generation,data2$mean_t)
+plot(data2$generation,data2$mean_p)
+plot(data2$generation,data2$surviving_males)
+plot(data2$meanmrs,data2$mean_t)
+plot(data2$mean_t,data2$mean_p,type="l")
+
+mod2<-glm(data2$meanmrs~data2$mean_t)
+summary(mod2)
+
+data3 <- read.delim("output_fisher_nopcost.csv", sep=";", header=T)
+plot(data3$generation,data3$mean_t)
+plot(data3$generation,data3$mean_p)
+plot(data3$meanmrs,data3$mean_t)
+plot(data3$mean_t,data3$mean_p,type="l")
+
+mod3<-glm(data3$meanmrs~data3$mean_t)
+summary(mod3)
+
+data4 <- read.delim("output_fisher_noptcost.csv", sep=";", header=T)
+plot(data4$mean_t,data4$mean_p)
+plot(data4$generation,data4$mean_t)
+plot(data4$generation,data4$mean_p)
+
+data5 <- read.delim("output_fisher_noptcost2.csv", sep=";", header=T)
+plot(data5$mean_t,data5$mean_p,type="l",pch=18)
+plot(data5$generation,data5$mean_t)
+plot(data5$generation,data5$mean_p)
+plot(data5$meanmrs,data5$mean_t)
+
+web <- read.delim("output_fisher_Webtestyay.csv", sep=";", header=T)
+plot(web$mean_t,web$mean_p,type="l",pch=18)
+plot(web$generation,web$mean_t,type="l",pch=18)
+plot(web$generation,web$mean_p,type="l",pch=18)
+plot(web$meanmrs,web$mean_t)
+
+web2 <- read.delim("output_fisher_Webtest2.csv", sep=";", header=T)
+plot(web2$mean_t,web2$mean_p,type="l",pch=18)
+plot(web2$generation,web2$mean_t,type="l",pch=18)
+plot(web2$generation,web2$mean_p,type="l",pch=18)
+plot(web2$meanmrs,web2$mean_t)
+
+web3 <- read.delim("output_fisher_costlyWeb.csv", sep=";", header=T)
+plot(web3$mean_t,web3$mean_p,type="l",pch=18)
+plot(web3$generation,web3$mean_t,type="l",pch=18)
+plot(web3$generation,web3$mean_p,type="l",pch=18)
+plot(web3$meanmrs,web3$mean_t)
+plot(web3$generation,web3$covpt,type="l",pch=18)
+
+web4 <- read.delim("test.csv", sep=";", header=T)
+plot(web3$mean_t,web3$mean_p,type="l",pch=18)
+plot(web4$generation,web4$mean_t,type="l",pch=18)
+plot(web4$generation,web4$mean_p,type="l",pch=18)
+plot(web3$meanmrs,web3$mean_t)
+plot(web4$generation,web4$covpt,type="l",pch=18)
+
+
+
+
+par(mfrow=c(5,1))
+
+test1 <- read.delim("output_fisher1.csv", sep=";", header=T)
+test2 <- read.delim("output_fisher2.csv", sep=";", header=T)
+test3 <- read.delim("output_fisher3.csv", sep=";", header=T)
+test4 <- read.delim("output_fisher4.csv", sep=";", header=T)
+test5 <- read.delim("output_fisher5.csv", sep=";", header=T)
+
+plot(test1$generation,test1$mean_t,type="l",pch=18)
+plot(test2$generation,test2$mean_t,type="l",pch=18)
+plot(test3$generation,test3$mean_t,type="l",pch=18)
+plot(test4$generation,test4$mean_t,type="l",pch=18)
+plot(test5$generation,test5$mean_t,type="l",pch=18)
+
+plot(test1$generation,test1$mean_p,type="l",pch=18)
+plot(test2$generation,test2$mean_p,type="l",pch=18)
+plot(test3$generation,test3$mean_p,type="l",pch=18)
+plot(test4$generation,test4$mean_p,type="l",pch=18)
+plot(test5$generation,test5$mean_p,type="l",pch=18)
+
+null1 <- read.delim("null1.csv", sep=";", header=T)
+null2 <- read.delim("null2.csv", sep=";", header=T)
+null3 <- read.delim("null3.csv", sep=";", header=T)
+null4 <- read.delim("null4.csv", sep=";", header=T)
+null5 <- read.delim("null5.csv", sep=";", header=T)
+
+plot(null1$generation,null1$mean_t,type="l",pch=18)
+plot(null2$generation,null2$mean_t,type="l",pch=18)
+plot(null3$generation,null3$mean_t,type="l",pch=18)
+plot(null4$generation,null4$mean_t,type="l",pch=18)
+plot(null5$generation,null5$mean_t,type="l",pch=18)
+
+plot(null1$generation,null1$mean_p,type="l",pch=18)
+plot(null2$generation,null2$mean_p,type="l",pch=18)
+plot(null3$generation,null3$mean_p,type="l",pch=18)
+plot(null4$generation,null4$mean_p,type="l",pch=18)
+plot(null5$generation,null5$mean_p,type="l",pch=18)
+
+test11 <- read.delim("output_fisher11.csv", sep=";", header=T)
+test22 <- read.delim("output_fisher22.csv", sep=";", header=T)
+test33 <- read.delim("output_fisher33.csv", sep=";", header=T)
+test44 <- read.delim("output_fisher44.csv", sep=";", header=T)
+test55 <- read.delim("output_fisher55.csv", sep=";", header=T)
+
+plot(test11$generation,test11$mean_t,type="l",pch=18)
+plot(test22$generation,test22$mean_t,type="l",pch=18)
+plot(test33$generation,test33$mean_t,type="l",pch=18)
+plot(test44$generation,test44$mean_t,type="l",pch=18)
+plot(test55$generation,test55$mean_t,type="l",pch=18)
+
+plot(test11$generation,test11$mean_p,type="l",pch=18)
+plot(test22$generation,test22$mean_p,type="l",pch=18)
+plot(test33$generation,test33$mean_p,type="l",pch=18)
+plot(test44$generation,test44$mean_p,type="l",pch=18)
+plot(test55$generation,test55$mean_p,type="l",pch=18)
 
 
 #  a       b     c     biast       mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
@@ -393,28 +521,6 @@ plot_mutfaw <- ggplot(mutfaw) +
   geom_point(aes(x=file,y=mean_p,colour="p"))
 plot_mutfaw
 
-#   a       b                  c          biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
-#  1         0.001            varies         0.9            0.05    0.05    0.05        0.05        1                 1  
-#Starting with p=3
 
-webc<-read.delim("sims_output_webc.csv", sep=" ", header=T)
-plot_webc <- ggplot(webc) + 
-  geom_point(aes(x=c.,y=mean_t,colour="t")) + 
-  geom_point(aes(x=c.,y=mean_p,colour="p"))
-plot_webc
-
-webc2<-read.delim("sims_output_webc2.csv", sep=" ", header=T)
-plot_webc2 <- ggplot(webc2) + 
-  geom_point(aes(x=c.,y=mean_t,colour="t")) + 
-  geom_point(aes(x=c.,y=mean_p,colour="p"))
-plot_webc2
-
-#Starting with p=10 and t=1
-
-webp10<-read.delim("sims_output_webp10.csv", sep=" ", header=T)
-plot_webp10 <- ggplot(webp10) + 
-  geom_point(aes(x=c.,y=mean_t,colour="t")) + 
-  geom_point(aes(x=c.,y=mean_p,colour="p"))
-plot_webp10
 
 
