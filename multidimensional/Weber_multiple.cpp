@@ -1,11 +1,4 @@
-//      Fisherian sexual selection for gonochorists
-//
-//      Bram Kuijper, Lukas Scharer and Ido Pen
-//
-//      This work is licensed under a Creative Commons 
-//      Attribution-NonCommercial-ShareAlike 4.0 
-//      International License. 
-//      http://creativecommons.org/licenses/by-nc-sa/4.0/
+//      Fisherian sexual selection for gonochorists with addition of a Weber preference function
 
 //KATHRYN EDIT TEST
 
@@ -46,11 +39,20 @@ const int N = 5000; // population size
 const int N_mate_sample = 10; // number of mates sampled
 const int clutch_size = 10; // number of offspring produced
 
+int const ntrait = 2;
+
 double init_t = 0.0; // initial value for ornament
 double init_p = 0.0; // initial value for preference
 double a = 1.0; // choice slope
 double b = 0.5; // cost of preference 
-double c = 0.5; // cost of trait
+double gamma = 2.0; // cost curvature of a preference (1: linear, 2: bell-shaped survival curve, 3: bell-shaped with skewness, etc etc)
+double theta = 0.5; // how do preferences interact when it comes to a combined cost, see Pomiankowski & Iwasa 1993 procb
+double c[ntrait] = {0.5,0.5}; // cost of trait
+double lambda[ntrait] = {1.0,1.0}; // cost of trait
+
+double l
+
+
 double biast = 0; // mutation bias: 0.5 means no bias. > 0.5 means bias towards reduction in tratt.
 
 double mu_p 	  = 0.05;            // mutation rate preference
@@ -76,7 +78,6 @@ int fsurvivors = 0;
 int father_eggs[N];
 int mother_eggs[N];
 
-int const ntrait = 2;
 
 std::string file_name = "output.csv";
 
@@ -114,6 +115,7 @@ void initArguments(int argc, char *argv[])
     init_t = std::stod(argv[13]);
     init_p = std::stod(argv[14]);
     file_name = argv[15];
+    //Maybe add another one to allow the change of ntraits to something other than 2?
 } // end initArguments
 
 // mutation function:
@@ -164,34 +166,35 @@ void Init()
 	// initialize the whole populatin
 	for (int i = 0; i < Nfemales; ++i)
 	{
-        for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
-        {
-            // initialize each allele of each diploid locus
-            for (int j = 0; j < 2; ++j)
-            {
-                Females[i].t[trait_idx][j] = init_t;
-                Females[i].p[trait_idx][j] = init_p;
-            }
-
-            // and the expressed values
-            Females[i].t_expr[trait_idx] = init_t;
-            Females[i].p_expr[trait_idx] = init_p;
-        }
-        
-			
-	}
+	   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+	   {
+		// initialize both diploid loci
+		for (int j = 0; j < 2; ++j)
+		{
+			Females[i].t[trait_idx][j] = init_t;
+			Females[i].p[trait_idx][j] = init_p;
+		}
+		
+		// and the expressed values
+		Females[i].t_expr[trait_idx] = init_t;
+		Females[i].p_expr[trait_idx] = init_p;
+	  } // end for trait_idx
+	} // end for Nfemales
 
     // initialize the male part of the population
 	for (int i = 0; i < Nmales; ++i)
 	{
-		for (int j = 0; j < 2; ++j)
-		{
-			Males[i].t[trait_idx][j] = init_t;
-			Males[i].p[j] = init_p;
-		}
-			
-        Males[i].t_expr = init_t;
-        Males[i].p_expr = init_p;
+	   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+	   {
+			for (int j = 0; j < 2; ++j)
+			{
+				Males[i].t[trait_idx][j] = init_t;
+				Males[i].p[trait_idx][j] = init_p;
+			}
+				
+		Males[i].t_expr[trait_idx] = init_t;
+		Males[i].p_expr[trait_idx] = init_p;
+	   }
 	}
 } // end Init
 
@@ -200,20 +203,22 @@ void Create_Kid(int mother, int father, Individual &kid)
 {
 	assert(mother >= 0 && mother < fsurvivors);
 	assert(father >= 0 && father < msurvivors);
+ 
+ for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+ {
 
-    for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
-    {
-        // inherit ornament
-        kid.t[trait_idx][0] = FemaleSurvivors[mother].t[trait_idx][segregator(rng_r)];
-        mutate(kid.t[trait_ix][0], mu_t, sdmu_t, biast);
-        kid.t[trait_idx][1] = MaleSurvivors[father].t[segregator(rng_r)];
-        mutate(kid.t[1], mu_t, sdmu_t, biast);
+    // inherit ornament
+	kid.t[trait_idx][0] = FemaleSurvivors[mother].t[trait_idx][segregator(rng_r)];
+    mutate(kid.t[trait_idx][0], mu_t, sdmu_t, biast);
+	kid.t[trait_idx][1] = MaleSurvivors[father].t[trait_idx][segregator(rng_r)];
+    mutate(kid.t[trait_idx][1], mu_t, sdmu_t, biast);
 
-        // inherit preference
-        kid.p[0] = FemaleSurvivors[mother].p[segregator(rng_r)];
-        mutate(kid.p[0], mu_p, sdmu_p);
-        kid.p[1] = MaleSurvivors[father].p[segregator(rng_r)];
-        mutate(kid.p[1], mu_p, sdmu_p);
+    // inherit preference
+	kid.p[trait_idx][0] = FemaleSurvivors[mother].p[trait_idx][segregator(rng_r)];
+    mutate(kid.p[trait_idx][0], mu_p, sdmu_p);
+	kid.p[trait_idx][1] = MaleSurvivors[father].p[trait_idx][segregator(rng_r)];
+    mutate(kid.p[trait_idx][1], mu_p, sdmu_p);
+ }
 } // end Create_Kid
 
 // survival stage
@@ -222,33 +227,47 @@ void Survive(std::ofstream &DataFile)
     // keep track of the 
     // number of female breeders
     fsurvivors = 0;     
+    msurvivors = 0;
     
     // store individual fitness values
-    double w = 0; 
+    double wf = 0; 
+    double wm = 0; 
 
     // keep track of the 
     // mean ornament size of surviving males
     // necessary for absolute/relative preference
     // functions
     meanornsurv = 0;
+    
+    //Not too sure what some of these values should be
+    double sump = 0.0;
 
     // allow females to survive
 	for (int i = 0; i < Nfemales; ++i)
 	{
-		double p_expr = Females[i].p_expr;
-		double t_expr = Females[i].t_expr;
+	   sump = 0.0;
 
-		w = exp(-b*p_expr*p_expr + (1-sexlimt)*(-c)*t_expr*t_expr);
+	   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+	   {
+		double p_expr = Females[i].p_expr[trait_idx];
+   
+		sump += pow(lambda[trait_idx]*p_expr,1.0/theta);
+	   }
 
-        // if individuals survive
-        // take stats and add them to pool of survivors
-        if (uniform(rng_r) < w)
-        {
-            FemaleSurvivors[fsurvivors++] = Females[i];
-        }
-	}
+	   // after summing over all traits, take power over gamma * theta and multiply
+	   // by b as in eq. (10b) in Pomiankowski & Iwasa (1993)
+   		wf = exp(-b*pow(sump,gamma * theta));
 
-    msurvivors = 0;
+		//w = exp(-b*p_expr*p_expr + (1-sexlimt)*(-c)*t_expr*t_expr);
+
+		// if individuals survive
+		// take stats and add them to pool of survivors
+		if (uniform(rng_r) < wf)
+		{
+		    FemaleSurvivors[fsurvivors++] = Females[i];
+		}
+	}// end for i < Nfemales
+
 
     // male survival
 	for (int i = 0; i < Nmales; ++i)
@@ -285,7 +304,7 @@ void Survive(std::ofstream &DataFile)
 
 
 // mate choice - Kathryn suggested new function
-void Choose(double p, int& father) 
+void Choose(double p, int &father) 
 {
   if (web == 1) {
     
@@ -356,11 +375,13 @@ void Choose(double p, int& father)
     // mate choice among the sample of males
 	for (int j = 0; j < current_mate_sample; ++j)
 	{
+   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx) 
+   {
 		// get a random surviving male
 		int random_mate = msurvivor_sampler(rng_r);
 
         // obtain a male's ornament
-		double trait = MaleSurvivors[random_mate].t_expr;
+		double trait = MaleSurvivors[random_mate].t_expr[trait_idx];
 
         // value of the preference function
         double po = 0;
@@ -384,6 +405,12 @@ void Choose(double p, int& father)
             {
                 double reltr = trait - meanornsurv;
                 po = exp(-a*(reltr - p)*(reltr - p));
+            } break;
+            
+            // Weber preferences
+            case 3:
+            {
+                po = a * pow(p,-1) * log(trait);
             } break;
         }
 
@@ -419,6 +446,7 @@ void Choose(double p, int& father)
 			break;	
 		}
 	}
+ }
 
     assert(father >= 0 && father < msurvivors);
 
@@ -448,9 +476,11 @@ void NextGen()
     // let the surviving females choose a mate
 	for (int i = 0; i < fsurvivors; ++i)
 	{
+   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+   {
 		int Father = -1;
         
-        double expr_p = FemaleSurvivors[i].p_expr;
+        double expr_p = FemaleSurvivors[i].p_expr[trait_idx];
 
 		Choose(expr_p, Father);
 
@@ -473,6 +503,7 @@ void NextGen()
             ++offspring;
         }
 	}
+ }
 
     int sons = 0;
     int daughters = 0;
@@ -505,20 +536,20 @@ void NextGen()
         {
             Males[sons] = Kid;
     
-            double t = 0.5 * ( Males[sons].t[0] + Males[sons].t[1]);
-            double p = 0.5 * ( Males[sons].p[0] + Males[sons].p[1]);
-            Males[sons].t_expr = t; 
-            Males[sons].p_expr = p; 
+            double t[ntrait] = 0.5 * ( Males[sons].t[ntrait][0] + Males[sons].t[ntrait][1]);
+            double p[ntrait] = 0.5 * ( Males[sons].p[ntrait][0] + Males[sons].p[ntrait][1]);
+            Males[sons].t_expr[ntrait] = t[ntrait]; 
+            Males[sons].p_expr[ntrait] = p[ntrait]; 
             ++sons;
         }
         else
         {
             Females[daughters] = Kid;
 
-            double t = 0.5 * ( Females[daughters].t[0] + Females[daughters].t[1]);
-            double p = 0.5 * ( Females[daughters].p[0] + Females[daughters].p[1]);
-            Females[daughters].t_expr = t; 
-            Females[daughters].p_expr = p;
+            double t[ntrait] = 0.5 * ( Females[daughters].t[ntrait][0] + Females[daughters].t[ntrait][1]);
+            double p[ntrait] = 0.5 * ( Females[daughters].p[ntrait][0] + Females[daughters].p[ntrait][1]);
+            Females[daughters].t_expr[ntrait] = t[ntrait]; 
+            Females[daughters].p_expr[ntrait] = p[ntrait];
             ++daughters;
         }
     }
