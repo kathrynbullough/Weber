@@ -45,13 +45,11 @@ double init_t = 0.0; // initial value for ornament
 double init_p = 0.0; // initial value for preference
 double a = 1.0; // choice slope
 double b = 0.5; // cost of preference 
+
 double gamma = 2.0; // cost curvature of a preference (1: linear, 2: bell-shaped survival curve, 3: bell-shaped with skewness, etc etc)
 double theta = 0.5; // how do preferences interact when it comes to a combined cost, see Pomiankowski & Iwasa 1993 procb
 double c[ntrait] = {0.5,0.5}; // cost of trait
 double lambda[ntrait] = {1.0,1.0}; // cost of trait
-
-double l
-
 
 double biast = 0; // mutation bias: 0.5 means no bias. > 0.5 means bias towards reduction in tratt.
 
@@ -239,8 +237,9 @@ void Survive(std::ofstream &DataFile)
     // functions
     meanornsurv = 0;
     
-    //Not too sure what some of these values should be
     double sump = 0.0;
+    double sumapt = 0.0;
+    double sumctsq = 0.0;
 
     // allow females to survive
 	for (int i = 0; i < Nfemales; ++i)
@@ -272,12 +271,23 @@ void Survive(std::ofstream &DataFile)
     // male survival
 	for (int i = 0; i < Nmales; ++i)
 	{
-		double p_expr = Males[i].p_expr;
-		double t_expr = Males[i].t_expr;
+     sumapt = 0.0;
+     sumctsq = 0.0;
+     
+     for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+     {
+		double p_expr = Males[i].p_expr[trait_idx];
+		double t_expr = Males[i].t_expr[trait_idx];
+   
+   sumapt += a*p_expr*t_expr;
+   sumctsq += c[trait_idx]*pow(t_expr,2);
+     }
 
-		w = exp(-c*t_expr*t_expr + (1-sexlimp)*-b*p_expr*p_expr);
+      //Eq. 10a in Pomiankowski & Iwasa (1993)
+      wm = exp(sumapt-sumctsq);
+		//w = exp(-c*t_expr*t_expr + (1-sexlimp)*-b*p_expr*p_expr);
         
-        if (uniform(rng_r) < w)
+        if (uniform(rng_r) < wm)
         {
             // in case of relative preferences get the mean ornament
             meanornsurv += t_expr;
@@ -391,26 +401,26 @@ void Choose(double p, int &father)
             // open-ended preferences
             case 0: 
             {
-                po = exp(a * trait * p);
+                po = exp(a * trait * p[trait_idx]);
             } break;
 
             // absolute preferences
             case 1:
             {
-                po = exp(-a*(trait - p)*(trait - p));
+                po = exp(-a*(trait - p[trait_idx])*(trait - p[trait_idx]));
             } break;
 
             // relative preferences
             case 2:
             {
                 double reltr = trait - meanornsurv;
-                po = exp(-a*(reltr - p)*(reltr - p));
+                po = exp(-a*(reltr - p[trait_idx])*(reltr - p[trait_idx]));
             } break;
             
             // Weber preferences
             case 3:
             {
-                po = a * pow(p,-1) * log(trait);
+                po = a*(trait/(trait+p[trait_idx]));
             } break;
         }
 
@@ -535,21 +545,27 @@ void NextGen()
         if (uniform(rng_r) < 0.5)
         {
             Males[sons] = Kid;
-    
-            double t[ntrait] = 0.5 * ( Males[sons].t[ntrait][0] + Males[sons].t[ntrait][1]);
-            double p[ntrait] = 0.5 * ( Males[sons].p[ntrait][0] + Males[sons].p[ntrait][1]);
-            Males[sons].t_expr[ntrait] = t[ntrait]; 
-            Males[sons].p_expr[ntrait] = p[ntrait]; 
+            
+            for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+            {
+            double t[trait_idx] = 0.5 * ( Males[sons].t[trait_idx][0] + Males[sons].t[trait_idx][1]);
+            double p[trait_idx] = 0.5 * ( Males[sons].p[trait_idx][0] + Males[sons].p[trait_idx][1]);
+            Males[sons].t_expr[trait_idx] = t[trait_idx]; 
+            Males[sons].p_expr[trait_idx] = p[trait_idx]; 
+            }
             ++sons;
         }
         else
         {
             Females[daughters] = Kid;
 
-            double t[ntrait] = 0.5 * ( Females[daughters].t[ntrait][0] + Females[daughters].t[ntrait][1]);
-            double p[ntrait] = 0.5 * ( Females[daughters].p[ntrait][0] + Females[daughters].p[ntrait][1]);
-            Females[daughters].t_expr[ntrait] = t[ntrait]; 
-            Females[daughters].p_expr[ntrait] = p[ntrait];
+            for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+            {
+            double t[trait_idx] = 0.5 * ( Females[daughters].t[trait_idx][0] + Females[daughters].t[trait_idx][1]);
+            double p[trait_idx] = 0.5 * ( Females[daughters].p[trait_idx][0] + Females[daughters].p[trait_idx][1]);
+            Females[daughters].t_expr[trait_idx] = t[trait_idx]; 
+            Females[daughters].p_expr[trait_idx] = p[trait_idx];
+            }
             ++daughters;
         }
     }
@@ -571,27 +587,30 @@ void WriteData(std::ofstream &DataFile)
 		exit(1);
 	}
 
-    double meanp = 0.0;
-    double meant = 0.0; 
-    double ssp = 0.0;
-    double sst = 0.0;
-    double spt = 0.0;
+    double meanp[ntrait] = {0.0,0.0};
+    double meant[ntrait] = {0.0,0.0}; 
+    double ssp[ntrait] = {0.0,0.0};
+    double sst[ntrait] = {0.0,0.0};
+    double spt[ntrait] = {0.0,0.0};
 
-	double p,t,meanmrs,meanfrs,varfrs,varmrs;
+	double p[ntrait],t[ntrait],meanmrs,meanfrs,varfrs,varmrs;
 	double ssmrs = 0, ssfrs = 0, summrs=0, sumfrs=0;
 
     // calculate means and variances for the males
 	for (int i = 0; i < Nmales; ++i)
 	{
-		p = 0.5 * ( Males[i].p[0] + Males[i].p[1]);
-		t = 0.5 * ( Males[i].t[0] + Males[i].t[1]);
+   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+   {
+		p[trait_idx] = 0.5 * ( Males[i].p[trait_idx][0] + Males[i].p[trait_idx][1]);
+		t[trait_idx] = 0.5 * ( Males[i].t[trait_idx][0] + Males[i].t[trait_idx][1]);
 
-        meanp += p;
-        meant += t;
+        meanp[trait_idx] += p[trait_idx];
+        meant[trait_idx] += t[trait_idx];
 
-        ssp += p * p;
-        sst += t * t;
-        spt += t * p;
+        ssp[trait_idx] += p[trait_idx] * p[trait_idx];
+        sst[trait_idx] += t[trait_idx] * t[trait_idx];
+        spt[trait_idx] += t[trait_idx] * p[trait_idx];
+    }
 
         if (i < msurvivors)
         {
@@ -603,15 +622,18 @@ void WriteData(std::ofstream &DataFile)
     // calculate means and variances for the females
 	for (int i = 0; i < Nfemales; ++i)
 	{
-		p = 0.5 * ( Females[i].p[0] + Females[i].p[1]);
-		t = 0.5 * ( Females[i].t[0] + Females[i].t[1]);
+   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+   {
+		p[trait_idx] = 0.5 * ( Females[i].p[trait_idx][0] + Females[i].p[trait_idx][1]);
+		t[trait_idx] = 0.5 * ( Females[i].t[trait_idx][0] + Females[i].t[trait_idx][1]);
 
-        meanp += p;
-        meant += t;
+        meanp[trait_idx] += p[trait_idx];
+        meant[trait_idx] += t[trait_idx];
 
-        ssp += p * p;
-        sst += t * t;
-        spt += t * p;
+        ssp[trait_idx] += p[trait_idx] * p[trait_idx];
+        sst[trait_idx] += t[trait_idx] * t[trait_idx];
+        spt[trait_idx] += t[trait_idx] * p[trait_idx];
+    }
         
         if (i < fsurvivors)
         {
@@ -620,16 +642,19 @@ void WriteData(std::ofstream &DataFile)
         }
 	} 
 
-    double varp = 0; 
-    double vart = 0; 
+    double varp[ntrait] = {0.0,0.0}; 
+    double vart[ntrait] = {0.0,0.0}; 
     double covpt = 0;
 
     double sum_sexes = Nmales + Nfemales;
 
-    meant /= sum_sexes;
-    meanp /= sum_sexes;
-    vart = sst / sum_sexes - meant * meant;
-    varp = ssp / sum_sexes - meanp * meanp;
+    for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+    {
+    meant[trait_idx] /= sum_sexes;
+    meanp[trait_idx] /= sum_sexes;
+    vart[trait_idx] = sst[trait_idx] / sum_sexes - meant[trait_idx] * meant[trait_idx];
+    varp[trait_idx] = ssp[trait_idx] / sum_sexes - meanp[trait_idx] * meanp[trait_idx];
+    }
     covpt = spt / sum_sexes - meanp * meant;
 
     meanfrs = sumfrs / Nfemales;
