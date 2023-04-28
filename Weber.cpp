@@ -381,7 +381,7 @@ void Choose(double p, int &father)
             // Weber preferences
             case 3:
             {
-                po = a * pow(p,-1) * log(trait);
+                po = a*(trait/(trait+p));
             } break;
         }
 
