@@ -3,4 +3,4 @@
 # Current parameters that seem to work:
 #   a       b                  c             biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
 #  1         0.001             0.5            0.9             0.05    0.05    0.05        0.05        1                 1  
-#Starting with various initial t values
+#Starting with various initial p values (p=3 for example)
