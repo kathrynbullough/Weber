@@ -276,8 +276,49 @@ void Survive(std::ofstream &DataFile)
 }
 
 
+double open_ended_prefs(Individual &female, Individual &male)
+{
+    double sum_odds = 0.0;
+
+    for (int trait_idx  = 0; trait_idx < 2; ++trait_idx)
+    {
+        sum_odds += exp(a * female.p[trait_idx] * male.t[trait_idx]);
+    }
+
+    return(sum_odds);
+} // end open_ended_prefs()
+
+double absolute_prefs(Individual &female, Individual &male)
+{
+    double sum_odds = 0.0;
+
+    for (int trait_idx  = 0; trait_idx < 2; ++trait_idx)
+    {
+        sum_odds += exp(-0.5 * a * 
+                (female.p[trait_idx] - male.t[trait_idx])*
+                (female.p[trait_idx] - male.t[trait_idx]));
+    }
+
+    return(sum_odds);
+} // end absolute_prefs()
+
+double relative_prefs(Individual &female, Individual &male)
+{
+    double sum_odds = 0.0;
+
+    for (int trait_idx  = 0; trait_idx < 2; ++trait_idx)
+    {
+        sum_odds += exp(-0.5 * a * 
+                (male.t[trait_idx] - (female.p[trait_idx] + meanornsurv)) *
+                (male.t[trait_idx] - (female.p[trait_idx] + meanornsurv))
+                );
+    }
+
+    return(sum_odds);
+} // end relative_prefs()
+
 // mate choice - Kathryn suggested new function
-void Choose(double p, int &father) 
+void Choose(Individual &mother, int &father) 
 {
   if (web == 1) {
     
@@ -294,22 +335,22 @@ void Choose(double p, int &father)
     // mate choice among the sample of pairs of males
     for (int i = 0; i < current_mate_sample; i+=2)  //Do we want this to be i+=2 or i++ ?
   {
-    //Generate the pair of random males
-    int id1 = msurvivor_sampler(rng_r);
-    int id2 = msurvivor_sampler(rng_r);
-
-    //Work out their traits and calculate the k value for that pair
-    double trait1 = MaleSurvivors[id1].t_expr;
-    double trait2 = MaleSurvivors[id2].t_expr;
-    double k = exp(a * p * (trait1 - trait2) / trait1);
-
-    //Work out which one is the winner
-    int winner = trait1 > trait2 ? id1 : id2;
-
-    //Add winner and k value to the vectors
-    best_male_of_pair.push_back(winner);
-    k_values.push_back(k);
-
+//    //Generate the pair of random males
+//    int id1 = msurvivor_sampler(rng_r);
+//    int id2 = msurvivor_sampler(rng_r);
+//
+//    //Work out their traits and calculate the k value for that pair
+//    double trait1 = MaleSurvivors[id1].t_expr;
+//    double trait2 = MaleSurvivors[id2].t_expr;
+//    double k = exp(a * p * (trait1 - trait2) / trait1);
+//
+//    //Work out which one is the winner
+//    int winner = trait1 > trait2 ? id1 : id2;
+//
+//    //Add winner and k value to the vectors
+//    best_male_of_pair.push_back(winner);
+//    k_values.push_back(k);
+//
   }//End for loop i<current_male_sample
     
     //Create the distribution of k values
@@ -351,9 +392,6 @@ void Choose(double p, int &father)
 		// get a random surviving male
 		int random_mate = msurvivor_sampler(rng_r);
 
-        // obtain a male's ornament
-		double trait = MaleSurvivors[random_mate].t_expr;
-
         // value of the preference function
         double po = 0;
 
@@ -362,20 +400,19 @@ void Choose(double p, int &father)
             // open-ended preferences
             case 0: 
             {
-                po = exp(a * trait * p);
+                po = open_ended_prefs(mother, MaleSurvivors[random_mate]);
             } break;
 
             // absolute preferences
             case 1:
             {
-                po = exp(-a*(trait - p)*(trait - p));
+                po = absolute_prefs(mother, MaleSurvivors[random_mate]);
             } break;
 
             // relative preferences
             case 2:
             {
-                double reltr = trait - meanornsurv;
-                po = exp(-a*(reltr - p)*(reltr - p));
+                po = relative_prefs(mother, MaleSurvivors[random_mate]);
             } break;
             
             // Weber preferences
@@ -383,7 +420,7 @@ void Choose(double p, int &father)
             {
                 po = a*(trait/(trait+p));
             } break;
-        }
+        } // end switch
 
         // prevent the exponential of going to infinity
         // which would make things really awkward
@@ -418,9 +455,10 @@ void Choose(double p, int &father)
 		}
 	}
 
-    assert(father >= 0 && father < msurvivors);
+        assert(father >= 0 && father < msurvivors);
+    } 
 
-} }// end ChooseMates
+}// end ChooseMates
 
 
 // produce the next generation
