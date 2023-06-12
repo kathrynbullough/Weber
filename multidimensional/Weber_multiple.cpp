@@ -248,9 +248,9 @@ void Survive(std::ofstream &DataFile)
 
 	   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
 	   {
-		double p_expr = Females[i].p_expr[trait_idx];
+            double p_expr = Females[i].p_expr[trait_idx];
    
-		sump += pow(lambda[trait_idx]*p_expr,1.0/theta);
+            sump += pow(lambda[trait_idx]*p_expr,1.0/theta);
 	   }
 
 	   // after summing over all traits, take power over gamma * theta and multiply
@@ -279,8 +279,8 @@ void Survive(std::ofstream &DataFile)
 		double p_expr = Males[i].p_expr[trait_idx];
 		double t_expr = Males[i].t_expr[trait_idx];
    
-   sumapt += a*p_expr*t_expr;
-   sumctsq += c[trait_idx]*pow(t_expr,2);
+        sumapt += a*p_expr*t_expr;
+        sumctsq += c[trait_idx]*pow(t_expr,2);
      }
 
       //Eq. 10a in Pomiankowski & Iwasa (1993)
@@ -490,9 +490,7 @@ void NextGen()
    {
 		int Father = -1;
         
-        double expr_p = FemaleSurvivors[i].p_expr[trait_idx];
-
-		Choose(expr_p, Father);
+		Choose(FemaleSurvivors[i], Father);
 
 		assert(Father >= 0 && Father < msurvivors);
 
@@ -650,11 +648,12 @@ void WriteData(std::ofstream &DataFile)
 
     for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
     {
-    meant[trait_idx] /= sum_sexes;
-    meanp[trait_idx] /= sum_sexes;
-    vart[trait_idx] = sst[trait_idx] / sum_sexes - meant[trait_idx] * meant[trait_idx];
-    varp[trait_idx] = ssp[trait_idx] / sum_sexes - meanp[trait_idx] * meanp[trait_idx];
+        meant[trait_idx] /= sum_sexes;
+        meanp[trait_idx] /= sum_sexes;
+        vart[trait_idx] = sst[trait_idx] / sum_sexes - meant[trait_idx] * meant[trait_idx];
+        varp[trait_idx] = ssp[trait_idx] / sum_sexes - meanp[trait_idx] * meanp[trait_idx];
     }
+
     covpt = spt / sum_sexes - meanp * meant;
 
     meanfrs = sumfrs / Nfemales;
