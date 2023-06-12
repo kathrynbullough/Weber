@@ -310,66 +310,54 @@ void Survive(std::ofstream &DataFile)
     assert(fsurvivors < popsize);
     assert(msurvivors > 0);
     assert(msurvivors < popsize);
-}
+} // end void Survival()
+
+double open_ended_prefs(Individual &female, Individual &male)
+{
+    double sum_odds = 0.0;
+
+    for (int trait_idx  = 0; trait_idx < 2; ++trait_idx)
+    {
+        sum_odds += exp(a * female.p[trait_idx] * male.t[trait_idx]);
+    }
+
+    return(sum_odds);
+} // end open_ended_prefs()
+
+double absolute_prefs(Individual &female, Individual &male)
+{
+    double sum_odds = 0.0;
+
+    for (int trait_idx  = 0; trait_idx < 2; ++trait_idx)
+    {
+        sum_odds += exp(-0.5 * a * 
+                (female.p[trait_idx] - male.t[trait_idx])*
+                (female.p[trait_idx] - male.t[trait_idx]));
+    }
+
+    return(sum_odds);
+} // end absolute_prefs()
+
+double relative_prefs(Individual &female, Individual &male)
+{
+    double sum_odds = 0.0;
+
+    for (int trait_idx  = 0; trait_idx < 2; ++trait_idx)
+    {
+        sum_odds += exp(-0.5 * a * 
+                (male.t[trait_idx] - (female.p[trait_idx] + meanornsurv)) *
+                (male.t[trait_idx] - (female.p[trait_idx] + meanornsurv))
+                );
+    }
+
+    return(sum_odds);
+} // end relative_prefs()
 
 
 // mate choice - Kathryn suggested new function
 void Choose(double p, int &father) 
 {
-  if (web == 1) {
-    
-    // empty vectors with all our k values and male id values of each pair
-    std::vector <double> k_values;
-    std::vector <int> best_male_of_pair;
-
-    // check if there are enough other males to choose from
-    // otherwise restrict the sample to the amount of individuals present
-    int current_mate_sample = N_mate_sample > msurvivors ? msurvivors : N_mate_sample;
-
-    std::uniform_int_distribution <int> msurvivor_sampler(0, msurvivors - 1);
-
-    // mate choice among the sample of pairs of males
-    for (int i = 0; i < current_mate_sample; i+=2)  //Do we want this to be i+=2 or i++ ?
-  {
-    //Generate the pair of random males
-    int id1 = msurvivor_sampler(rng_r);
-    int id2 = msurvivor_sampler(rng_r);
-
-    //Work out their traits and calculate the k value for that pair
-    double trait1 = MaleSurvivors[id1].t_expr;
-    double trait2 = MaleSurvivors[id2].t_expr;
-    double k = exp(a * p * (trait1 - trait2) / trait1);
-
-    //Work out which one is the winner
-    int winner = trait1 > trait2 ? id1 : id2;
-
-    //Add winner and k value to the vectors
-    best_male_of_pair.push_back(winner);
-    k_values.push_back(k);
-
-  }//End for loop i<current_male_sample
-    
-    //Create the distribution of k values
-    std::discrete_distribution <int> k_value_distribution(
-         k_values.begin()
-         ,k_values.end()
-         );
-
-    // now we are going to sample from this distribution
-    int sampled_pair_idx = k_value_distribution(rng_r);
-
-    // now look up the best male of that pair that is in the
-    // corresponding vector
-    int best_male_idx = best_male_of_pair[sampled_pair_idx];
-    
-    //Turn this into the 'father' object somehow to complete the function??
-    father = best_male_idx;
-
-    assert(father >= 0 && father < msurvivors);
-
-  } else {// end ChooseMates-Kathryn 
-
-// mate choice - original code
+    // mate choice - original code
 	// make arrays that hold the values of the sample of assessed males
 	double Fitness[N_mate_sample];
 	int Candidates[N_mate_sample];
@@ -378,20 +366,20 @@ void Choose(double p, int &father)
 
 	// check if there are enough other males to choose from
 	// otherwise restrict the sample to the amount of individuals present
-	int current_mate_sample = N_mate_sample > msurvivors ? msurvivors : N_mate_sample;
+	int current_mate_sample = N_mate_sample > msurvivors ? 
+        msurvivors 
+        : 
+        N_mate_sample;
 
-    std::uniform_int_distribution <int> msurvivor_sampler(0, msurvivors - 1);
+    // distribution of number of survivors
+    std::uniform_int_distribution <int> 
+        msurvivor_sampler(0, msurvivors - 1);
 
     // mate choice among the sample of males
 	for (int j = 0; j < current_mate_sample; ++j)
 	{
-   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx) 
-   {
-		// get a random surviving male
-		int random_mate = msurvivor_sampler(rng_r);
-
-        // obtain a male's ornament
-		double trait = MaleSurvivors[random_mate].t_expr[trait_idx];
+        // get a random surviving male
+        int random_mate = msurvivor_sampler(rng_r);
 
         // value of the preference function
         double po = 0;
@@ -401,28 +389,27 @@ void Choose(double p, int &father)
             // open-ended preferences
             case 0: 
             {
-                po = exp(a * trait * p[trait_idx]);
+                po = open_ended_prefs(mother, MaleSurvivors[random_mate]);
             } break;
 
             // absolute preferences
             case 1:
             {
-                po = exp(-a*(trait - p[trait_idx])*(trait - p[trait_idx]));
+                po = absolute_prefs(mother, MaleSurvivors[random_mate]);
             } break;
 
             // relative preferences
             case 2:
             {
-                double reltr = trait - meanornsurv;
-                po = exp(-a*(reltr - p[trait_idx])*(reltr - p[trait_idx]));
+                po = relative_prefs(mother, MaleSurvivors[random_mate]);
             } break;
             
             // Weber preferences
             case 3:
             {
-                po = a*(trait/(trait+p[trait_idx]));
+                po = weber_prefs(mother, MaleSurvivors[random_mate]);
             } break;
-        }
+        } // end switch
 
         // prevent the exponential of going to infinity
         // which would make things really awkward
@@ -433,11 +420,11 @@ void Choose(double p, int &father)
 
         // make a cumulative distribution of the male's
         // fitness value
-		Fitness[j] = sumFitness + po;
-		sumFitness=Fitness[j];
+        Fitness[j] = sumFitness + po;
+        sumFitness=Fitness[j];
 
-		Candidates[j] = random_mate;
-	} 
+        Candidates[j] = random_mate;
+    } 
 
     // sample from the cumulative distribution
 	double r = uniform(rng_r)*sumFitness;
