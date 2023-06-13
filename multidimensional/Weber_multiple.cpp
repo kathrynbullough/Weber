@@ -279,12 +279,12 @@ void Survive(std::ofstream &DataFile)
 		double p_expr = Males[i].p_expr[trait_idx];
 		double t_expr = Males[i].t_expr[trait_idx];
    
-        sumapt += a*p_expr*t_expr;
+       // sumapt += a*p_expr*t_expr;     //Remove as we haven't performed mate choice yet??
         sumctsq += c[trait_idx]*pow(t_expr,2);
      }
 
       //Eq. 10a in Pomiankowski & Iwasa (1993)
-      wm = exp(sumapt-sumctsq);
+      wm = exp(-sumctsq);      //wm = exp(sumapt-sumctsq);
 		//w = exp(-c*t_expr*t_expr + (1-sexlimp)*-b*p_expr*p_expr);
         
         if (uniform(rng_r) < wm)
@@ -641,7 +641,7 @@ void WriteData(std::ofstream &DataFile)
 
     double varp[ntrait] = {0.0,0.0}; 
     double vart[ntrait] = {0.0,0.0}; 
-    double covpt = 0;
+    double covpt[ntrait] = {0.0,0.0};
 
     double sum_sexes = Nmales + Nfemales;
 
@@ -651,9 +651,11 @@ void WriteData(std::ofstream &DataFile)
         meanp[trait_idx] /= sum_sexes;
         vart[trait_idx] = sst[trait_idx] / sum_sexes - meant[trait_idx] * meant[trait_idx];
         varp[trait_idx] = ssp[trait_idx] / sum_sexes - meanp[trait_idx] * meanp[trait_idx];
+        covpt[trait_idx] = spt[trait_idx] / sum_sexes - meanp[trait_idx] * meant[trait_idx];
+        
     }
 
-    covpt = spt / sum_sexes - meanp * meant;
+    
 
     meanfrs = sumfrs / Nfemales;
     varfrs = ssfrs / Nfemales - meanfrs * meanfrs;
