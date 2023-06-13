@@ -353,6 +353,18 @@ double relative_prefs(Individual &female, Individual &male)
     return(sum_odds);
 } // end relative_prefs()
 
+double weber_prefs(Individual &female, Individual &male)
+{
+    double sum_odds = 0.0;
+    
+    for (int trait_idx  = 0; trait_idx < 2; ++trait_idx)
+    {
+        sum_odds += a * (male.t[trait_idx] / (male.t[trait_idx] + female.p[trait_idx]));
+    }
+
+    return(sum_odds);
+} // end weber_prefs()
+
 
 // mate choice - Kathryn suggested new function
 void Choose(double p, int &father) 
