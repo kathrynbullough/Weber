@@ -46,8 +46,8 @@ double init_p = 0.0; // initial value for preference
 double a = 1.0; // choice slope
 double b = 0.5; // cost of preference 
 
-double gamma = 2.0; // cost curvature of a preference (1: linear, 2: bell-shaped survival curve, 3: bell-shaped with skewness, etc etc)
-double theta = 0.5; // how do preferences interact when it comes to a combined cost, see Pomiankowski & Iwasa 1993 procb
+double gam = 2.0; // cost curvature of a preference (1: linear, 2: bell-shaped survival curve, 3: bell-shaped with skewness, etc etc)
+double thet = 0.5; // how do preferences interact when it comes to a combined cost, see Pomiankowski & Iwasa 1993 procb
 double c[ntrait] = {0.5,0.5}; // cost of trait
 double lambda[ntrait] = {1.0,1.0}; // cost of trait
 
@@ -250,12 +250,12 @@ void Survive(std::ofstream &DataFile)
 	   {
             double p_expr = Females[i].p_expr[trait_idx];
    
-            sump += pow(lambda[trait_idx]*p_expr,1.0/theta);
+            sump += pow(lambda[trait_idx]*p_expr,1.0/thet);
 	   }
 
-	   // after summing over all traits, take power over gamma * theta and multiply
+	   // after summing over all traits, take power over gam * thet and multiply
 	   // by b as in eq. (10b) in Pomiankowski & Iwasa (1993)
-   		wf = exp(-b*pow(sump,gamma * theta));
+   		wf = exp(-b*pow(sump,(gam * thet)));
 
 		//w = exp(-b*p_expr*p_expr + (1-sexlimt)*(-c)*t_expr*t_expr);
 
@@ -455,11 +455,11 @@ void Choose(double p, int &father)
 			break;	
 		}
 	}
- }
+ 
 
     assert(father >= 0 && father < msurvivors);
 
-} }// end ChooseMates
+} // end ChooseMates
 
 
 // produce the next generation
@@ -545,8 +545,11 @@ void NextGen()
             
             for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
             {
-            double t[trait_idx] = 0.5 * ( Males[sons].t[trait_idx][0] + Males[sons].t[trait_idx][1]);
-            double p[trait_idx] = 0.5 * ( Males[sons].p[trait_idx][0] + Males[sons].p[trait_idx][1]);
+            double t[trait_idx] = {0.0,0.0}; //Is it right to initialise these here?
+            double p[trait_idx] = {0.0,0.0};
+            
+            t[trait_idx] = 0.5 * ( Males[sons].t[trait_idx][0] + Males[sons].t[trait_idx][1]);
+            p[trait_idx] = 0.5 * ( Males[sons].p[trait_idx][0] + Males[sons].p[trait_idx][1]);
             Males[sons].t_expr[trait_idx] = t[trait_idx]; 
             Males[sons].p_expr[trait_idx] = p[trait_idx]; 
             }
@@ -558,8 +561,11 @@ void NextGen()
 
             for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
             {
-            double t[trait_idx] = 0.5 * ( Females[daughters].t[trait_idx][0] + Females[daughters].t[trait_idx][1]);
-            double p[trait_idx] = 0.5 * ( Females[daughters].p[trait_idx][0] + Females[daughters].p[trait_idx][1]);
+            double t[trait_idx] = {0.0,0.0}; //Is it right to initialise these here?
+            double p[trait_idx] = {0.0,0.0};
+            
+            t[trait_idx] = 0.5 * ( Females[daughters].t[trait_idx][0] + Females[daughters].t[trait_idx][1]);
+            p[trait_idx] = 0.5 * ( Females[daughters].p[trait_idx][0] + Females[daughters].p[trait_idx][1]);
             Females[daughters].t_expr[trait_idx] = t[trait_idx]; 
             Females[daughters].p_expr[trait_idx] = p[trait_idx];
             }
