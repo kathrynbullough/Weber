@@ -674,16 +674,21 @@ void WriteData(std::ofstream &DataFile)
 
 
     // output of all the statistics
-	DataFile << generation 
-		<< ";" << meanp
-		<< ";" << meant
-		
-        << ";" << meanfrs 
+	DataFile << generation << ";";
+
+    for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+    {
+		DataFile << meanp[trait_idx]
+                    << ";" << meant[trait_idx]
+                    << ";" << varp[trait_idx]
+                    << ";" << vart[trait_idx]
+                    << ";" << covpt [trait_idx]
+                    << ";";
+    }
+
+    DataFile << meanfrs 
         << ";" << meanmrs 
 		
-        << ";" << varp
-		<< ";" << vart
-		<< ";" << covpt 
 		
         << ";" << varfrs 
         << ";" << varmrs 
@@ -691,20 +696,26 @@ void WriteData(std::ofstream &DataFile)
         << ";" << msurvivors
         << ";" << fsurvivors
 		<< ";" << sum_sexes
-	       	<< ";" << std::endl;
+	    << ";" << std::endl;
 } // end WriteData
 
 // headers of the datafile
 void WriteDataHeaders(std::ofstream &DataFile)
 {
-	DataFile << "generation" 
-		<< ";mean_p" 
-		<< ";mean_t" 
-        << ";meanfrs"
+	DataFile << "generation" << ";";
+
+    for (int trait_idx = 0; trait_idx < 2; ++trait_idx)
+    {
+		DataFile 
+            << "meanp" << (trait_idx + 1) << ";"
+            << "meant" << (trait_idx + 1) << ";"
+            << "varp" << (trait_idx + 1) << ";"
+            << "vart" << (trait_idx + 1) << ";"
+            << "covpt" << (trait_idx + 1) << ";";
+    }
+
+    DataFile << "meanfrs"
         << ";meanmrs"
-        << ";varp"
-        << ";vart"
-        << ";covpt"
         << ";varfrs"
         << ";varmrs"
         << ";surviving_males"
