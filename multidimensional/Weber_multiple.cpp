@@ -63,7 +63,7 @@ double sexlimp = 0; // degree of sex-limited expression in p,t
 double sexlimt = 0;
 int pref = 0;
 int web = 3;
-double meanornsurv = 0;
+double meanornsurv[2] = {0.0,0.0};
 
 int popsize = N; // population size between 
 bool do_stats = 0;
@@ -100,7 +100,9 @@ void initArguments(int argc, char *argv[])
 {
 	a = std::stod(argv[1]);
 	b = std::stod(argv[2]);
-	c = std::stod(argv[3]);
+
+    // initially same cost for each ornament
+	c[0] = c[1] = std::stod(argv[3]);
 	biast = std::stod(argv[4]);
 	mu_p = std::stod(argv[5]);
 	mu_t = std::stod(argv[6]);
@@ -235,10 +237,10 @@ void Survive(std::ofstream &DataFile)
     // mean ornament size of surviving males
     // necessary for absolute/relative preference
     // functions
-    meanornsurv = 0;
+    meanornsurv[0] = 0.0;
+    meanornsurv[1] = 0.0;
     
     double sump = 0.0;
-    double sumapt = 0.0;
     double sumctsq = 0.0;
 
     // allow females to survive
@@ -271,26 +273,27 @@ void Survive(std::ofstream &DataFile)
     // male survival
 	for (int i = 0; i < Nmales; ++i)
 	{
-     sumapt = 0.0;
      sumctsq = 0.0;
      
      for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
      {
-		double p_expr = Males[i].p_expr[trait_idx];
 		double t_expr = Males[i].t_expr[trait_idx];
    
-       // sumapt += a*p_expr*t_expr;     //Remove as we haven't performed mate choice yet??
         sumctsq += c[trait_idx]*pow(t_expr,2);
-     }
+
+     } //end for trait_idx
 
       //Eq. 10a in Pomiankowski & Iwasa (1993)
-      wm = exp(-sumctsq);      //wm = exp(sumapt-sumctsq);
-		//w = exp(-c*t_expr*t_expr + (1-sexlimp)*-b*p_expr*p_expr);
+      wm = exp(-sumctsq);      //wm(survival) = exp(-sumctsq);
         
         if (uniform(rng_r) < wm)
         {
-            // in case of relative preferences get the mean ornament
-            meanornsurv += t_expr;
+            for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+            {
+                // in case of relative preferences get the mean ornament
+                meanornsurv[trait_idx] += Males[i].t_expr[trait_idx];
+            }
+
             MaleSurvivors[msurvivors++] = Males[i];
         }
 	}
@@ -303,8 +306,11 @@ void Survive(std::ofstream &DataFile)
         exit(1);
     }
 
-    // take the average of the surviving male trait value
-    meanornsurv /= msurvivors;
+    for (int trait_idx  = 0; trait_idx < ntrait; ++trait_idx)
+    {
+        // take the average of the surviving male trait value
+        meanornsurv[trait_idx] /= msurvivors;
+    }
 
     assert(fsurvivors > 0);
     assert(fsurvivors < popsize);
@@ -318,7 +324,7 @@ double open_ended_prefs(Individual &female, Individual &male)
 
     for (int trait_idx  = 0; trait_idx < 2; ++trait_idx)
     {
-        sum_odds += exp(a * female.p[trait_idx] * male.t[trait_idx]);
+        sum_odds += exp(a * female.p_expr[trait_idx] * male.t_expr[trait_idx]);
     }
 
     return(sum_odds);
@@ -331,8 +337,8 @@ double absolute_prefs(Individual &female, Individual &male)
     for (int trait_idx  = 0; trait_idx < 2; ++trait_idx)
     {
         sum_odds += exp(-0.5 * a * 
-                (female.p[trait_idx] - male.t[trait_idx])*
-                (female.p[trait_idx] - male.t[trait_idx]));
+                (female.p_expr[trait_idx] - male.t_expr[trait_idx])*
+                (female.p_expr[trait_idx] - male.t_expr[trait_idx]));
     }
 
     return(sum_odds);
@@ -342,11 +348,12 @@ double relative_prefs(Individual &female, Individual &male)
 {
     double sum_odds = 0.0;
 
-    for (int trait_idx  = 0; trait_idx < 2; ++trait_idx)
+    for (int trait_idx  = 0; trait_idx < ntrait; ++trait_idx)
     {
+        // check the eqn in Lande (1981) PNAS
         sum_odds += exp(-0.5 * a * 
-                (male.t[trait_idx] - (female.p[trait_idx] + meanornsurv)) *
-                (male.t[trait_idx] - (female.p[trait_idx] + meanornsurv))
+                (male.t_expr[trait_idx] - (female.p_expr[trait_idx] + meanornsurv[trait_idx])) *
+                (male.t_expr[trait_idx] - (female.p_expr[trait_idx] + meanornsurv[trait_idx]))
                 );
     }
 
@@ -359,7 +366,7 @@ double weber_prefs(Individual &female, Individual &male)
     
     for (int trait_idx  = 0; trait_idx < 2; ++trait_idx)
     {
-        sum_odds += a * (male.t[trait_idx] / (male.t[trait_idx] + female.p[trait_idx]));
+        sum_odds += a * (male.t_expr[trait_idx] / (male.t_expr[trait_idx] + female.p_expr[trait_idx]));
     }
 
     return(sum_odds);
@@ -367,7 +374,7 @@ double weber_prefs(Individual &female, Individual &male)
 
 
 // mate choice - Kathryn suggested new function
-void Choose(double p, int &father) 
+void Choose(Individual &mother, int &father) 
 {
     // mate choice - original code
 	// make arrays that hold the values of the sample of assessed males
@@ -542,16 +549,15 @@ void NextGen()
         if (uniform(rng_r) < 0.5)
         {
             Males[sons] = Kid;
+
             
             for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
             {
-            double t[trait_idx] = {0.0,0.0}; //Is it right to initialise these here?
-            double p[trait_idx] = {0.0,0.0};
-            
-            t[trait_idx] = 0.5 * ( Males[sons].t[trait_idx][0] + Males[sons].t[trait_idx][1]);
-            p[trait_idx] = 0.5 * ( Males[sons].p[trait_idx][0] + Males[sons].p[trait_idx][1]);
-            Males[sons].t_expr[trait_idx] = t[trait_idx]; 
-            Males[sons].p_expr[trait_idx] = p[trait_idx]; 
+                double t = 0.5 * ( Males[sons].t[trait_idx][0] + Males[sons].t[trait_idx][1]);
+                double p = 0.5 * ( Males[sons].p[trait_idx][0] + Males[sons].p[trait_idx][1]);
+
+                Males[sons].t_expr[trait_idx] = t;
+                Males[sons].p_expr[trait_idx] = p;
             }
             ++sons;
         }
@@ -561,13 +567,10 @@ void NextGen()
 
             for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
             {
-            double t[trait_idx] = {0.0,0.0}; //Is it right to initialise these here?
-            double p[trait_idx] = {0.0,0.0};
-            
-            t[trait_idx] = 0.5 * ( Females[daughters].t[trait_idx][0] + Females[daughters].t[trait_idx][1]);
-            p[trait_idx] = 0.5 * ( Females[daughters].p[trait_idx][0] + Females[daughters].p[trait_idx][1]);
-            Females[daughters].t_expr[trait_idx] = t[trait_idx]; 
-            Females[daughters].p_expr[trait_idx] = p[trait_idx];
+                double t = 0.5 * ( Females[daughters].t[trait_idx][0] + Females[daughters].t[trait_idx][1]);
+                double p = 0.5 * ( Females[daughters].p[trait_idx][0] + Females[daughters].p[trait_idx][1]);
+                Females[daughters].t_expr[trait_idx] = t;
+                Females[daughters].p_expr[trait_idx] = p;
             }
             ++daughters;
         }
@@ -575,7 +578,7 @@ void NextGen()
 
     Nmales = sons;
     Nfemales = daughters;
-}
+} // end NextGen
 
 
 
