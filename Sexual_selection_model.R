@@ -427,3 +427,6 @@ plot_mean_p <- ggplot(data=multi
                                    ,y=meanp1))
 plot_mean_p
 
+multisims<-read.delim("sims_output_multi.csv", sep=" ", header=T)
+multisimsWeb<-read.delim("sims_output_multiWeb.csv", sep=" ", header=T)
+

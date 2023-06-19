@@ -17,7 +17,7 @@ parameter_object$sdmu_p <- 0.05
 parameter_object$sdmu_t <- 0.05
 parameter_object$sex_limited_p <- 1.0
 parameter_object$sex_limited_t <- 1.0
-parameter_object$pref_type <- 0
+parameter_object$pref_type <- 3
 parameter_object$web <- 0
 parameter_object$init_t <- 0
 parameter_object$init_p <- 3

@@ -325,7 +325,7 @@ double open_ended_prefs(Individual &female, Individual &male)
 {
     double sum_odds = 0.0;
 
-    for (int trait_idx  = 0; trait_idx < 2; ++trait_idx)
+    for (int trait_idx  = 0; trait_idx < ntrait; ++trait_idx)
     {
         sum_odds += exp(a * female.p_expr[trait_idx] * male.t_expr[trait_idx]);
     }
@@ -337,7 +337,7 @@ double absolute_prefs(Individual &female, Individual &male)
 {
     double sum_odds = 0.0;
 
-    for (int trait_idx  = 0; trait_idx < 2; ++trait_idx)
+    for (int trait_idx  = 0; trait_idx < ntrait; ++trait_idx)
     {
         sum_odds += exp(-0.5 * a * 
                 (female.p_expr[trait_idx] - male.t_expr[trait_idx])*
@@ -367,7 +367,7 @@ double weber_prefs(Individual &female, Individual &male)
 {
     double sum_odds = 0.0;
     
-    for (int trait_idx  = 0; trait_idx < 2; ++trait_idx)
+    for (int trait_idx  = 0; trait_idx < ntrait; ++trait_idx)
     {
         sum_odds += a * (male.t_expr[trait_idx] / (male.t_expr[trait_idx] + female.p_expr[trait_idx]));
     }
@@ -707,7 +707,7 @@ void WriteDataHeaders(std::ofstream &DataFile)
 {
 	DataFile << "generation" << ";";
 
-    for (int trait_idx = 0; trait_idx < 2; ++trait_idx)
+    for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
     {
 		DataFile 
             << "meanp" << (trait_idx + 1) << ";"
