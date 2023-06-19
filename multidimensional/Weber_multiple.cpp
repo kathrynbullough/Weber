@@ -148,7 +148,7 @@ void WriteParameters(std::ofstream &DataFile)
 		<< "init_p:;" << init_p << ";"<< std::endl
 		<< "a:;" <<  a << ";"<< std::endl
 		<< "b:;" <<  b << ";"<< std::endl
-		<< "c:;" <<  c << ";"<< std::endl
+		<< "c:;" <<  c[0] << ";"<< c[1] << std::endl
 		<< "pref:;" <<  pref << ";"<< std::endl
 		<< "mu_p:;" <<  mu_p << ";"<< std::endl
 		<< "mu_t:;" <<  mu_t << ";"<< std::endl
