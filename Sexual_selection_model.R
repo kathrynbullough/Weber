@@ -413,3 +413,17 @@ plot_monodfish <- ggplot(monodfish) +
   geom_point(aes(x=c.,y=mean_t,colour="t")) + 
   geom_point(aes(x=c.,y=mean_p,colour="p"))
 plot_monodfish
+
+
+
+#### multiple traits ####
+
+multi<-read.delim("output_multi(1).csv", sep=";", header=T)
+plot(multi$covpt2~multi$generation)
+
+#Plot mean t
+plot_mean_p <- ggplot(data=multi
+                      ,mapping=aes(x=generation
+                                   ,y=meanp1))
+plot_mean_p
+
