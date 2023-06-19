@@ -103,7 +103,7 @@ void initArguments(int argc, char *argv[])
 
     // initially same cost for each ornament
 	c[0] = c[1] = std::stod(argv[3]);
-  lambda[0] = lambda[2] = std::stod(argv[4]);
+  lambda[0] = lambda[1] = std::stod(argv[4]);
 	biast = std::stod(argv[5]);
 	mu_p = std::stod(argv[6]);
 	mu_t = std::stod(argv[7]);
@@ -116,7 +116,7 @@ void initArguments(int argc, char *argv[])
     init_t = std::stod(argv[14]);
     init_p = std::stod(argv[15]);
     gam = std::stod(argv[16]);
-    thet =  = std::stod(argv[17]);
+    thet = std::stod(argv[17]);
     file_name = argv[18];
     //Maybe add another one to allow the change of ntraits to something other than 2?
 } // end initArguments
