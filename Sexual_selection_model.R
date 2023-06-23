@@ -419,7 +419,8 @@ plot_monodfish
 #### multiple traits ####
 
 multi<-read.delim("output_multi(1).csv", sep=";", header=T)
-plot(multi$covpt2~multi$generation)
+plot(multi$meanp1~multi$generation)
+plot(multi$meant1,multi$generation)
 
 #Plot mean t
 plot_mean_p <- ggplot(data=multi
@@ -427,6 +428,13 @@ plot_mean_p <- ggplot(data=multi
                                    ,y=meanp1))
 plot_mean_p
 
+multiWeb<-read.delim("output_multiWeb.csv", sep=";", header=T)
+plot(multiWeb$meant2~multiWeb$generation)
+
+
 multisims<-read.delim("sims_output_multi.csv", sep=" ", header=T)
 multisimsWeb<-read.delim("sims_output_multiWeb.csv", sep=" ", header=T)
 
+install.packages("remotes")
+remotes::install_github("bramkuijper/simulation.utils")
+library("simulation.utils")

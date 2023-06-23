@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
 
 # one only has to run this once, so that it installs the thing:
-#install.packages("remotes")
-#remotes::install_github("bramkuijper/simulation.utils")
+install.packages("remotes")
+remotes::install_github("bramkuijper/simulation.utils")
 library("simulation.utils")
 parameter_object <- list()
 
@@ -17,12 +17,12 @@ parameter_object$sdmu_p <- 0.05
 parameter_object$sdmu_t <- 0.05
 parameter_object$sex_limited_p <- 1.0
 parameter_object$sex_limited_t <- 1.0
-parameter_object$pref_type <- 3
+parameter_object$pref_type <- 0
 parameter_object$web <- 0
 parameter_object$init_t <- 0
 parameter_object$init_p <- 3
 parameter_object$gam <- 2.0
-parameter_object$thet <- 0.5
+parameter_object$thet <- seq(0,1,0.1)
 
 #purlease continue adding all the parameters, except for the output file
 # (this will be done by the function itself)
