@@ -10,11 +10,16 @@ parameter_object$a <- 1    #Choice slope
 parameter_object$b <- 0.001      #Cost of preference
 parameter_object$c <- 0.5      #Cost of trait
 parameter_object$lambda <- 0.5
-parameter_object$biast <- 0.9  #Mutation bias
-parameter_object$mu_p <- 0.05
-parameter_object$mu_t <- 0.05
-parameter_object$sdmu_p <- 0.05
-parameter_object$sdmu_t <- 0.05
+parameter_object$biast[0] <- 0.9  #Mutation bias
+parameter_object$biast[1] <- 0.9
+parameter_object$mu_p[0] <- 0.05
+parameter_object$mu_p[1] <- 0.05
+parameter_object$mu_t[0] <- 0.05
+parameter_object$mu_t[1] <- 0.05
+parameter_object$sdmu_p[0] <- 0.05
+parameter_object$sdmu_p[1] <- 0.05
+parameter_object$sdmu_t[0] <- 0.05
+parameter_object$sdmu_t[1] <- 0.05
 parameter_object$sex_limited_p <- 1.0
 parameter_object$sex_limited_t <- 1.0
 parameter_object$pref_type <- 0
