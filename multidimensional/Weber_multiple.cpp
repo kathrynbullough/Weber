@@ -51,7 +51,7 @@ double thet = 0.5; // how do preferences interact when it comes to a combined co
 double c[ntrait] = {0.5,0.5}; // cost of trait
 double lambda[ntrait] = {1.0,1.0}; // cost of trait
 
-double biast = 0; // mutation bias: 0.5 means no bias. > 0.5 means bias towards reduction in tratt.
+double biast[ntrait] = {0.0,0.0}; // mutation bias: 0.5 means no bias. > 0.5 means bias towards reduction in tratt.
 
 double mu_p[ntrait] 	  = {0.05,0.05};            // mutation rate preference
 double mu_t[ntrait] 	  = {0.05,0.05};            // mutation rate ornament
@@ -104,24 +104,25 @@ void initArguments(int argc, char *argv[])
     // initially same cost for each ornament
 	c[0] = c[1] = std::stod(argv[3]);
   lambda[0] = lambda[1] = std::stod(argv[4]);
-	biast = std::stod(argv[5]);
-	mu_p[0] = std::stod(argv[6]);
-  mu_p[1] = std::stod(argv[7]);
-	mu_t[0] = std::stod(argv[8]);
-  mu_t[1] = std::stod(argv[9]);
-	sdmu_p[0] = std::stod(argv[10]);
-  sdmu_p[1] = std::stod(argv[11]);
-	sdmu_t[0] = std::stod(argv[12]);
-  sdmu_t[1] = std::stod(argv[13]);
-	sexlimp = std::stod(argv[14]);
-	sexlimt = std::stod(argv[15]);
-    pref = std::stoi(argv[16]);
-    web = std::stoi(argv[17]);
-    init_t = std::stod(argv[18]);
-    init_p = std::stod(argv[19]);
-    gam = std::stod(argv[20]);
-    thet = std::stod(argv[21]);
-    file_name = argv[22];
+	biast[0] = std::stod(argv[5]);
+  biast[1] = std::stod(argv[6]);
+	mu_p[0] = std::stod(argv[7]);
+  mu_p[1] = std::stod(argv[8]);
+	mu_t[0] = std::stod(argv[9]);
+  mu_t[1] = std::stod(argv[10]);
+	sdmu_p[0] = std::stod(argv[11]);
+  sdmu_p[1] = std::stod(argv[12]);
+	sdmu_t[0] = std::stod(argv[13]);
+  sdmu_t[1] = std::stod(argv[14]);
+	sexlimp = std::stod(argv[15]);
+	sexlimt = std::stod(argv[16]);
+    pref = std::stoi(argv[17]);
+    web = std::stoi(argv[18]);
+    init_t = std::stod(argv[19]);
+    init_p = std::stod(argv[20]);
+    gam = std::stod(argv[21]);
+    thet = std::stod(argv[22]);
+    file_name = argv[23];
     //Maybe add another one to allow the change of ntraits to something other than 2?
 } // end initArguments
 
@@ -158,7 +159,7 @@ void WriteParameters(std::ofstream &DataFile)
 		<< "mu_t:;" <<  mu_t[0] << ";"<< mu_t[1] << ";" << std::endl
 		<< "mu_std_p:;" <<  sdmu_p[0] << ";" << sdmu_p[1] << ";" << std::endl
 		<< "mu_std_t:;" <<  sdmu_t[0] << ";"<< sdmu_t[1] << ";" << std::endl
-		<< "biast:;" <<  biast << ";"<< std::endl
+		<< "biast:;" <<  biast[0] << ";" << biast[1] << ";" << std::endl
 		<< "sexlimp:;" <<  sexlimp << ";"<< std::endl
 		<< "sexlimt:;" <<  sexlimt << ";"<< std::endl
     << "web:;" <<  web << ";"<< std::endl
@@ -216,9 +217,9 @@ void Create_Kid(int mother, int father, Individual &kid)
 
     // inherit ornament
 	kid.t[trait_idx][0] = FemaleSurvivors[mother].t[trait_idx][segregator(rng_r)];
-    mutate(kid.t[trait_idx][0], mu_t[trait_idx], sdmu_t[trait_idx], biast);
+    mutate(kid.t[trait_idx][0], mu_t[trait_idx], sdmu_t[trait_idx], biast[trait_idx]);
 	kid.t[trait_idx][1] = MaleSurvivors[father].t[trait_idx][segregator(rng_r)];
-    mutate(kid.t[trait_idx][1], mu_t[trait_idx], sdmu_t[trait_idx], biast);
+    mutate(kid.t[trait_idx][1], mu_t[trait_idx], sdmu_t[trait_idx], biast[trait_idx]);
 
     // inherit preference
 	kid.p[trait_idx][0] = FemaleSurvivors[mother].p[trait_idx][segregator(rng_r)];
