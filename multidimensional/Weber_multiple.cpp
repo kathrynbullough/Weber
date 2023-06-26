@@ -122,7 +122,7 @@ void initArguments(int argc, char *argv[])
     init_p = std::stod(argv[20]);
     gam = std::stod(argv[21]);
     thet = std::stod(argv[22]);
-    file_name = argv[23];
+    file_name = argv[23];//Helloooooo
     //Maybe add another one to allow the change of ntraits to something other than 2?
 } // end initArguments
 
