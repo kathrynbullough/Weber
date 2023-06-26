@@ -11,15 +11,15 @@ parameter_object$b <- 0.001      #Cost of preference
 parameter_object$c <- 0.5      #Cost of trait
 parameter_object$lambda <- 0.5
 parameter_object$biast1 <- 0.9  #Mutation bias
-parameter_object$biast2 <- 0.9
+parameter_object$biast2 <- 0.5
 parameter_object$mu_p1 <- 0.05
-parameter_object$mu_p2 <- 0.05
+parameter_object$mu_p2 <- 0.0
 parameter_object$mu_t1 <- 0.05
-parameter_object$mu_t2 <- 0.05
+parameter_object$mu_t2 <- 0.0
 parameter_object$sdmu_p1 <- 0.05
-parameter_object$sdmu_p2 <- 0.05
+parameter_object$sdmu_p2 <- 0.0
 parameter_object$sdmu_t1 <- 0.05
-parameter_object$sdmu_t2 <- 0.05
+parameter_object$sdmu_t2 <- 0.0
 parameter_object$sex_limited_p <- 1.0
 parameter_object$sex_limited_t <- 1.0
 parameter_object$pref_type <- 0
