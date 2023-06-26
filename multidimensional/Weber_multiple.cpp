@@ -41,8 +41,8 @@ const int clutch_size = 10; // number of offspring produced
 
 int const ntrait = 2;
 
-double init_t = 0.0; // initial value for ornament
-double init_p = 0.0; // initial value for preference
+double init_t[ntrait] = {0.0,0.0}; // initial value for ornament
+double init_p[ntrait] = {0.0,0.0}; // initial value for preference
 double a = 1.0; // choice slope
 double b = 0.5; // cost of preference 
 
@@ -118,11 +118,13 @@ void initArguments(int argc, char *argv[])
 	sexlimt = std::stod(argv[16]);
     pref = std::stoi(argv[17]);
     web = std::stoi(argv[18]);
-    init_t = std::stod(argv[19]);
-    init_p = std::stod(argv[20]);
-    gam = std::stod(argv[21]);
-    thet = std::stod(argv[22]);
-    file_name = argv[23];//Helloooooo
+    init_t[0] = std::stod(argv[19]);
+    init_t[1] = std::stod(argv[20]);
+    init_p[0] = std::stod(argv[21]);
+    init_p[1] = std::stod(argv[22]);
+    gam = std::stod(argv[23]);
+    thet = std::stod(argv[24]);
+    file_name = argv[25];
     //Maybe add another one to allow the change of ntraits to something other than 2?
 } // end initArguments
 
@@ -149,8 +151,8 @@ void WriteParameters(std::ofstream &DataFile)
 		<< "type:;" << "gonochorist_fisherian" << ";" << std::endl
 		<< "popsize_init:;" << N << ";" << std::endl
 		<< "n_mate_sample:;" << N_mate_sample << ";"<< std::endl
-		<< "init_t:;" << init_t << ";"<< std::endl
-		<< "init_p:;" << init_p << ";"<< std::endl
+		<< "init_t:;" << init_t[0] << ";"<< init_t[1] << ";" << std::endl
+		<< "init_p:;" << init_p[0] << ";"<< init_p[1] << ";" << std::endl
 		<< "a:;" <<  a << ";"<< std::endl
 		<< "b:;" <<  b << ";"<< std::endl
 		<< "c:;" <<  c[0] << ";"<< c[1] << std::endl
@@ -163,8 +165,8 @@ void WriteParameters(std::ofstream &DataFile)
 		<< "sexlimp:;" <<  sexlimp << ";"<< std::endl
 		<< "sexlimt:;" <<  sexlimt << ";"<< std::endl
     << "web:;" <<  web << ";"<< std::endl
-    << "init_t:;" <<  init_t << ";"<< std::endl
-    << "init_p:;" <<  init_p << ";"<< std::endl
+    << "gamma:;" <<  gam << ";"<< std::endl
+    << "theta:;" <<  thet << ";"<< std::endl
 		<< "seed:;" << seed << ";"<< std::endl;
 }
 
@@ -179,13 +181,13 @@ void Init()
 		// initialize both diploid loci
 		for (int j = 0; j < 2; ++j)
 		{
-			Females[i].t[trait_idx][j] = init_t;
-			Females[i].p[trait_idx][j] = init_p;
+			Females[i].t[trait_idx][j] = init_t[trait_idx];
+			Females[i].p[trait_idx][j] = init_p[trait_idx];
 		}
 		
 		// and the expressed values
-		Females[i].t_expr[trait_idx] = init_t;
-		Females[i].p_expr[trait_idx] = init_p;
+		Females[i].t_expr[trait_idx] = init_t[trait_idx];
+		Females[i].p_expr[trait_idx] = init_p[trait_idx];
 	  } // end for trait_idx
 	} // end for Nfemales
 
@@ -196,12 +198,12 @@ void Init()
 	   {
 			for (int j = 0; j < 2; ++j)
 			{
-				Males[i].t[trait_idx][j] = init_t;
-				Males[i].p[trait_idx][j] = init_p;
+				Males[i].t[trait_idx][j] = init_t[trait_idx];
+				Males[i].p[trait_idx][j] = init_p[trait_idx];
 			}
 				
-		Males[i].t_expr[trait_idx] = init_t;
-		Males[i].p_expr[trait_idx] = init_p;
+		Males[i].t_expr[trait_idx] = init_t[trait_idx];
+		Males[i].p_expr[trait_idx] = init_p[trait_idx];
 	   }
 	}
 } // end Init
