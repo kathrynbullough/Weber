@@ -151,17 +151,25 @@ void WriteParameters(std::ofstream &DataFile)
 		<< "type:;" << "gonochorist_fisherian" << ";" << std::endl
 		<< "popsize_init:;" << N << ";" << std::endl
 		<< "n_mate_sample:;" << N_mate_sample << ";"<< std::endl
-		<< "init_t:;" << init_t[0] << ";"<< init_t[1] << ";" << std::endl
-		<< "init_p:;" << init_p[0] << ";"<< init_p[1] << ";" << std::endl
+		<< "init_t1:;" << init_t[0] << ";" << std::endl
+    << "init_t2:;" << init_t[1] << ";" << std::endl
+		<< "init_p1:;" << init_p[0] << ";" << std::endl
+    << "init_p2:;" << init_p[1] << ";" << std::endl
 		<< "a:;" <<  a << ";"<< std::endl
 		<< "b:;" <<  b << ";"<< std::endl
-		<< "c:;" <<  c[0] << ";"<< c[1] << std::endl
+		<< "c1:;" <<  c[0] << ";"<< std::endl
+    << "c2:;" <<  c[1] << ";"<< std::endl
 		<< "pref:;" <<  pref << ";"<< std::endl
-		<< "mu_p:;" <<  mu_p[0] << ";"<< mu_p[1] << ";" << std::endl
-		<< "mu_t:;" <<  mu_t[0] << ";"<< mu_t[1] << ";" << std::endl
-		<< "mu_std_p:;" <<  sdmu_p[0] << ";" << sdmu_p[1] << ";" << std::endl
-		<< "mu_std_t:;" <<  sdmu_t[0] << ";"<< sdmu_t[1] << ";" << std::endl
-		<< "biast:;" <<  biast[0] << ";" << biast[1] << ";" << std::endl
+		<< "mu_p1:;" <<  mu_p[0] << ";" << std::endl
+    << "mu_p2:;" <<  mu_p[1] << ";" << std::endl
+		<< "mu_t1:;" <<  mu_t[0] << ";" << std::endl
+    << "mu_t2:;" <<  mu_t[1] << ";" << std::endl
+		<< "mu_std_p1:;" <<  sdmu_p[0] << ";" << std::endl
+    << "mu_std_p2:;" <<  sdmu_p[1] << ";" << std::endl
+		<< "mu_std_t1:;" <<  sdmu_t[0] << ";"<< std::endl
+    << "mu_std_t2:;" <<  sdmu_t[1] << ";" << std::endl
+		<< "biast1:;" <<  biast[0] << ";" << std::endl
+    << "biast2:;" <<  biast[1] << ";" << std::endl
 		<< "sexlimp:;" <<  sexlimp << ";"<< std::endl
 		<< "sexlimt:;" <<  sexlimt << ";"<< std::endl
     << "web:;" <<  web << ";"<< std::endl
