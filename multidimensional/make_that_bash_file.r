@@ -28,8 +28,8 @@ parameter_object$init_t1 <- 0
 parameter_object$init_t2 <- 0
 parameter_object$init_p1 <- 3
 parameter_object$init_p2 <- 0
-parameter_object$gam <- 2.0
-parameter_object$thet <- seq(0,1,0.1)
+parameter_object$gam <- seq(0,5,1)
+parameter_object$thet <- 0
 
 #purlease continue adding all the parameters, except for the output file
 # (this will be done by the function itself)
