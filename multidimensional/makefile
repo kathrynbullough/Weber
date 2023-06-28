@@ -8,7 +8,7 @@ CPP=Weber_multiple.cpp
 CXX=g++
 
 # any flags that the compiler uses?
-CXXFLAGS=-Wall -O3
+CXXFLAGS=-Wall -O3 -std=c++17
 
 # actually building the executable, this will run
 # if you type 'make'
