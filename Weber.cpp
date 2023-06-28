@@ -216,7 +216,8 @@ void Survive(std::ofstream &DataFile)
     fsurvivors = 0;     
     
     // store individual fitness values
-    double w = 0; 
+    double wf = 0; 
+    double wm = 0;
 
     // keep track of the 
     // mean ornament size of surviving males
@@ -230,11 +231,12 @@ void Survive(std::ofstream &DataFile)
 		double p_expr = Females[i].p_expr;
 		double t_expr = Females[i].t_expr;
 
-		w = exp(-b*p_expr*p_expr + (1-sexlimt)*(-c)*t_expr*t_expr);
+		wf = exp(-b*p_expr*p_expr + (1-sexlimt)*(-c)*t_expr*t_expr);
+   //std::cout << wf;
 
         // if individuals survive
         // take stats and add them to pool of survivors
-        if (uniform(rng_r) < w)
+        if (uniform(rng_r) < wf)
         {
             FemaleSurvivors[fsurvivors++] = Females[i];
         }
@@ -248,9 +250,10 @@ void Survive(std::ofstream &DataFile)
 		double p_expr = Males[i].p_expr;
 		double t_expr = Males[i].t_expr;
 
-		w = exp(-c*t_expr*t_expr + (1-sexlimp)*-b*p_expr*p_expr);
+		wm = exp(-c*t_expr*t_expr + (1-sexlimp)*-b*p_expr*p_expr);
+   //std::cout << wm;
         
-        if (uniform(rng_r) < w)
+        if (uniform(rng_r) < wm)
         {
             // in case of relative preferences get the mean ornament
             meanornsurv += t_expr;

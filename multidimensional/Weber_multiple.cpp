@@ -276,6 +276,7 @@ void Survive(std::ofstream &DataFile)
 	   // after summing over all traits, take power over gam * thet and multiply
 	   // by b as in eq. (10b) in Pomiankowski & Iwasa (1993)
    		wf = exp(-b*pow(sump,(gam * thet)));
+      //std::cout << wf;
 
 		//w = exp(-b*p_expr*p_expr + (1-sexlimt)*(-c)*t_expr*t_expr);
 
@@ -303,6 +304,7 @@ void Survive(std::ofstream &DataFile)
 
       //Eq. 10a in Pomiankowski & Iwasa (1993)
       wm = exp(-sumctsq);      //wm(survival) = exp(-sumctsq);
+      //std::cout << wm;
         
         if (uniform(rng_r) < wm)
         {
