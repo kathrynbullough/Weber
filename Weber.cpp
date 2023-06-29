@@ -232,7 +232,7 @@ void Survive(std::ofstream &DataFile)
 		double t_expr = Females[i].t_expr;
 
 		wf = exp(-b*p_expr*p_expr + (1-sexlimt)*(-c)*t_expr*t_expr);
-   //std::cout << wf;
+    std::cout << wf;
 
         // if individuals survive
         // take stats and add them to pool of survivors
@@ -251,7 +251,7 @@ void Survive(std::ofstream &DataFile)
 		double t_expr = Males[i].t_expr;
 
 		wm = exp(-c*t_expr*t_expr + (1-sexlimp)*-b*p_expr*p_expr);
-   //std::cout << wm;
+    std::cout << wm;
         
         if (uniform(rng_r) < wm)
         {
