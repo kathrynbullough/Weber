@@ -345,8 +345,9 @@ double open_ended_prefs(Individual &female, Individual &male)
     for (int trait_idx  = 0; trait_idx < ntrait; ++trait_idx)
     {
         sum_odds += a * female.p_expr[trait_idx] * male.t_expr[trait_idx];
-        sum_odds = exp(sum_odds);
     }
+    
+    sum_odds = exp(sum_odds);
 
     return(sum_odds);
 } // end open_ended_prefs()
@@ -360,8 +361,9 @@ double absolute_prefs(Individual &female, Individual &male)
         sum_odds += -0.5 * a * 
                 (female.p_expr[trait_idx] - male.t_expr[trait_idx])*
                 (female.p_expr[trait_idx] - male.t_expr[trait_idx]);
-        sum_odds = exp(sum_odds);
     }
+    
+    sum_odds = exp(sum_odds);
 
     return(sum_odds);
 } // end absolute_prefs()
@@ -376,8 +378,9 @@ double relative_prefs(Individual &female, Individual &male)
         sum_odds += -0.5 * a * 
                 (male.t_expr[trait_idx] - (female.p_expr[trait_idx] + meanornsurv[trait_idx])) *
                 (male.t_expr[trait_idx] - (female.p_expr[trait_idx] + meanornsurv[trait_idx]));
-                sum_odds = exp(sum_odds);
     }
+    
+    sum_odds = exp(sum_odds);
 
     return(sum_odds);
 } // end relative_prefs()
