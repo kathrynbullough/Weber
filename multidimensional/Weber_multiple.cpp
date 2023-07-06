@@ -350,6 +350,7 @@ double open_ended_prefs(Individual &female, Individual &male)
     sum_odds = exp(sum_odds);
 
     return(sum_odds);
+    //std::cout << sum_odds;
 } // end open_ended_prefs()
 
 double absolute_prefs(Individual &female, Individual &male)
@@ -434,6 +435,7 @@ void Choose(Individual &mother, int &father)
             case 0: 
             {
                 po = open_ended_prefs(mother, MaleSurvivors[random_mate]);
+                std::cout << po;
             } break;
 
             // absolute preferences
