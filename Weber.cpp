@@ -366,6 +366,7 @@ void Choose(double p, int &father)
             case 0: 
             {
                 po = exp(a * trait * p);
+                std::cout << po;
             } break;
 
             // absolute preferences

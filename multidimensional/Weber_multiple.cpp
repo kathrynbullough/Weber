@@ -435,7 +435,7 @@ void Choose(Individual &mother, int &father)
             case 0: 
             {
                 po = open_ended_prefs(mother, MaleSurvivors[random_mate]);
-                std::cout << po;
+                //std::cout << po;
             } break;
 
             // absolute preferences
