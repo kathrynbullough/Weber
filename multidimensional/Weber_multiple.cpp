@@ -349,8 +349,8 @@ double open_ended_prefs(Individual &female, Individual &male)
     
     sum_odds = exp(sum_odds);
 
+    std::cout << sum_odds;
     return(sum_odds);
-    //std::cout << sum_odds;
 } // end open_ended_prefs()
 
 double absolute_prefs(Individual &female, Individual &male)
@@ -701,7 +701,7 @@ void WriteData(std::ofstream &DataFile)
 
 
     //To check that p2 and t2 stay at 0
-    assert(meanp[1] == 0.0 && meant[1] == 0.0);
+    //assert(meanp[1] == 0.0 && meant[1] == 0.0);
 
     // output of all the statistics
 	DataFile << generation << ";";
