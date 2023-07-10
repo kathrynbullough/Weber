@@ -134,7 +134,6 @@ void initArguments(int argc, char *argv[])
 // of sdmu and a certain mutational bias
 void mutate(double &G, double mu, double sdmu, double bias=0.5)
 {
-
     if (uniform(rng_r) < mu)
     {
         double effect = uniform_mutation(rng_r);
@@ -224,7 +223,6 @@ void Create_Kid(int mother, int father, Individual &kid)
  
  for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
  {
-
     // inherit ornament
 	kid.t[trait_idx][0] = FemaleSurvivors[mother].t[trait_idx][segregator(rng_r)];
     mutate(kid.t[trait_idx][0], mu_t[trait_idx], sdmu_t[trait_idx], biast[trait_idx]);
@@ -519,31 +517,31 @@ void NextGen()
     // let the surviving females choose a mate
 	for (int i = 0; i < fsurvivors; ++i)
 	{
-   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
-   {
-		int Father = -1;
-        
-		Choose(FemaleSurvivors[i], Father);
+       for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+       {
+            int Father = -1;
+            
+            Choose(FemaleSurvivors[i], Father);
 
-		assert(Father >= 0 && Father < msurvivors);
+            assert(Father >= 0 && Father < msurvivors);
 
-        // do some stats on the mating pairs
-        if (do_stats)
-        {
-            mother_eggs[i] += clutch_size;
-            father_eggs[Father] += clutch_size;
+            // do some stats on the mating pairs
+            if (do_stats)
+            {
+                mother_eggs[i] += clutch_size;
+                father_eggs[Father] += clutch_size;
+            }
+
+            // for each offspring to be produced
+            // store the indices of the parents
+            // we then make offspring later
+            for (int j = 0; j < clutch_size; ++j)
+            {
+                Parents[offspring][0] = i;
+                Parents[offspring][1] = Father;
+                ++offspring;
+            }
         }
-
-        // for each offspring to be produced
-        // store the indices of the parents
-        // we then make offspring later
-        for (int j = 0; j < clutch_size; ++j)
-        {
-            Parents[offspring][0] = i;
-            Parents[offspring][1] = Father;
-            ++offspring;
-        }
-	}
  }
 
     int sons = 0;
@@ -605,6 +603,11 @@ void NextGen()
 
     Nmales = sons;
     Nfemales = daughters;
+
+    assert(Nmales <= N);
+    assert(Nfemales <= N);
+    assert(Nmales <= N);
+    assert(Nfemales <= N);
 } // end NextGen
 
 
