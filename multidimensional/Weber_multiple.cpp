@@ -347,7 +347,7 @@ double open_ended_prefs(Individual &female, Individual &male)
     
     sum_odds = exp(sum_odds);
 
-    std::cout << sum_odds;
+    //std::cout << sum_odds;
     return(sum_odds);
 } // end open_ended_prefs()
 
@@ -517,8 +517,6 @@ void NextGen()
     // let the surviving females choose a mate
 	for (int i = 0; i < fsurvivors; ++i)
 	{
-       for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
-       {
             int Father = -1;
             
             Choose(FemaleSurvivors[i], Father);
@@ -540,10 +538,12 @@ void NextGen()
                 Parents[offspring][0] = i;
                 Parents[offspring][1] = Father;
                 ++offspring;
-            }
-        }
+            }    
  }
 
+    assert(offspring <= N*clutch_size);
+    assert(offspring >= 0);
+    
     int sons = 0;
     int daughters = 0;
 

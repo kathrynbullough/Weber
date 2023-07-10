@@ -24,9 +24,9 @@ parameter_object$sex_limited_p <- 1.0
 parameter_object$sex_limited_t <- 1.0
 parameter_object$pref_type <- 0
 parameter_object$web <- 0
-parameter_object$init_t1 <- 0
+parameter_object$init_t1 <- 1
 parameter_object$init_t2 <- 0
-parameter_object$init_p1 <- 10
+parameter_object$init_p1 <- 1
 parameter_object$init_p2 <- 0
 parameter_object$gam <- 2
 parameter_object$thet <- 1
