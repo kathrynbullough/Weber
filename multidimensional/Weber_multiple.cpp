@@ -700,6 +700,9 @@ void WriteData(std::ofstream &DataFile)
     varmrs = ssmrs / Nmales - meanmrs * meanmrs;
 
 
+    //To check that p2 and t2 stay at 0
+    assert(meanp[1] == 0.0 && meant[1] == 0.0);
+
     // output of all the statistics
 	DataFile << generation << ";";
 
@@ -724,6 +727,7 @@ void WriteData(std::ofstream &DataFile)
         << ";" << fsurvivors
 		<< ";" << sum_sexes
 	    << ";" << std::endl;
+         
 } // end WriteData
 
 // headers of the datafile
