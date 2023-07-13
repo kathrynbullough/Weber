@@ -8,7 +8,7 @@ parameter_object <- list()
 
 parameter_object$a <- 1    #Choice slope
 parameter_object$b <- 0.001      #Cost of preference
-parameter_object$c <- 0.5      #Cost of trait
+parameter_object$c <- seq(0,1,0.1)      #Cost of trait
 parameter_object$lambda <- 1    #Keep as 1!!!
 parameter_object$biast1 <- 0.9  #Mutation bias
 parameter_object$biast2 <- 0.5
@@ -24,9 +24,9 @@ parameter_object$sex_limited_p <- 1.0
 parameter_object$sex_limited_t <- 1.0
 parameter_object$pref_type <- 0
 parameter_object$web <- 0
-parameter_object$init_t1 <- 0
+parameter_object$init_t1 <- 0.5
 parameter_object$init_t2 <- 0
-parameter_object$init_p1 <- 3
+parameter_object$init_p1 <- 4
 parameter_object$init_p2 <- 0
 parameter_object$gam <- 2
 parameter_object$thet <- 1
