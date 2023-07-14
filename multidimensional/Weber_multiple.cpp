@@ -84,8 +84,8 @@ struct Individual
 {
 	double t[ntrait][2]; // diploid, additive loci for t,p
 	double p[ntrait][2];
-    double t_expr[ntrait]; // and store their expressed values
-    double p_expr[ntrait];
+    	double t_expr[ntrait]; // and store their expressed values
+    	double p_expr[ntrait];
 	// amount to be allocated to male vs. female function
 };
 
@@ -100,31 +100,30 @@ void initArguments(int argc, char *argv[])
 {
 	a = std::stod(argv[1]);
 	b = std::stod(argv[2]);
-
     // initially same cost for each ornament
 	c[0] = std::stod(argv[3]);
-  c[1] = std::stod(argv[4]);
-  lambda[0] = lambda[1] = std::stod(argv[5]);
+  	c[1] = std::stod(argv[4]);
+  	lambda[0] = lambda[1] = std::stod(argv[5]);
 	biast[0] = std::stod(argv[6]);
-  biast[1] = std::stod(argv[7]);
+  	biast[1] = std::stod(argv[7]);
 	mu_p[0] = std::stod(argv[8]);
-  mu_p[1] = std::stod(argv[9]);
+  	mu_p[1] = std::stod(argv[9]);
 	mu_t[0] = std::stod(argv[10]);
-  mu_t[1] = std::stod(argv[11]);
+ 	mu_t[1] = std::stod(argv[11]);
 	sdmu_p[0] = std::stod(argv[12]);
-  sdmu_p[1] = std::stod(argv[13]);
+  	sdmu_p[1] = std::stod(argv[13]);
 	sdmu_t[0] = std::stod(argv[14]);
-  sdmu_t[1] = std::stod(argv[15]);
+  	sdmu_t[1] = std::stod(argv[15]);
 	sexlimp = std::stod(argv[16]);
 	sexlimt = std::stod(argv[17]);
-    pref = std::stoi(argv[18]);
-    init_t[0] = std::stod(argv[19]);
-    init_t[1] = std::stod(argv[20]);
-    init_p[0] = std::stod(argv[21]);
-    init_p[1] = std::stod(argv[22]);
-    gam = std::stod(argv[23]);
-    thet = std::stod(argv[24]);
-    file_name = argv[25];
+    	pref = std::stoi(argv[18]);
+    	init_t[0] = std::stod(argv[19]);
+    	init_t[1] = std::stod(argv[20]);
+    	init_p[0] = std::stod(argv[21]);
+    	init_p[1] = std::stod(argv[22]);
+    	gam = std::stod(argv[23]);
+    	thet = std::stod(argv[24]);
+    	file_name = argv[25];
     //Maybe add another one to allow the change of ntraits to something other than 2?
 } // end initArguments
 
@@ -137,7 +136,6 @@ void mutate(double &G, double mu, double sdmu, double bias=0.5)
     if (uniform(rng_r) < mu)
     {
         double effect = uniform_mutation(rng_r);
-
         G+= uniform(rng_r) < bias ? -effect : effect;
     }
 }
@@ -151,35 +149,35 @@ void WriteParameters(std::ofstream &DataFile)
 		<< "popsize_init:;" << N << ";" << std::endl
 		<< "n_mate_sample:;" << N_mate_sample << ";"<< std::endl
 		<< "init_t1:;" << init_t[0] << ";" << std::endl
-    << "init_t2:;" << init_t[1] << ";" << std::endl
+    		<< "init_t2:;" << init_t[1] << ";" << std::endl
 		<< "init_p1:;" << init_p[0] << ";" << std::endl
-    << "init_p2:;" << init_p[1] << ";" << std::endl
+    		<< "init_p2:;" << init_p[1] << ";" << std::endl
 		<< "a:;" <<  a << ";"<< std::endl
 		<< "b:;" <<  b << ";"<< std::endl
 		<< "c1:;" <<  c[0] << ";"<< std::endl
-    << "c2:;" <<  c[1] << ";"<< std::endl
+   		<< "c2:;" <<  c[1] << ";"<< std::endl
 		<< "pref:;" <<  pref << ";"<< std::endl
 		<< "mu_p1:;" <<  mu_p[0] << ";" << std::endl
-    << "mu_p2:;" <<  mu_p[1] << ";" << std::endl
+    		<< "mu_p2:;" <<  mu_p[1] << ";" << std::endl
 		<< "mu_t1:;" <<  mu_t[0] << ";" << std::endl
-    << "mu_t2:;" <<  mu_t[1] << ";" << std::endl
+    		<< "mu_t2:;" <<  mu_t[1] << ";" << std::endl
 		<< "mu_std_p1:;" <<  sdmu_p[0] << ";" << std::endl
-    << "mu_std_p2:;" <<  sdmu_p[1] << ";" << std::endl
+    		<< "mu_std_p2:;" <<  sdmu_p[1] << ";" << std::endl
 		<< "mu_std_t1:;" <<  sdmu_t[0] << ";"<< std::endl
-    << "mu_std_t2:;" <<  sdmu_t[1] << ";" << std::endl
+    		<< "mu_std_t2:;" <<  sdmu_t[1] << ";" << std::endl
 		<< "biast1:;" <<  biast[0] << ";" << std::endl
-    << "biast2:;" <<  biast[1] << ";" << std::endl
+    		<< "biast2:;" <<  biast[1] << ";" << std::endl
 		<< "sexlimp:;" <<  sexlimp << ";"<< std::endl
 		<< "sexlimt:;" <<  sexlimt << ";"<< std::endl
-    << "gamma:;" <<  gam << ";"<< std::endl
-    << "theta:;" <<  thet << ";"<< std::endl
+    		<< "gamma:;" <<  gam << ";"<< std::endl
+    		<< "theta:;" <<  thet << ";"<< std::endl
 		<< "seed:;" << seed << ";"<< std::endl;
 }
 
 // initialize all the phenotypes
 void Init()
 {
-	// initialize the whole populatin
+	// initialize the whole population
 	for (int i = 0; i < Nfemales; ++i)
 	{
 	   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
@@ -220,20 +218,20 @@ void Create_Kid(int mother, int father, Individual &kid)
 	assert(mother >= 0 && mother < fsurvivors);
 	assert(father >= 0 && father < msurvivors);
  
- for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
- {
-    // inherit ornament
-	kid.t[trait_idx][0] = FemaleSurvivors[mother].t[trait_idx][segregator(rng_r)];
-    mutate(kid.t[trait_idx][0], mu_t[trait_idx], sdmu_t[trait_idx], biast[trait_idx]);
-	kid.t[trait_idx][1] = MaleSurvivors[father].t[trait_idx][segregator(rng_r)];
-    mutate(kid.t[trait_idx][1], mu_t[trait_idx], sdmu_t[trait_idx], biast[trait_idx]);
+ 	for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+ 	{
+  	   // inherit ornament
+		kid.t[trait_idx][0] = FemaleSurvivors[mother].t[trait_idx][segregator(rng_r)];
+   		mutate(kid.t[trait_idx][0], mu_t[trait_idx], sdmu_t[trait_idx], biast[trait_idx]);
+		kid.t[trait_idx][1] = MaleSurvivors[father].t[trait_idx][segregator(rng_r)];
+    		mutate(kid.t[trait_idx][1], mu_t[trait_idx], sdmu_t[trait_idx], biast[trait_idx]);
 
-    // inherit preference
-	kid.p[trait_idx][0] = FemaleSurvivors[mother].p[trait_idx][segregator(rng_r)];
-    mutate(kid.p[trait_idx][0], mu_p[trait_idx], sdmu_p[trait_idx]);
-	kid.p[trait_idx][1] = MaleSurvivors[father].p[trait_idx][segregator(rng_r)];
-    mutate(kid.p[trait_idx][1], mu_p[trait_idx], sdmu_p[trait_idx]);
- }
+    	  // inherit preference
+		kid.p[trait_idx][0] = FemaleSurvivors[mother].p[trait_idx][segregator(rng_r)];
+   		mutate(kid.p[trait_idx][0], mu_p[trait_idx], sdmu_p[trait_idx]);
+		kid.p[trait_idx][1] = MaleSurvivors[father].p[trait_idx][segregator(rng_r)];
+    		mutate(kid.p[trait_idx][1], mu_p[trait_idx], sdmu_p[trait_idx]);
+ 	}
 } // end Create_Kid
 
 // survival stage
@@ -265,61 +263,59 @@ void Survive(std::ofstream &DataFile)
 
 	   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
 	   {
-            double p_expr = Females[i].p_expr[trait_idx];
+            	double p_expr = Females[i].p_expr[trait_idx];
    
-            sump += pow(lambda[trait_idx]*p_expr,1.0/thet);
+            	sump += pow(lambda[trait_idx]*p_expr,1.0/thet);
 	   }
 
 	   // after summing over all traits, take power over gam * thet and multiply
 	   // by b as in eq. (10b) in Pomiankowski & Iwasa (1993)
-   		wf = exp(-b*pow(sump,(gam * thet)));
-      //std::cout << wf;
+   	   wf = exp(-b*pow(sump,(gam * thet)));
+      	   //std::cout << wf;
 
-		//w = exp(-b*p_expr*p_expr + (1-sexlimt)*(-c)*t_expr*t_expr);
+	   //w = exp(-b*p_expr*p_expr + (1-sexlimt)*(-c)*t_expr*t_expr);
 
-		// if individuals survive
-		// take stats and add them to pool of survivors
-		if (uniform(rng_r) < wf)
-		{
+	   // if individuals survive
+	   // take stats and add them to pool of survivors
+	   if (uniform(rng_r) < wf)
+	    {
 		    FemaleSurvivors[fsurvivors++] = Females[i];
-		}
+	    }
 	}// end for i < Nfemales
 
 
     // male survival
 	for (int i = 0; i < Nmales; ++i)
 	{
-     sumctsq = 0.0;
+     	sumctsq = 0.0;
      
-     for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
-     {
-		double t_expr = Males[i].t_expr[trait_idx];
-   
-        sumctsq += c[trait_idx]*pow(t_expr,2);
+		for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+    		{
+			double t_expr = Males[i].t_expr[trait_idx];
+        		sumctsq += c[trait_idx]*pow(t_expr,2);
 
-     } //end for trait_idx
+     		} //end for trait_idx
 
-      //Eq. 10a in Pomiankowski & Iwasa (1993)
-      wm = exp(-sumctsq);      //wm(survival) = exp(-sumctsq);
-      //std::cout << wm;
+      	//Eq. 10a in Pomiankowski & Iwasa (1993)
+ 	wm = exp(-sumctsq);      //wm(survival) = exp(-sumctsq);
+        //std::cout << wm;
         
-        if (uniform(rng_r) < wm)
-        {
-            for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
-            {
-                // in case of relative preferences get the mean ornament
-                meanornsurv[trait_idx] += Males[i].t_expr[trait_idx];
-            }
+        	if (uniform(rng_r) < wm)
+        	{
+            		for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+            		{
+                		// in case of relative preferences get the mean ornament
+                		meanornsurv[trait_idx] += Males[i].t_expr[trait_idx];
+            		}
 
-            MaleSurvivors[msurvivors++] = Males[i];
-        }
+            	MaleSurvivors[msurvivors++] = Males[i];
+       		}
 	}
 
     // extinction?
     if (fsurvivors == 0 || msurvivors == 0)
     {
         WriteParameters(DataFile);
-
         exit(1);
     }
 
@@ -356,7 +352,7 @@ double absolute_prefs(Individual &female, Individual &male)
 
     for (int trait_idx  = 0; trait_idx < ntrait; ++trait_idx)
     {
-        sum_odds += -0.5 * a * 
+        	sum_odds += -0.5 * a * 
                 (female.p_expr[trait_idx] - male.t_expr[trait_idx])*
                 (female.p_expr[trait_idx] - male.t_expr[trait_idx]);
     }
@@ -372,8 +368,8 @@ double relative_prefs(Individual &female, Individual &male)
 
     for (int trait_idx  = 0; trait_idx < ntrait; ++trait_idx)
     {
-        // check the eqn in Lande (1981) PNAS
-        sum_odds += -0.5 * a * 
+        	// check the eqn in Lande (1981) PNAS
+        	sum_odds += -0.5 * a * 
                 (male.t_expr[trait_idx] - (female.p_expr[trait_idx] + meanornsurv[trait_idx])) *
                 (male.t_expr[trait_idx] - (female.p_expr[trait_idx] + meanornsurv[trait_idx]));
     }
@@ -414,60 +410,60 @@ void Choose(Individual &mother, int &father)
         N_mate_sample;
 
     // distribution of number of survivors
-    std::uniform_int_distribution <int> 
+    	std::uniform_int_distribution <int> 
         msurvivor_sampler(0, msurvivors - 1);
 
     // mate choice among the sample of males
 	for (int j = 0; j < current_mate_sample; ++j)
 	{
-        // get a random surviving male
-        int random_mate = msurvivor_sampler(rng_r);
+        	// get a random surviving male
+        	int random_mate = msurvivor_sampler(rng_r);
 
-        // value of the preference function
-        double po = 0;
+        	// value of the preference function
+        	double po = 0;
 
-        switch(pref)
-        {
-            // open-ended preferences
-            case 0: 
-            {
-                po = open_ended_prefs(mother, MaleSurvivors[random_mate]);
-                //std::cout << po;
-            } break;
+        	switch(pref)
+        	{
+           		 // open-ended preferences
+            		case 0: 
+            		{
+               		 	po = open_ended_prefs(mother, MaleSurvivors[random_mate]);
+                		//std::cout << po;
+            		} break;
 
-            // absolute preferences
-            case 1:
-            {
-                po = absolute_prefs(mother, MaleSurvivors[random_mate]);
-            } break;
+            		// absolute preferences
+            		case 1:
+            		{
+                		po = absolute_prefs(mother, MaleSurvivors[random_mate]);
+            		} break;
 
-            // relative preferences
-            case 2:
-            {
-                po = relative_prefs(mother, MaleSurvivors[random_mate]);
-            } break;
+            		// relative preferences
+            		case 2:
+            		{
+                		po = relative_prefs(mother, MaleSurvivors[random_mate]);
+            		} break;
             
-            // Weber preferences
-            case 3:
-            {
-                po = weber_prefs(mother, MaleSurvivors[random_mate]);
-            } break;
-        } // end switch
+            		// Weber preferences
+            		case 3:
+            		{
+                		po = weber_prefs(mother, MaleSurvivors[random_mate]);
+            		} break;
+        	} // end switch
 
-        // prevent the exponential of going to infinity
-        // which would make things really awkward
-        if (po > 100)
-        {
-            po = 100;
-        }
+        	// prevent the exponential of going to infinity
+        	// which would make things really awkward
+        	if (po > 100)
+        	{
+            		po = 100;
+        	}
 
-        // make a cumulative distribution of the male's
-        // fitness value
-        Fitness[j] = sumFitness + po;
-        sumFitness=Fitness[j];
+        	// make a cumulative distribution of the male's
+        	// fitness value
+        	Fitness[j] = sumFitness + po;
+        	sumFitness=Fitness[j];
 
-        Candidates[j] = random_mate;
-    } 
+        	Candidates[j] = random_mate;
+    	} 
 
     // sample from the cumulative distribution
 	double r = uniform(rng_r)*sumFitness;
@@ -487,7 +483,6 @@ void Choose(Individual &mother, int &father)
 		}
 	}
  
-
     assert(father >= 0 && father < msurvivors);
 
 } // end ChooseMates
@@ -538,7 +533,7 @@ void NextGen()
                 Parents[offspring][1] = Father;
                 ++offspring;
             }    
- }
+ 	}
 
     assert(offspring <= N*clutch_size);
     assert(offspring >= 0);
@@ -610,7 +605,6 @@ void NextGen()
 } // end NextGen
 
 
-
 // write the data
 void WriteData(std::ofstream &DataFile)
 {
@@ -628,53 +622,53 @@ void WriteData(std::ofstream &DataFile)
     double sst[ntrait] = {0.0,0.0};
     double spt[ntrait] = {0.0,0.0};
 
-	double p[ntrait],t[ntrait],meanmrs,meanfrs,varfrs,varmrs;
-	double ssmrs = 0, ssfrs = 0, summrs=0, sumfrs=0;
+    double p[ntrait],t[ntrait],meanmrs,meanfrs,varfrs,varmrs;
+    double ssmrs = 0, ssfrs = 0, summrs=0, sumfrs=0;
 
     // calculate means and variances for the males
 	for (int i = 0; i < Nmales; ++i)
 	{
-   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
-   {
-		p[trait_idx] = 0.5 * ( Males[i].p[trait_idx][0] + Males[i].p[trait_idx][1]);
-		t[trait_idx] = 0.5 * ( Males[i].t[trait_idx][0] + Males[i].t[trait_idx][1]);
+   		for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+   		{
+			p[trait_idx] = 0.5 * ( Males[i].p[trait_idx][0] + Males[i].p[trait_idx][1]);
+			t[trait_idx] = 0.5 * ( Males[i].t[trait_idx][0] + Males[i].t[trait_idx][1]);
 
-        meanp[trait_idx] += p[trait_idx];
-        meant[trait_idx] += t[trait_idx];
+        		meanp[trait_idx] += p[trait_idx];
+        		meant[trait_idx] += t[trait_idx];
 
-        ssp[trait_idx] += p[trait_idx] * p[trait_idx];
-        sst[trait_idx] += t[trait_idx] * t[trait_idx];
-        spt[trait_idx] += t[trait_idx] * p[trait_idx];
-    }
+        		ssp[trait_idx] += p[trait_idx] * p[trait_idx];
+        		sst[trait_idx] += t[trait_idx] * t[trait_idx];
+        		spt[trait_idx] += t[trait_idx] * p[trait_idx];
+    		}
 
-        if (i < msurvivors)
-        {
-            summrs += father_eggs[i];
-            ssmrs += father_eggs[i] * father_eggs[i];
-        }
+        	if (i < msurvivors)
+        	{
+            		summrs += father_eggs[i];
+            		ssmrs += father_eggs[i] * father_eggs[i];
+        	}
 	}
 
     // calculate means and variances for the females
 	for (int i = 0; i < Nfemales; ++i)
 	{
-   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
-   {
-		p[trait_idx] = 0.5 * ( Females[i].p[trait_idx][0] + Females[i].p[trait_idx][1]);
-		t[trait_idx] = 0.5 * ( Females[i].t[trait_idx][0] + Females[i].t[trait_idx][1]);
+   		for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+   		{
+			p[trait_idx] = 0.5 * ( Females[i].p[trait_idx][0] + Females[i].p[trait_idx][1]);
+			t[trait_idx] = 0.5 * ( Females[i].t[trait_idx][0] + Females[i].t[trait_idx][1]);
 
-        meanp[trait_idx] += p[trait_idx];
-        meant[trait_idx] += t[trait_idx];
+        		meanp[trait_idx] += p[trait_idx];
+        		meant[trait_idx] += t[trait_idx];
 
-        ssp[trait_idx] += p[trait_idx] * p[trait_idx];
-        sst[trait_idx] += t[trait_idx] * t[trait_idx];
-        spt[trait_idx] += t[trait_idx] * p[trait_idx];
-    }
+        		ssp[trait_idx] += p[trait_idx] * p[trait_idx];
+        		sst[trait_idx] += t[trait_idx] * t[trait_idx];
+        		spt[trait_idx] += t[trait_idx] * p[trait_idx];
+    		}
         
-        if (i < fsurvivors)
-        {
-            sumfrs += mother_eggs[i];
-            ssfrs += mother_eggs[i] * mother_eggs[i];
-        }
+        	if (i < fsurvivors)
+        	{
+            		sumfrs += mother_eggs[i];
+            		ssfrs += mother_eggs[i] * mother_eggs[i];
+        	}
 	} 
 
     double varp[ntrait] = {0.0,0.0}; 
@@ -707,39 +701,34 @@ void WriteData(std::ofstream &DataFile)
 
     // output of all the statistics
 	DataFile << generation << ";";
-
-    for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
-    {
+    	for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+    	{
 		DataFile << meanp[trait_idx]
-                    << ";" << meant[trait_idx]
-                    << ";" << varp[trait_idx]
-                    << ";" << vart[trait_idx]
-                    << ";" << covpt [trait_idx]
-                    << ";";
-    }
-
-    DataFile << meanfrs 
-        << ";" << meanmrs 
-		
-		
+                << ";" << meant[trait_idx]
+                << ";" << varp[trait_idx]
+                << ";" << vart[trait_idx]
+                << ";" << covpt [trait_idx]
+                << ";";
+    	}
+	DataFile << meanfrs 
+        << ";" << meanmrs 		
         << ";" << varfrs 
         << ";" << varmrs 
-
         << ";" << msurvivors
         << ";" << fsurvivors
-		<< ";" << sum_sexes
-	    << ";" << std::endl;
+	<< ";" << sum_sexes
+	<< ";" << std::endl;
          
 } // end WriteData
 
 // headers of the datafile
 void WriteDataHeaders(std::ofstream &DataFile)
 {
-	DataFile << "generation" << ";";
+    DataFile << "generation" << ";";
 
     for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
     {
-		DataFile 
+	    DataFile 
             << "meanp" << (trait_idx + 1) << ";"
             << "meant" << (trait_idx + 1) << ";"
             << "varp" << (trait_idx + 1) << ";"
@@ -753,8 +742,8 @@ void WriteDataHeaders(std::ofstream &DataFile)
         << ";varmrs"
         << ";surviving_males"
         << ";surviving_females"
-		<< ";N;"
-		<< std::endl;
+	<< ";N;"
+	<< std::endl;
 } // end WriteDataHeaders
 
 // the core part of the code
