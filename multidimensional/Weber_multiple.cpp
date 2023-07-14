@@ -102,22 +102,22 @@ void initArguments(int argc, char *argv[])
 	b = std::stod(argv[2]);
 
     // initially same cost for each ornament
-	c[0] = c[1] = std::stod(argv[3]);
-  lambda[0] = lambda[1] = std::stod(argv[4]);
-	biast[0] = std::stod(argv[5]);
-  biast[1] = std::stod(argv[6]);
-	mu_p[0] = std::stod(argv[7]);
-  mu_p[1] = std::stod(argv[8]);
-	mu_t[0] = std::stod(argv[9]);
-  mu_t[1] = std::stod(argv[10]);
-	sdmu_p[0] = std::stod(argv[11]);
-  sdmu_p[1] = std::stod(argv[12]);
-	sdmu_t[0] = std::stod(argv[13]);
-  sdmu_t[1] = std::stod(argv[14]);
-	sexlimp = std::stod(argv[15]);
-	sexlimt = std::stod(argv[16]);
-    pref = std::stoi(argv[17]);
-    web = std::stoi(argv[18]);
+	c[0] = std::stod(argv[3]);
+  c[1] = std::stod(argv[4]);
+  lambda[0] = lambda[1] = std::stod(argv[5]);
+	biast[0] = std::stod(argv[6]);
+  biast[1] = std::stod(argv[7]);
+	mu_p[0] = std::stod(argv[8]);
+  mu_p[1] = std::stod(argv[9]);
+	mu_t[0] = std::stod(argv[10]);
+  mu_t[1] = std::stod(argv[11]);
+	sdmu_p[0] = std::stod(argv[12]);
+  sdmu_p[1] = std::stod(argv[13]);
+	sdmu_t[0] = std::stod(argv[14]);
+  sdmu_t[1] = std::stod(argv[15]);
+	sexlimp = std::stod(argv[16]);
+	sexlimt = std::stod(argv[17]);
+    pref = std::stoi(argv[18]);
     init_t[0] = std::stod(argv[19]);
     init_t[1] = std::stod(argv[20]);
     init_p[0] = std::stod(argv[21]);
@@ -171,7 +171,6 @@ void WriteParameters(std::ofstream &DataFile)
     << "biast2:;" <<  biast[1] << ";" << std::endl
 		<< "sexlimp:;" <<  sexlimp << ";"<< std::endl
 		<< "sexlimt:;" <<  sexlimt << ";"<< std::endl
-    << "web:;" <<  web << ";"<< std::endl
     << "gamma:;" <<  gam << ";"<< std::endl
     << "theta:;" <<  thet << ";"<< std::endl
 		<< "seed:;" << seed << ";"<< std::endl;
