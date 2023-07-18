@@ -24,11 +24,11 @@ parameter_object$sdmu_t2 <- 0.05
 parameter_object$sex_limited_p <- 1.0
 parameter_object$sex_limited_t <- 1.0
 parameter_object$pref_type <- seq(0,3,3)
-parameter_object$init_t1 <- 0.5
-parameter_object$init_t2 <- 0.5
-parameter_object$init_p1 <- 1
-parameter_object$init_p2 <- 10
-parameter_object$gam <- seq(0,5,1) #does 1 look better?
+parameter_object$init_t1 <- 0
+parameter_object$init_t2 <- 0
+parameter_object$init_p1 <- 3
+parameter_object$init_p2 <- 3
+parameter_object$gam <- seq(0,3,0.5) #does 1 look better?
 parameter_object$thet <- 1
 
 #purlease continue adding all the parameters, except for the output file
@@ -37,7 +37,7 @@ parameter_object$thet <- 1
 # please be sensible with the amount of parameters
 
 make.batch.file(parameter_list=parameter_object
-                     ,executable_path="./Weber_multiple.exe",n_replicates=1)
+                     ,executable_path="./Weber_multiple.exe",n_replicates=3)
                      
                      
 #seq(0,0.5,0.1)
