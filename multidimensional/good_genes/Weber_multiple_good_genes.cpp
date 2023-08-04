@@ -1,4 +1,4 @@
-//      Fisherian sexual selection for gonochorists with addition of a Weber preference function
+//      Good genes sexual selection for gonochorists with addition of a Weber preference function
 
 //KATHRYN EDIT TEST
 
