@@ -28,8 +28,8 @@ parameter_object$init_t1 <- 0
 parameter_object$init_t2 <- 0
 parameter_object$init_p1 <- 3
 parameter_object$init_p2 <- 3
-parameter_object$gam <- seq(0,3,0.5) #does 1 look better?
-parameter_object$thet <- 1
+parameter_object$gam <- 1 #does 1 look better?
+parameter_object$thet <- seq(0,1,0.1)
 
 #purlease continue adding all the parameters, except for the output file
 # (this will be done by the function itself)
@@ -37,7 +37,7 @@ parameter_object$thet <- 1
 # please be sensible with the amount of parameters
 
 make.batch.file(parameter_list=parameter_object
-                     ,executable_path="./Weber_multiple.exe",n_replicates=3)
+                     ,executable_path="./Weber_multiple.exe",n_replicates=1)
                      
                      
 #seq(0,0.5,0.1)
