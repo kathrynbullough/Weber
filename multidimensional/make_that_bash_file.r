@@ -7,7 +7,7 @@ library("simulation.utils")
 parameter_object <- list()
 
 parameter_object$a <- 1    #Choice slope
-parameter_object$b <- 0.001      #Cost of preference
+parameter_object$b <- seq(0,0.1,0.002)      #Cost of preference
 parameter_object$c1 <- 0.5      #Cost of trait
 parameter_object$c2 <- 0.5  
 parameter_object$lambda <- 1    #Keep as 1!!!
@@ -29,7 +29,7 @@ parameter_object$init_t2 <- 0
 parameter_object$init_p1 <- 3
 parameter_object$init_p2 <- 3
 parameter_object$gam <- 1 #does 1 look better?
-parameter_object$thet <- seq(0,1,0.1)
+parameter_object$thet <- 0.8
 
 #purlease continue adding all the parameters, except for the output file
 # (this will be done by the function itself)
