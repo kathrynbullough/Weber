@@ -51,6 +51,11 @@ double thet = 0.5; // how do preferences interact when it comes to a combined co
 double c[ntrait] = {0.5,0.5}; // cost of trait
 double lambda[ntrait] = {1.0,1.0}; // cost of trait
 
+double tt[ntrait] = {0.0,0.0}; // viability independent component of male trait
+double ttd[ntrait]  = {0.0,0.0}; // sensitivity of male trait  to general viability
+double v = 0.0; // general viability
+double k[ntrait] = {0.0,0.0}; // sensitivity of cost coefficient to general viability
+
 double biast[ntrait] = {0.0,0.0}; // mutation bias: 0.5 means no bias. > 0.5 means bias towards reduction in tratt.
 
 double mu_p[ntrait] 	  = {0.05,0.05};            // mutation rate preference
@@ -123,7 +128,14 @@ void initArguments(int argc, char *argv[])
     	init_p[1] = std::stod(argv[22]);
     	gam = std::stod(argv[23]);
     	thet = std::stod(argv[24]);
-    	file_name = argv[25];
+     tt[0] = std::stod(argv[25]); 
+     tt[1] = std::stod(argv[26]); 
+     ttd[0]  = std::stod(argv[27]); 
+     ttd[1]  = std::stod(argv[28]);
+     v = std::stod(argv[29]);
+     k[0] = std::stod(argv[30]);
+     k[1] = std::stod(argv[31]);
+    	file_name = argv[32];
     //Maybe add another one to allow the change of ntraits to something other than 2?
 } // end initArguments
 
@@ -185,13 +197,17 @@ void Init()
 		// initialize both diploid loci
 		for (int j = 0; j < 2; ++j)
 		{
-			Females[i].t[trait_idx][j] = init_t[trait_idx];
+			//Females[i].t[trait_idx][j] = init_t[trait_idx];
+			//Females[i].p[trait_idx][j] = init_p[trait_idx];
+      Females[i].t[trait_idx][j] = tt[trait_idx] + ttd[trait_idx]*v;
 			Females[i].p[trait_idx][j] = init_p[trait_idx];
 		}
 		
 		// and the expressed values
-		Females[i].t_expr[trait_idx] = init_t[trait_idx];
-		Females[i].p_expr[trait_idx] = init_p[trait_idx];
+		//Females[i].t_expr[trait_idx] = init_t[trait_idx];
+		//Females[i].p_expr[trait_idx] = init_p[trait_idx];
+     Females[i].t_expr[trait_idx] = tt[trait_idx] + ttd[trait_idx]*v;
+     Females[i].p_expr[trait_idx] = init_p[trait_idx];
 	  } // end for trait_idx
 	} // end for Nfemales
 
@@ -202,11 +218,15 @@ void Init()
 	   {
 			for (int j = 0; j < 2; ++j)
 			{
-				Males[i].t[trait_idx][j] = init_t[trait_idx];
+				//Males[i].t[trait_idx][j] = init_t[trait_idx];
+				//Males[i].p[trait_idx][j] = init_p[trait_idx];
+        Males[i].t[trait_idx][j] = tt[trait_idx] + ttd[trait_idx]*v;
 				Males[i].p[trait_idx][j] = init_p[trait_idx];
 			}
 				
-		Males[i].t_expr[trait_idx] = init_t[trait_idx];
+		//Males[i].t_expr[trait_idx] = init_t[trait_idx];
+		//Males[i].p_expr[trait_idx] = init_p[trait_idx];
+    Males[i].t_expr[trait_idx] = tt[trait_idx] + ttd[trait_idx]*v;
 		Males[i].p_expr[trait_idx] = init_p[trait_idx];
 	   }
 	}
@@ -269,8 +289,8 @@ void Survive(std::ofstream &DataFile)
 	   }
 
 	   // after summing over all traits, take power over gam * thet and multiply
-	   // by b as in eq. (10b) in Pomiankowski & Iwasa (1993)
-   	   wf = exp(-b*pow(sump,(gam * thet)));
+	   // by b, then add to v, as in eq. (13) in  Iwasa & Pomiankowski (1994)
+   	   wf = exp((-b*pow(sump,(gam * thet)))+v);
       	   //std::cout << wf;
 
 	   //w = exp(-b*p_expr*p_expr + (1-sexlimt)*(-c)*t_expr*t_expr);
@@ -287,17 +307,17 @@ void Survive(std::ofstream &DataFile)
     // male survival
 	for (int i = 0; i < Nmales; ++i)
 	{
-     	sumctsq = 0.0;
+     	sumdiv = 0.0;
      
 		for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
     		{
 			double t_expr = Males[i].t_expr[trait_idx];
-        		sumctsq += c[trait_idx]*pow(t_expr,2);
+        		sumdiv += (c[trait_idx]/(1+k[trait_idx]*v))*pow(t_expr,2);
 
      		} //end for trait_idx
 
-      	//Eq. 10a in Pomiankowski & Iwasa (1993)
- 	wm = exp(-sumctsq);      //wm(survival) = exp(-sumctsq);
+      	//Eq. 13 in Iwasa & Pomiankowski (1994)
+ 	wm = exp(v-sumdiv);      //wm(survival) = exp(-sumctsq);
         //std::cout << wm;
         
         	if (uniform(rng_r) < wm)
@@ -392,7 +412,7 @@ double weber_prefs(Individual &female, Individual &male)
 } // end weber_prefs()
 
 
-// mate choice - Kathryn suggested new function
+// mate choice
 void Choose(Individual &mother, int &father) 
 {
     // mate choice - original code
