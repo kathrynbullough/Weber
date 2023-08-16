@@ -592,6 +592,7 @@ void NextGen()
             
             for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
             {
+                //Do we maybe want to integrate ttd and v in this bit too??
                 double t = 0.5 * ( Males[sons].t[trait_idx][0] + Males[sons].t[trait_idx][1]);
                 double p = 0.5 * ( Males[sons].p[trait_idx][0] + Males[sons].p[trait_idx][1]);
 
