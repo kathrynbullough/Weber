@@ -274,7 +274,7 @@ void Survive(std::ofstream &DataFile)
     meanornsurv[1] = 0.0;
     
     double sump = 0.0;
-    double sumctsq = 0.0;
+    double sumdiv = 0.0;
 
     // allow females to survive
 	for (int i = 0; i < Nfemales; ++i)
