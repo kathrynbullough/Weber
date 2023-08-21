@@ -325,6 +325,7 @@ void Survive(std::ofstream &DataFile)
             		for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
             		{
                 		// in case of relative preferences get the mean ornament
+                   //Does this need to include tt, ttd, and v as well??
                 		meanornsurv[trait_idx] += Males[i].t_expr[trait_idx];
             		}
 
