@@ -43,7 +43,7 @@ int const ntrait = 2;
 
 double init_t[ntrait] = {0.0,0.0}; // initial value for ornament
 double init_p[ntrait] = {0.0,0.0}; // initial value for preference
-double init_v[ntrait] = {0.0,0.0}; // initial value for viability
+double init_v = 0.0; // initial value for viability
 double a = 1.0; // choice slope
 double b = 0.5; // cost of preference 
 
@@ -340,7 +340,7 @@ void Survive(std::ofstream &DataFile)
 	for (int i = 0; i < Nmales; ++i)
 	{
      	sumdiv = 0.0;
-      double v_expr = Males[i].v_expr
+      double v_expr = Males[i].v_expr;
      
 		for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
     		{
