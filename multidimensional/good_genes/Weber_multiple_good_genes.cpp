@@ -58,6 +58,7 @@ double lambda[ntrait] = {1.0,1.0}; // cost of trait
 double k[ntrait] = {0.0,0.0}; // sensitivity of cost coefficient to general viability - does this need to have ntrait???
 
 double biast[ntrait] = {0.0,0.0}; // mutation bias: 0.5 means no bias. > 0.5 means bias towards reduction in tratt.
+//Are t mutations unbiased in good genes though???
 
 double mu_p[ntrait] 	  = {0.05,0.05};            // mutation rate preference
 double mu_t[ntrait] 	  = {0.05,0.05};            // mutation rate ornament
@@ -323,6 +324,7 @@ void Survive(std::ofstream &DataFile)
 	   // by b, then add to v, as in eq. (13) in  Iwasa & Pomiankowski (1994)
        double v_expr = Females[i].v_expr;
    	   wf = exp((-b*pow(sump,(gam * thet)))+v_expr);
+          //Or is v_expr meant to be out of the exp??
       	   //std::cout << wf;
 
 	   //w = exp(-b*p_expr*p_expr + (1-sexlimt)*(-c)*t_expr*t_expr);
@@ -351,6 +353,7 @@ void Survive(std::ofstream &DataFile)
 
       	//Eq. 13 in Iwasa & Pomiankowski (1994)
  	wm = exp(v_expr-sumdiv);      //wm(survival) = exp(-sumctsq);
+  //Or is v_expr meant to be out of the exp??
         //std::cout << wm;
         
         	if (uniform(rng_r) < wm)
