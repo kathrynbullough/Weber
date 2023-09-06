@@ -59,13 +59,15 @@ double k[ntrait] = {0.0,0.0}; // sensitivity of cost coefficient to general viab
 
 double biast[ntrait] = {0.0,0.0}; // mutation bias: 0.5 means no bias. > 0.5 means bias towards reduction in tratt.
 //Are t mutations unbiased in good genes though???
+//Do we also need a biasv as well??
+//double biasv = 0.0;
 
 double mu_p[ntrait] 	  = {0.05,0.05};            // mutation rate preference
 double mu_t[ntrait] 	  = {0.05,0.05};            // mutation rate ornament
 double mu_v[ntrait] 	  = {0.05,0.05};            //mutation rate viability
 double sdmu_p[ntrait]         = {0.4,0.4};			 // standard deviation mutation stepsize
 double sdmu_t[ntrait]         = {0.4,0.4};			 // standard deviation mutation stepsize
-double sdmu_v[ntrait]         = {0.4,0.4};			 // standard deviation mutation stepsize
+double sdmu_v         = 0.4;					 // standard deviation mutation stepsize
 const double NumGen = 150000; // number of generations
 const int skip = 10; // n generations interval before data is printed
 double sexlimp = 0; // degree of sex-limited expression in p,t
