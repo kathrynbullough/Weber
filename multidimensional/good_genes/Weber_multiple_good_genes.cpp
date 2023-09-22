@@ -48,6 +48,7 @@ double a = 1.0; // choice slope
 double b = 0.5; // cost of preference 
 
 double gam = 2.0; // cost curvature of a preference (1: linear, 2: bell-shaped survival curve, 3: bell-shaped with skewness, etc etc)
+                  //
 double thet = 0.5; // how do preferences interact when it comes to a combined cost, see Pomiankowski & Iwasa 1993 procb
 double c[ntrait] = {0.5,0.5}; // cost of trait
 double lambda[ntrait] = {1.0,1.0}; // cost of trait
@@ -64,10 +65,10 @@ double biast[ntrait] = {0.0,0.0}; // mutation bias: 0.5 means no bias. > 0.5 mea
 
 double mu_p[ntrait] 	  = {0.05,0.05};            // mutation rate preference
 double mu_t[ntrait] 	  = {0.05,0.05};            // mutation rate ornament
-double mu_v[ntrait] 	  = {0.05,0.05};            //mutation rate viability
+double mu_v 	  = 0.05;            //mutation rate viability
 double sdmu_p[ntrait]         = {0.4,0.4};			 // standard deviation mutation stepsize
 double sdmu_t[ntrait]         = {0.4,0.4};			 // standard deviation mutation stepsize
-double sdmu_v         = 0.4;					 // standard deviation mutation stepsize
+double w_v         = 0.4;					 // neg binomial mutational effect size parameter (w in Iwasa et al (1991) and w in Fawcett et al 2007 p. 75
 const double NumGen = 150000; // number of generations
 const int skip = 10; // n generations interval before data is printed
 double sexlimp = 0; // degree of sex-limited expression in p,t
@@ -93,12 +94,12 @@ std::string file_name = "output.csv";
 // the components of an actual individual
 struct Individual
 {
-	double t[ntrait][2]; // diploid, additive loci for t,p
-	double p[ntrait][2];
-  double v[2]; // extra loci for v (but only one, doesn't need an ntrait]
-    	double t_expr[ntrait]; // and store their expressed values
-    	double p_expr[ntrait];
-      double v_expr;
+    double t[ntrait][2]; // diploid, additive loci for t,p
+    double p[ntrait][2];
+    double v[2]; // extra loci for v (but only one, doesn't need an ntrait]
+    double t_expr[ntrait]; // and store their expressed values
+    double p_expr[ntrait];
+    double v_expr;
 	// amount to be allocated to male vs. female function
 };
 
@@ -123,10 +124,16 @@ void initArguments(int argc, char *argv[])
   	mu_p[1] = std::stod(argv[9]);
 	mu_t[0] = std::stod(argv[10]);
  	mu_t[1] = std::stod(argv[11]);
+
+    // TODO update the numberz
+	mu_v = std::stod(argv[10]);
 	sdmu_p[0] = std::stod(argv[12]);
   	sdmu_p[1] = std::stod(argv[13]);
 	sdmu_t[0] = std::stod(argv[14]);
   	sdmu_t[1] = std::stod(argv[15]);
+    
+    w_v = std::stod(argv[15]);
+
 	sexlimp = std::stod(argv[16]);
 	sexlimt = std::stod(argv[17]);
     	pref = std::stoi(argv[18]);
@@ -159,13 +166,21 @@ void mutate(double &G, double mu, double sdmu, double bias=0.5)
         double effect = uniform_mutation(rng_r);
         G+= uniform(rng_r) < bias ? -effect : effect;
     }
-}
+} // end mutate
 
-//ALSO NOW NEED A MUTATION FUNCTION FOR V - DRAWN FROM A NEGATIVE EXPONENTIAL PROBABILITY DISTRIBUTION
+void mutate_v(double &v, double mu_v_i, double rate_v_i)
+{
+    if (uniform(rng_r) < mu_v_i)
+    {
+        std::exponential_distribution <double> v_effect{rate_v_i};
+        v -= v_effect(rng_r);
+    }
+} // end mutate_v
 
 // write the parameters to the DataFile
 void WriteParameters(std::ofstream &DataFile)
 {
+    // TODO update them paramz
 	DataFile << std::endl
 		<< std::endl
 		<< "type:;" << "gonochorist_fisherian" << ";" << std::endl
@@ -182,8 +197,9 @@ void WriteParameters(std::ofstream &DataFile)
 		<< "pref:;" <<  pref << ";"<< std::endl
 		<< "mu_p1:;" <<  mu_p[0] << ";" << std::endl
     		<< "mu_p2:;" <<  mu_p[1] << ";" << std::endl
-		<< "mu_t1:;" <<  mu_t[0] << ";" << std::endl
+            << "mu_t1:;" <<  mu_t[0] << ";" << std::endl
     		<< "mu_t2:;" <<  mu_t[1] << ";" << std::endl
+            << "mu_v:;" <<  mu_v << ";" << std::endl
 		<< "mu_std_p1:;" <<  sdmu_p[0] << ";" << std::endl
     		<< "mu_std_p2:;" <<  sdmu_p[1] << ";" << std::endl
 		<< "mu_std_t1:;" <<  sdmu_t[0] << ";"<< std::endl
@@ -210,23 +226,23 @@ void Init()
 		{
 			//Females[i].t[trait_idx][j] = init_t[trait_idx];
 			//Females[i].p[trait_idx][j] = init_p[trait_idx];
-      Females[i].t[trait_idx][j] = init_t[trait_idx];
+            Females[i].t[trait_idx][j] = init_t[trait_idx];
 			Females[i].p[trait_idx][j] = init_p[trait_idx];
 		}
 		
 		// and the expressed values
 		//Females[i].t_expr[trait_idx] = init_t[trait_idx];
 		//Females[i].p_expr[trait_idx] = init_p[trait_idx];
-     Females[i].t_expr[trait_idx] = init_t[trait_idx]*init_v;
-     Females[i].p_expr[trait_idx] = init_p[trait_idx];
-	  } // end for trait_idx
+         Females[i].t_expr[trait_idx] = init_t[trait_idx]*init_v;
+         Females[i].p_expr[trait_idx] = init_p[trait_idx];
+        } // end for trait_idx
      
-     //initialise v
-     for (int j = 0; j < 2; ++j)
-     {
-     Females[i].v[j] = init_v;
-     }
-     Females[i].v_expr = init_v;
+         //initialise v
+         for (int j = 0; j < 2; ++j)
+         {
+             Females[i].v[j] = init_v;
+         }
+         Females[i].v_expr = init_v;
      
 	} // end for Nfemales
 
@@ -239,22 +255,22 @@ void Init()
 			{
 				//Males[i].t[trait_idx][j] = init_t[trait_idx];
 				//Males[i].p[trait_idx][j] = init_p[trait_idx];
-        Males[i].t[trait_idx][j] = init_t[trait_idx];
+                Males[i].t[trait_idx][j] = init_t[trait_idx];
 				Males[i].p[trait_idx][j] = init_p[trait_idx];
 			}
 				
 		//Males[i].t_expr[trait_idx] = init_t[trait_idx];
 		//Males[i].p_expr[trait_idx] = init_p[trait_idx];
-    Males[i].t_expr[trait_idx] = init_t[trait_idx]*init_v;
-		Males[i].p_expr[trait_idx] = init_p[trait_idx];
+            Males[i].t_expr[trait_idx] = init_t[trait_idx]*init_v;
+            Males[i].p_expr[trait_idx] = init_p[trait_idx];
 	   }
        
-    //initialise v
-     for (int j = 0; j < 2; ++j)
-     {
-     Males[i].v[j] = init_v;
-     }
-     Males[i].v_expr = init_v;  
+        //initialise v
+         for (int j = 0; j < 2; ++j)
+         {
+             Males[i].v[j] = init_v;
+         }
+         Males[i].v_expr = init_v;  
     
 	}
 } // end Init
@@ -282,10 +298,13 @@ void Create_Kid(int mother, int father, Individual &kid)
   
      // inherit viability
     kid.v[0] = FemaleSurvivors[mother].v[segregator(rng_r)];
-    //INSERT V MUTATION FUNCTION HERE
+    mutate_v(kid.v[0], mu_v, w_v);
     kid.v[1] = MaleSurvivors[father].v[segregator(rng_r)];
-    //INSERT V MUTATION FUNCTION HERE
-    
+    mutate_v(kid.v[1], mu_v, w_v);
+
+
+    // TODO: t_expr as in your initialization
+
 } // end Create_Kid
 
 // survival stage
@@ -325,7 +344,8 @@ void Survive(std::ofstream &DataFile)
 	   // after summing over all traits, take power over gam * thet and multiply
 	   // by b, then add to v, as in eq. (13) in  Iwasa & Pomiankowski (1994)
        double v_expr = Females[i].v_expr;
-   	   wf = exp((-b*pow(sump,(gam * thet)))+v_expr);
+
+   	   wf = v_expr * exp((-b*pow(sump,(gam * thet))));
           //Or is v_expr meant to be out of the exp??
       	   //std::cout << wf;
 
@@ -348,27 +368,27 @@ void Survive(std::ofstream &DataFile)
      
 		for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
     		{
-			double t_expr = Males[i].t_expr[trait_idx];
+                double t_expr = Males[i].t_expr[trait_idx];
         		sumdiv += (c[trait_idx]/(1+k[trait_idx]*v_expr))*pow(t_expr,2);
 
      		} //end for trait_idx
 
-      	//Eq. 13 in Iwasa & Pomiankowski (1994)
- 	wm = exp(v_expr-sumdiv);      //wm(survival) = exp(-sumctsq);
+      	//Eq. 2A, 13 in Iwasa & Pomiankowski (1994)
+        wm = v_expr * exp(-sumdiv);      //wm(survival) = exp(-sumctsq);
   //Or is v_expr meant to be out of the exp??
         //std::cout << wm;
         
-        	if (uniform(rng_r) < wm)
-        	{
-            		for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
-            		{
-                		// in case of relative preferences get the mean ornament
-                   //Does this need to be multiplied by v as well??
-                		meanornsurv[trait_idx] += Males[i].t_expr[trait_idx];
-            		}
+        if (uniform(rng_r) < wm)
+        {
+            for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+            {
+                // in case of relative preferences get the mean ornament
+           //Does this need to be multiplied by v as well??
+                meanornsurv[trait_idx] += Males[i].t_expr[trait_idx];
+            }
 
-            	MaleSurvivors[msurvivors++] = Males[i];
-       		}
+            MaleSurvivors[msurvivors++] = Males[i];
+        }
 	}
 
     // extinction?
