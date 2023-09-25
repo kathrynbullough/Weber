@@ -53,15 +53,11 @@ double thet = 0.5; // how do preferences interact when it comes to a combined co
 double c[ntrait] = {0.5,0.5}; // cost of trait
 double lambda[ntrait] = {1.0,1.0}; // cost of trait
 
-//double tt[ntrait] = {0.0,0.0}; // viability independent component of male trait
-//double ttd[ntrait]  = {0.0,0.0}; // sensitivity of male trait  to general viability
-//double v = 0.0; // general viability
 double k[ntrait] = {0.0,0.0}; // sensitivity of cost coefficient to general viability - does this need to have ntrait???
 
 double biast[ntrait] = {0.0,0.0}; // mutation bias: 0.5 means no bias. > 0.5 means bias towards reduction in tratt.
 //Are t mutations unbiased in good genes though???
 //Do we also need a biasv as well??
-//double biasv = 0.0;
 
 double mu_p[ntrait] 	  = {0.05,0.05};            // mutation rate preference
 double mu_t[ntrait] 	  = {0.05,0.05};            // mutation rate ornament
@@ -114,7 +110,6 @@ void initArguments(int argc, char *argv[])
 {
 	a = std::stod(argv[1]);
 	b = std::stod(argv[2]);
-    // initially same cost for each ornament
 	c[0] = std::stod(argv[3]);
   	c[1] = std::stod(argv[4]);
   	lambda[0] = lambda[1] = std::stod(argv[5]);
@@ -124,34 +119,25 @@ void initArguments(int argc, char *argv[])
   	mu_p[1] = std::stod(argv[9]);
 	mu_t[0] = std::stod(argv[10]);
  	mu_t[1] = std::stod(argv[11]);
-
-    // TODO update the numberz
-	mu_v = std::stod(argv[10]);
-	sdmu_p[0] = std::stod(argv[12]);
-  	sdmu_p[1] = std::stod(argv[13]);
-	sdmu_t[0] = std::stod(argv[14]);
-  	sdmu_t[1] = std::stod(argv[15]);
-    
-    w_v = std::stod(argv[15]);
-
-	sexlimp = std::stod(argv[16]);
-	sexlimt = std::stod(argv[17]);
-    	pref = std::stoi(argv[18]);
-    	init_t[0] = std::stod(argv[19]);
-    	init_t[1] = std::stod(argv[20]);
-    	init_p[0] = std::stod(argv[21]);
-    	init_p[1] = std::stod(argv[22]);
-      init_v = std::stod(argv[23]);
-    	gam = std::stod(argv[24]);
-    	thet = std::stod(argv[25]);
-     //tt[0] = std::stod(argv[25]); 
-     //tt[1] = std::stod(argv[26]); 
-     //ttd[0]  = std::stod(argv[27]); 
-     //ttd[1]  = std::stod(argv[28]);
-     //v = std::stod(argv[29]);
-     k[0] = std::stod(argv[26]);
-     k[1] = std::stod(argv[27]);
-    	file_name = argv[28];
+	mu_v = std::stod(argv[12]);
+	sdmu_p[0] = std::stod(argv[13]);
+  	sdmu_p[1] = std::stod(argv[14]);
+	sdmu_t[0] = std::stod(argv[15]);
+  	sdmu_t[1] = std::stod(argv[16]);    
+    w_v = std::stod(argv[17]);
+	sexlimp = std::stod(argv[18]);
+	sexlimt = std::stod(argv[19]);
+    	pref = std::stoi(argv[20]);
+    	init_t[0] = std::stod(argv[21]);
+    	init_t[1] = std::stod(argv[22]);
+    	init_p[0] = std::stod(argv[23]);
+    	init_p[1] = std::stod(argv[24]);
+      init_v = std::stod(argv[25]);
+    	gam = std::stod(argv[26]);
+    	thet = std::stod(argv[27]);
+     k[0] = std::stod(argv[28]);
+     k[1] = std::stod(argv[29]);
+    	file_name = argv[30];
     //Maybe add another one to allow the change of ntraits to something other than 2?
 } // end initArguments
 

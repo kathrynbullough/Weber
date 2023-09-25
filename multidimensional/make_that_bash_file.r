@@ -8,7 +8,7 @@ parameter_object <- list()
 
 parameter_object$a <- 1    #Choice slope
 parameter_object$b <- 0.001      #Cost of preference
-parameter_object$c1 <- 0.5      #Cost of trait
+parameter_object$c1 <- 0.25      #Cost of trait
 parameter_object$c2 <- 0.5  
 parameter_object$lambda <- 1    #Keep as 1!!!
 parameter_object$biast1 <- 0.9  #Mutation bias
@@ -17,7 +17,7 @@ parameter_object$mu_p1 <- 0.05
 parameter_object$mu_p2 <- 0.0
 parameter_object$mu_t1 <- 0.05
 parameter_object$mu_t2 <- 0.0
-parameter_object$sdmu_p1 <- seq(0,0.3,0.01)
+parameter_object$sdmu_p1 <- 0.05
 parameter_object$sdmu_p2 <- 0.0
 parameter_object$sdmu_t1 <- 0.05
 parameter_object$sdmu_t2 <- 0.0
@@ -37,7 +37,7 @@ parameter_object$thet <- 0.8
 # please be sensible with the amount of parameters
 
 make.batch.file(parameter_list=parameter_object
-                     ,executable_path="./Weber_multiple.exe",n_replicates=1)
+                     ,executable_path="./Weber_multiple.exe",n_replicates=5)
                      
                      
 #seq(0,0.5,0.1)
