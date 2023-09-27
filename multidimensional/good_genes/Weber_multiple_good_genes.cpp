@@ -166,7 +166,6 @@ void mutate_v(double &v, double mu_v_i, double rate_v_i)
 // write the parameters to the DataFile
 void WriteParameters(std::ofstream &DataFile)
 {
-    // TODO update them paramz
 	DataFile << std::endl
 		<< std::endl
 		<< "type:;" << "gonochorist_fisherian" << ";" << std::endl
@@ -176,6 +175,7 @@ void WriteParameters(std::ofstream &DataFile)
     		<< "init_t2:;" << init_t[1] << ";" << std::endl
 		<< "init_p1:;" << init_p[0] << ";" << std::endl
     		<< "init_p2:;" << init_p[1] << ";" << std::endl
+       << "init_v:;" << init_v << ";" << std::endl
 		<< "a:;" <<  a << ";"<< std::endl
 		<< "b:;" <<  b << ";"<< std::endl
 		<< "c1:;" <<  c[0] << ";"<< std::endl
@@ -196,6 +196,8 @@ void WriteParameters(std::ofstream &DataFile)
 		<< "sexlimt:;" <<  sexlimt << ";"<< std::endl
     		<< "gamma:;" <<  gam << ";"<< std::endl
     		<< "theta:;" <<  thet << ";"<< std::endl
+       << "mu_v:;" << mu_v << ";" << std::endl
+       << "w_v:;" << w_v << ";" << std::endl
 		<< "seed:;" << seed << ";"<< std::endl;
 }
 
@@ -691,8 +693,10 @@ void WriteData(std::ofstream &DataFile)
     double ssp[ntrait] = {0.0,0.0};
     double sst[ntrait] = {0.0,0.0};
     double spt[ntrait] = {0.0,0.0};
+    double meanv = 0.0;
+    double ssv = 0.0;
 
-    double p[ntrait],t[ntrait],meanmrs,meanfrs,varfrs,varmrs;
+    double p[ntrait],t[ntrait],v,meanmrs,meanfrs,varfrs,varmrs;
     double ssmrs = 0, ssfrs = 0, summrs=0, sumfrs=0;
 
     // calculate means and variances for the males
@@ -710,6 +714,10 @@ void WriteData(std::ofstream &DataFile)
         		sst[trait_idx] += t[trait_idx] * t[trait_idx];
         		spt[trait_idx] += t[trait_idx] * p[trait_idx];
     		}
+       
+       v = 0.5 * (Males[i].v[0] + Males[i].v[1]);
+       meanv += v;
+       ssv += v*v;
 
         	if (i < msurvivors)
         	{
@@ -733,6 +741,10 @@ void WriteData(std::ofstream &DataFile)
         		sst[trait_idx] += t[trait_idx] * t[trait_idx];
         		spt[trait_idx] += t[trait_idx] * p[trait_idx];
     		}
+       
+       v = 0.5 * (Females[i].v[0] + Females[i].v[1]);
+       meanv += v;
+       ssv += v*v;
         
         	if (i < fsurvivors)
         	{
@@ -744,6 +756,7 @@ void WriteData(std::ofstream &DataFile)
     double varp[ntrait] = {0.0,0.0}; 
     double vart[ntrait] = {0.0,0.0}; 
     double covpt[ntrait] = {0.0,0.0};
+    double varv = 0.0;
 
     double sum_sexes = Nmales + Nfemales;
 
@@ -756,8 +769,9 @@ void WriteData(std::ofstream &DataFile)
         covpt[trait_idx] = spt[trait_idx] / sum_sexes - meanp[trait_idx] * meant[trait_idx];
         
     }
-
     
+    meanv /= sum_sexes;
+    varv = ssv / sum_sexes - meanv * meanv;
 
     meanfrs = sumfrs / Nfemales;
     varfrs = ssfrs / Nfemales - meanfrs * meanfrs;
@@ -780,7 +794,9 @@ void WriteData(std::ofstream &DataFile)
                 << ";" << covpt [trait_idx]
                 << ";";
     	}
-	DataFile << meanfrs 
+	DataFile << meanv
+ << ";" << varv
+  << ";" << meanfrs 
         << ";" << meanmrs 		
         << ";" << varfrs 
         << ";" << varmrs 
@@ -806,7 +822,9 @@ void WriteDataHeaders(std::ofstream &DataFile)
             << "covpt" << (trait_idx + 1) << ";";
     }
 
-    DataFile << "meanfrs"
+    DataFile << "meanv"
+    << "varv"
+    << "meanfrs"
         << ";meanmrs"
         << ";varfrs"
         << ";varmrs"
