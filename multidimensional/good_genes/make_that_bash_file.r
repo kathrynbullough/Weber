@@ -17,12 +17,12 @@ parameter_object$mu_p1 <- 0.05
 parameter_object$mu_p2 <- 0.0
 parameter_object$mu_t1 <- 0.05
 parameter_object$mu_t2 <- 0.0
-parameter_object$mu_v <- 0.0
+parameter_object$mu_v <- 0.05
 parameter_object$sdmu_p1 <- 0.05
 parameter_object$sdmu_p2 <- 0.0
 parameter_object$sdmu_t1 <- 0.05
 parameter_object$sdmu_t2 <- 0.0
-parameter_object$w_v <- 0.0
+parameter_object$w_v <- 0.05
 parameter_object$sex_limited_p <- 1.0
 parameter_object$sex_limited_t <- 1.0
 parameter_object$pref_type <- 0
@@ -30,10 +30,10 @@ parameter_object$init_t1 <- 0
 parameter_object$init_t2 <- 0
 parameter_object$init_p1 <- 3
 parameter_object$init_p2 <- 0
-parameter_object$init_v <- 0.0
+parameter_object$init_v <- 2
 parameter_object$gam <- 2 #does 1 look better?
 parameter_object$thet <- 0.8
-parameter_object$k1 <- 0.0
+parameter_object$k1 <- 0.0   #How the cost of ornamentation depeneds on general viability (k=0 implies ornament cost is independent of viability)
 parameter_object$k2 <- 0.0
 
 #purlease continue adding all the parameters, except for the output file
