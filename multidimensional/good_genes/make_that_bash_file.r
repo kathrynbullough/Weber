@@ -42,7 +42,7 @@ parameter_object$k2 <- 0.0
 # please be sensible with the amount of parameters
 
 make.batch.file(parameter_list=parameter_object
-                     ,executable_path="./Weber_multiple.exe",n_replicates=5)
+                     ,executable_path="./Weber_goodgenes.exe",n_replicates=5)
                      
                      
 #seq(0,0.5,0.1)
