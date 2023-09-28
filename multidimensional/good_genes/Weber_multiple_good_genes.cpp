@@ -823,8 +823,8 @@ void WriteDataHeaders(std::ofstream &DataFile)
     }
 
     DataFile << "meanv"
-    << "varv"
-    << "meanfrs"
+    << ";varv"
+    << ";meanfrs"
         << ";meanmrs"
         << ";varfrs"
         << ";varmrs"
