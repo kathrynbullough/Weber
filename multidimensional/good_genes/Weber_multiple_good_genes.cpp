@@ -154,12 +154,20 @@ void mutate(double &G, double mu, double sdmu, double bias=0.5)
     }
 } // end mutate
 
-void mutate_v(double &v, double mu_v_i, double rate_v_i)
+void mutate_v(double &v, double mu_v_i, double sdmu_v)
 {
     if (uniform(rng_r) < mu_v_i)
     {
-        std::exponential_distribution <double> v_effect{rate_v_i};
-        v -= v_effect(rng_r);
+        // to test that 0 mutation bias indeed leads to no exaggeration (fingers crossed)
+        std::normal_distribution<double> v_effect_norm{0.0,sdmu_v};
+
+//        std::exponential_distribution <double> v_effect{rate_v_i};
+//        v -= v_effect(rng_r);
+        v += v_effect_norm(rng_r);
+
+        // make sure trait is bound between 0 and 1
+        v = std::clamp(v, 0.0, 1.0);
+
     }
 } // end mutate_v
 
@@ -290,8 +298,6 @@ void Create_Kid(int mother, int father, Individual &kid)
     kid.v[1] = MaleSurvivors[father].v[segregator(rng_r)];
     mutate_v(kid.v[1], mu_v, w_v);
 
-
-    // TODO: t_expr as in your initialization
 
 } // end Create_Kid
 
