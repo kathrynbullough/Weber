@@ -13,6 +13,7 @@
 #include <cmath>
 #include <cassert>
 #include <random>
+#include <algorithm>
 
 // random number generators
 //
