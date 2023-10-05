@@ -22,7 +22,7 @@ parameter_object$sdmu_p1 <- 0.05
 parameter_object$sdmu_p2 <- 0.0
 parameter_object$sdmu_t1 <- 0.05
 parameter_object$sdmu_t2 <- 0.0
-parameter_object$w_v <- 0.05
+parameter_object$w_v <- 0.05   #Bias for v - 0.01-0.1 on bias test
 parameter_object$sex_limited_p <- 1.0
 parameter_object$sex_limited_t <- 1.0
 parameter_object$pref_type <- 0
