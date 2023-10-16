@@ -30,9 +30,9 @@ parameter_object$init_t1 <- 0
 parameter_object$init_t2 <- 0
 parameter_object$init_p1 <- 3
 parameter_object$init_p2 <- 0
-parameter_object$init_v <- 2
+parameter_object$init_v <- 0.5
 parameter_object$gam <- 2 #does 1 look better?
-parameter_object$thet <- 0.8
+parameter_object$thet <- 1
 parameter_object$k1 <- 0.0   #How the cost of ornamentation depeneds on general viability (k=0 implies ornament cost is independent of viability)
 parameter_object$k2 <- 0.0
 

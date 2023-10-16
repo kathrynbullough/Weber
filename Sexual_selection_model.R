@@ -438,3 +438,37 @@ multisimsWeb<-read.delim("sims_output_multiWeb.csv", sep=" ", header=T)
 install.packages("remotes")
 remotes::install_github("bramkuijper/simulation.utils")
 library("simulation.utils")
+
+#### Trying ggplot code ####
+
+#Plot dynamics between p1 and t1
+plot_p1_t1 <- ggplot(data=multi, aes(x=meanp1, y=meant1)) + geom_point(size=1) +
+  geom_path(mapping=aes(x=meanp1,y=meant1))
+plot_p1_t1
+
+#Plot dynamics between p2 and t2
+plot_p2_t2 <- ggplot(data=multi, aes(x=meanp2, y=meant2)) + geom_point(size=1) +
+  geom_path(mapping=aes(x=meanp2,y=meant2))
+plot_p2_t2
+
+#Plot dynamics of p1, t1, p2, t2 all on the same graph
+plot_p_t <- ggplot(data=multi,aes(x=meanp1, y=meant1))  +
+    geom_path(mapping=aes(x=meanp1,y=meant1), colour="red") + geom_path(mapping=aes(x=meanp2,y=meant2), colour="blue")
+plot_p_t
+
+
+#Plot covarience over time
+plot_cov1 <- ggplot(data=sim_data
+                    ,mapping=aes(x=generation
+                                 ,y=covpt1)) +
+  geom_line(mapping=aes(x=generation,y=covpt1))
+
+#Plot covarience over time
+#plot_cov2 <- ggplot(data=sim_data
+#                   ,mapping=aes(x=generation
+#                                ,y=covpt2)) +
+#  geom_line(mapping=aes(x=generation,y=covpt2))
+
+
+
+

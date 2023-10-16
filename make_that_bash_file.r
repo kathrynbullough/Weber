@@ -9,7 +9,7 @@ parameter_object <- list()
 parameter_object$a <- 1    #Choice slope
 parameter_object$b <- 0.001      #Cost of preference
 parameter_object$c <- 0.5      #Cost of trait
-parameter_object$biast <- 0.9  #Mutation bias
+parameter_object$biast <- 0.5  #Mutation bias
 parameter_object$mu_p <- 0.05
 parameter_object$mu_t <- 0.05
 parameter_object$sdmu_p <- 0.05
