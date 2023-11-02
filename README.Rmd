@@ -9,7 +9,7 @@
 
 #parameter_object$a <- 1  
 #parameter_object$b <- 0.001   
-#parameter_object$c <- 0.5   
+#parameter_object$c <- 0.5   # 0.2 might work better now!!!
 #parameter_object$lambda <- 1  
 #parameter_object$biast1 <- 0.9 
 #parameter_object$biast2 <- 0.9
