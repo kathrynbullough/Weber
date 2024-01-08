@@ -54,18 +54,18 @@ double thet = 0.5; // how do preferences interact when it comes to a combined co
 double c[ntrait] = {0.5,0.5}; // cost of trait
 double lambda[ntrait] = {1.0,1.0}; // cost of trait
 
-double k[ntrait] = {0.0,0.0}; // sensitivity of cost coefficient to general viability - does this need to have ntrait???
+double k[ntrait] = {0.0,0.0}; // sensitivity of cost coefficient to general viability, see 2nd equation of eq. (13) Iwasa & Pomiankowski 1994 
 
 double biast[ntrait] = {0.0,0.0}; // mutation bias: 0.5 means no bias. > 0.5 means bias towards reduction in tratt.
-//Are t mutations unbiased in good genes though???
-//Do we also need a biasv as well??
 
+double biasv{0.0}; // mutation bias acting on the general viability trait
+                                  //
 double mu_p[ntrait] 	  = {0.05,0.05};            // mutation rate preference
 double mu_t[ntrait] 	  = {0.05,0.05};            // mutation rate ornament
 double mu_v 	  = 0.05;            //mutation rate viability
 double sdmu_p[ntrait]         = {0.4,0.4};			 // standard deviation mutation stepsize
 double sdmu_t[ntrait]         = {0.4,0.4};			 // standard deviation mutation stepsize
-double w_v         = 0.4;					 // neg binomial mutational effect size parameter (w in Iwasa et al (1991) and w in Fawcett et al 2007 p. 75
+double sdmu_v         = 0.4;					 // neg binomial mutational effect size parameter (w in Iwasa et al (1991) and w in Fawcett et al 2007 p. 75
 const double NumGen = 150000; // number of generations
 const int skip = 10; // n generations interval before data is printed
 double sexlimp = 0; // degree of sex-limited expression in p,t
@@ -116,29 +116,33 @@ void initArguments(int argc, char *argv[])
   	lambda[0] = lambda[1] = std::stod(argv[5]);
 	biast[0] = std::stod(argv[6]);
   	biast[1] = std::stod(argv[7]);
-	mu_p[0] = std::stod(argv[8]);
-  	mu_p[1] = std::stod(argv[9]);
-	mu_t[0] = std::stod(argv[10]);
- 	mu_t[1] = std::stod(argv[11]);
-	mu_v = std::stod(argv[12]);
-	sdmu_p[0] = std::stod(argv[13]);
-  	sdmu_p[1] = std::stod(argv[14]);
-	sdmu_t[0] = std::stod(argv[15]);
-  	sdmu_t[1] = std::stod(argv[16]);    
-    w_v = std::stod(argv[17]);
-	sexlimp = std::stod(argv[18]);
-	sexlimt = std::stod(argv[19]);
-    	pref = std::stoi(argv[20]);
-    	init_t[0] = std::stod(argv[21]);
-    	init_t[1] = std::stod(argv[22]);
-    	init_p[0] = std::stod(argv[23]);
-    	init_p[1] = std::stod(argv[24]);
-      init_v = std::stod(argv[25]);
-    	gam = std::stod(argv[26]);
-    	thet = std::stod(argv[27]);
-     k[0] = std::stod(argv[28]);
-     k[1] = std::stod(argv[29]);
-    	file_name = argv[30];
+
+    // bias in the genetic quality trait
+  	biasv = std::stod(argv[8]);
+
+	mu_p[0] = std::stod(argv[9]);
+  	mu_p[1] = std::stod(argv[10]);
+	mu_t[0] = std::stod(argv[11]);
+ 	mu_t[1] = std::stod(argv[12]);
+	mu_v = std::stod(argv[13]);
+	sdmu_p[0] = std::stod(argv[14]);
+  	sdmu_p[1] = std::stod(argv[15]);
+	sdmu_t[0] = std::stod(argv[16]);
+  	sdmu_t[1] = std::stod(argv[17]);    
+    sdmu_v = std::stod(argv[18]);
+	sexlimp = std::stod(argv[19]);
+	sexlimt = std::stod(argv[20]);
+    	pref = std::stoi(argv[21]);
+    	init_t[0] = std::stod(argv[22]);
+    	init_t[1] = std::stod(argv[23]);
+    	init_p[0] = std::stod(argv[24]);
+    	init_p[1] = std::stod(argv[25]);
+      init_v = std::stod(argv[26]);
+    	gam = std::stod(argv[27]);
+    	thet = std::stod(argv[28]);
+     k[0] = std::stod(argv[29]);
+     k[1] = std::stod(argv[30]);
+    	file_name = argv[31];
     //Maybe add another one to allow the change of ntraits to something other than 2?
 } // end initArguments
 
@@ -154,23 +158,6 @@ void mutate(double &G, double mu, double sdmu, double bias=0.5)
         G+= uniform(rng_r) < bias ? -effect : effect;
     }
 } // end mutate
-
-void mutate_v(double &v, double mu_v_i, double sdmu_v)
-{
-    if (uniform(rng_r) < mu_v_i)
-    {
-        // to test that 0 mutation bias indeed leads to no exaggeration (fingers crossed)
-        std::normal_distribution<double> v_effect_norm{0.0,sdmu_v};
-
-//        std::exponential_distribution <double> v_effect{rate_v_i};
-//        v -= v_effect(rng_r);
-        v += v_effect_norm(rng_r);
-
-        // make sure trait is bound between 0 and 1
-        v = std::clamp(v, 0.0, 1.0);
-
-    }
-} // end mutate_v
 
 // write the parameters to the DataFile
 void WriteParameters(std::ofstream &DataFile)
@@ -201,12 +188,13 @@ void WriteParameters(std::ofstream &DataFile)
     		<< "mu_std_t2:;" <<  sdmu_t[1] << ";" << std::endl
 		<< "biast1:;" <<  biast[0] << ";" << std::endl
     		<< "biast2:;" <<  biast[1] << ";" << std::endl
+    		<< "biasv:;" <<  biasv << ";" << std::endl
 		<< "sexlimp:;" <<  sexlimp << ";"<< std::endl
 		<< "sexlimt:;" <<  sexlimt << ";"<< std::endl
     		<< "gamma:;" <<  gam << ";"<< std::endl
     		<< "theta:;" <<  thet << ";"<< std::endl
        << "mu_v:;" << mu_v << ";" << std::endl
-       << "w_v:;" << w_v << ";" << std::endl
+       << "sdmu_v:;" << sdmu_v << ";" << std::endl
 		<< "seed:;" << seed << ";"<< std::endl;
 }
 
@@ -295,9 +283,9 @@ void Create_Kid(int mother, int father, Individual &kid)
   
      // inherit viability
     kid.v[0] = FemaleSurvivors[mother].v[segregator(rng_r)];
-    mutate_v(kid.v[0], mu_v, w_v);
+    mutate(kid.v[0], mu_v, sdmu_v, biasv);
     kid.v[1] = MaleSurvivors[father].v[segregator(rng_r)];
-    mutate_v(kid.v[1], mu_v, w_v);
+    mutate(kid.v[1], mu_v, sdmu_v, biasv);
 
 
 } // end Create_Kid
