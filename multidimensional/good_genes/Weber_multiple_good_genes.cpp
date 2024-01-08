@@ -66,6 +66,8 @@ double mu_v 	  = 0.05;            //mutation rate viability
 double sdmu_p[ntrait]         = {0.4,0.4};			 // standard deviation mutation stepsize
 double sdmu_t[ntrait]         = {0.4,0.4};			 // standard deviation mutation stepsize
 double sdmu_v         = 0.4;					 // neg binomial mutational effect size parameter (w in Iwasa et al (1991) and w in Fawcett et al 2007 p. 75
+double v_opt = 2.0;
+
 const double NumGen = 150000; // number of generations
 const int skip = 10; // n generations interval before data is printed
 double sexlimp = 0; // degree of sex-limited expression in p,t
@@ -93,7 +95,7 @@ struct Individual
 {
     double t[ntrait][2]; // diploid, additive loci for t,p
     double p[ntrait][2];
-    double v[2]; // extra loci for v (but only one, doesn't need an ntrait]
+    double v[2]; // extra locus for v
     double t_expr[ntrait]; // and store their expressed values
     double p_expr[ntrait];
     double v_expr;
@@ -189,6 +191,7 @@ void WriteParameters(std::ofstream &DataFile)
 		<< "biast1:;" <<  biast[0] << ";" << std::endl
     		<< "biast2:;" <<  biast[1] << ";" << std::endl
     		<< "biasv:;" <<  biasv << ";" << std::endl
+    		<< "v_opt:;" <<  v_opt << ";" << std::endl
 		<< "sexlimp:;" <<  sexlimp << ";"<< std::endl
 		<< "sexlimt:;" <<  sexlimt << ";"<< std::endl
     		<< "gamma:;" <<  gam << ";"<< std::endl
@@ -328,7 +331,8 @@ void Survive(std::ofstream &DataFile)
 	   // by b, then add to v, as in eq. (13) in  Iwasa & Pomiankowski (1994)
        double v_expr = Females[i].v_expr;
 
-   	   wf = v_expr * exp((-b*pow(sump,(gam * thet))));
+       // exp(-v_expr^2) is stabilizing selection around
+   	   wf = exp(-b*pow(sump,(gam * thet)) -(v_expr - v_opt)*(v_expr - v_opt));
           //Or is v_expr meant to be out of the exp??
       	   //std::cout << wf;
 
@@ -346,18 +350,18 @@ void Survive(std::ofstream &DataFile)
     // male survival
 	for (int i = 0; i < Nmales; ++i)
 	{
-     	sumdiv = 0.0;
-      double v_expr = Males[i].v_expr;
+        sumdiv = 0.0;
+        double v_expr = Males[i].v_expr;
      
 		for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
-    		{
-                double t_expr = Males[i].t_expr[trait_idx];
-        		sumdiv += (c[trait_idx]/(1+k[trait_idx]*v_expr))*pow(t_expr,2);
+        {
+            double t_expr = Males[i].t_expr[trait_idx];
+            sumdiv += (c[trait_idx]/(1+k[trait_idx]*v_expr))*pow(t_expr,2);
 
-     		} //end for trait_idx
+        } //end for trait_idx
 
       	//Eq. 2A, 13 in Iwasa & Pomiankowski (1994)
-        wm = v_expr * exp(-sumdiv);      //wm(survival) = exp(-sumctsq);
+        wm = exp(-sumdiv -(v_expr - v_opt)*(v_expr - v_opt));      //wm(survival) = exp(-sumctsq);
   //Or is v_expr meant to be out of the exp??
         //std::cout << wm;
         
