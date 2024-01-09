@@ -415,6 +415,86 @@ plot_monodfish <- ggplot(monodfish) +
 plot_monodfish
 
 
+# Varying b, c, and bias
+
+#for mutation bias
+vary_b<-read.delim("sims_output_vary_b.csv", sep=" ", header=T)
+plot_vary_b <- ggplot(vary_b) + 
+  geom_point(aes(x=b.,y=meant1,colour="t")) + 
+  geom_point(aes(x=b.,y=meanp1,colour="p"))
+plot_vary_b
+
+vary_c<-read.delim("sims_output_vary_c.csv", sep=" ", header=T)
+plot_vary_c <- ggplot(vary_c) + 
+  geom_point(aes(x=c1.,y=meant1,colour="t")) + 
+  geom_point(aes(x=c1.,y=meanp1,colour="p"))
+plot_vary_c
+
+vary_bias<-read.delim("sims_output_vary_bias.csv", sep=" ", header=T)
+plot_vary_bias <- ggplot(vary_bias) + 
+  geom_point(aes(x=biast1.,y=meant1,colour="t")) + 
+  geom_point(aes(x=biast1.,y=meanp1,colour="p"))
+plot_vary_bias
+
+#without mutation bias
+vary_b_nobias<-read.delim("sims_output_vary_b_nobias.csv", sep=" ", header=T)
+plot_vary_b_nobias <- ggplot(vary_b_nobias) + 
+  geom_point(aes(x=b.,y=meant1,colour="t")) + 
+  geom_point(aes(x=b.,y=meanp1,colour="p"))
+plot_vary_b_nobias
+
+vary_c_nobias<-read.delim("sims_output_vary_c_nobias.csv", sep=" ", header=T)
+plot_vary_c_nobias <- ggplot(vary_c_nobias) + 
+  geom_point(aes(x=c1.,y=meant1,colour="t")) + 
+  geom_point(aes(x=c1.,y=meanp1,colour="p"))
+plot_vary_c_nobias
+
+# Multi-panel plots
+
+vary5b<-read.delim("sims_output_5b.csv", sep=" ", header=T)
+plot_vary5b <- ggplot(vary5b) + 
+  geom_point(aes(x=biast1.,y=meant1,colour="t")) + 
+  geom_point(aes(x=biast1.,y=meanp1,colour="p")) +
+  facet_grid(b.~.)
+plot_vary5b
+
+vary5c<-read.delim("sims_output_5c.csv", sep=" ", header=T)
+merge<-rbind(vary5b,vary5c)
+
+plot_vary <- ggplot(merge) + 
+  geom_point(aes(x=biast1.,y=meant1,colour="t")) + 
+  geom_point(aes(x=biast1.,y=meanp1,colour="p")) +
+  facet_grid(b.~c1., labeller = label_both)
+plot_vary
+
+OE<-read.delim("sims_output_OE.csv", sep=" ", header=T)
+plot_OE <- ggplot(OE) + 
+  geom_point(aes(x=biast1.,y=meant1,colour="t")) + 
+  geom_point(aes(x=biast1.,y=meanp1,colour="p")) +
+  facet_grid(b.~c1., labeller = label_both,scales = "free")
+plot_OE
+
+WEB<-read.delim("sims_output_WEBFACET.csv", sep=" ", header=T)
+plot_WEB <- ggplot(WEB) + 
+  geom_point(aes(x=biast1.,y=meant1,colour="t")) + 
+  geom_point(aes(x=biast1.,y=meanp1,colour="p")) +
+  facet_grid(b.~c1., labeller = label_both,scales = "free")
+plot_WEB
+
+WEB2 <- subset(WEB, WEB$biast1.!=1)
+plot_WEB <- ggplot(WEB2) + 
+  geom_point(aes(x=biast1.,y=meant1,colour="t")) + 
+  geom_point(aes(x=biast1.,y=meanp1,colour="p")) +
+  facet_grid(b.~c1., labeller = label_both,scales = "free")
+plot_WEB
+
+WEB3 <- subset(WEB2, WEB2$c1.!=0.01)
+plot_WEBzoom <- ggplot(WEB3) + 
+  geom_point(aes(x=biast1.,y=meant1,colour="t")) + 
+  geom_point(aes(x=biast1.,y=meanp1,colour="p")) +
+  facet_grid(b.~c1., labeller = label_both,scales = "free")
+plot_WEBzoom
+
 
 #### multiple traits ####
 
@@ -430,6 +510,12 @@ plot_mean_p
 
 multiWeb<-read.delim("output_multiWeb.csv", sep=";", header=T)
 plot(multiWeb$meant2~multiWeb$generation)
+
+
+
+
+
+
 
 
 multisims<-read.delim("sims_output_multi.csv", sep=" ", header=T)
@@ -468,6 +554,15 @@ plot_cov1 <- ggplot(data=sim_data
 #                   ,mapping=aes(x=generation
 #                                ,y=covpt2)) +
 #  geom_line(mapping=aes(x=generation,y=covpt2))
+
+
+varb<-read.delim("varb.csv", sep=" ", header=T)
+
+plotb <- ggplot(varb) + 
+  geom_point(aes(x=biast1.,y=meant1,colour="t")) + 
+  geom_point(aes(x=biast1.,y=meanp1,colour="p"))
+plotb
+
 
 
 
