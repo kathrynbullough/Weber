@@ -449,7 +449,7 @@ plot_vary_c_nobias <- ggplot(vary_c_nobias) +
   geom_point(aes(x=c1.,y=meanp1,colour="p"))
 plot_vary_c_nobias
 
-# Multi-panel plots
+#### Multi-panel plots ####
 
 vary5b<-read.delim("sims_output_5b.csv", sep=" ", header=T)
 plot_vary5b <- ggplot(vary5b) + 
@@ -494,6 +494,18 @@ plot_WEBzoom <- ggplot(WEB3) +
   geom_point(aes(x=biast1.,y=meanp1,colour="p")) +
   facet_grid(b.~c1., labeller = label_both,scales = "free")
 plot_WEBzoom
+
+goodgenesOE<-read.delim("sims_output_gg_oe.csv", sep=" ", header=T)
+goodgenesOE$file2 = as.numeric(gsub(".*?([0-9]+).*", "\\1", goodgenesOE$file))
+goodgenesOE <- goodgenesOE[order(goodgenesOE$file2),]
+setdiff(1:880, goodgenesOE$file2)
+goodgenesOE$k <- rep(c(0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1),c(77,78,75,77,70,69,71,75,71,73,68))
+plot_goodgenesOE <- ggplot(goodgenesOE) + 
+  geom_point(aes(x=biasv.,y=meant1,colour="t")) + 
+  geom_point(aes(x=biasv.,y=meanp1,colour="p")) +
+  facet_grid(k~sdmu_v., labeller = label_both,scales = "free")
+plot_goodgenesOE
+
 
 
 #### multiple traits ####
