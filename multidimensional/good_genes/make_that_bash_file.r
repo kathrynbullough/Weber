@@ -13,6 +13,7 @@ parameter_object$c2 <- 0.2
 parameter_object$lambda <- 1    #Keep as 1!!!
 parameter_object$biast1 <- 0.9  #Mutation bias
 parameter_object$biast2 <- 0.9
+parameter_object$biasv <- 0.9
 parameter_object$mu_p1 <- 0.05
 parameter_object$mu_p2 <- 0.05
 parameter_object$mu_t1 <- 0.05
@@ -22,7 +23,7 @@ parameter_object$sdmu_p1 <- 0.05
 parameter_object$sdmu_p2 <- 0.05
 parameter_object$sdmu_t1 <- 0.05
 parameter_object$sdmu_t2 <- 0.05
-parameter_object$w_v <- seq(0.01,0.1,0.01)   #Bias for v - 0.01-0.1 on bias test
+parameter_object$sdmu_v <- 0.05
 parameter_object$sex_limited_p <- 1.0
 parameter_object$sex_limited_t <- 1.0
 parameter_object$pref_type <- seq(0,3,3)
