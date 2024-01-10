@@ -198,6 +198,8 @@ void WriteParameters(std::ofstream &DataFile)
     		<< "theta:;" <<  thet << ";"<< std::endl
        << "mu_v:;" << mu_v << ";" << std::endl
        << "sdmu_v:;" << sdmu_v << ";" << std::endl
+       << "k1:;" << k[0] << ";" << std::endl
+       << "k2:;" << k[1] << ";" << std::endl
 		<< "seed:;" << seed << ";"<< std::endl;
 }
 
