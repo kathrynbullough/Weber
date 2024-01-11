@@ -505,8 +505,15 @@ plot_goodgenesOE <- ggplot(goodgenesOE) +
   geom_point(aes(x=biasv.,y=meanp1,colour="p")) +
   facet_grid(k~sdmu_v., labeller = label_both,scales = "free")
 plot_goodgenesOE
+ggsave(filename="plot_goodgenesOE.pdf",width = 15,height = 20)
 
-
+goodgenesWEB<-read.delim("sims_output_gg_web.csv", sep=" ", header=T)
+plot_goodgenesWEB <- ggplot(goodgenesWEB) + 
+  geom_point(aes(x=biasv.,y=meant1,colour="t")) + 
+  geom_point(aes(x=biasv.,y=meanp1,colour="p")) +
+  facet_grid(k1.~sdmu_v., labeller = label_both,scales = "free")
+plot_goodgenesWEB
+ggsave(filename="plot_goodgenesWEB.pdf",width = 15,height = 20)
 
 #### multiple traits ####
 

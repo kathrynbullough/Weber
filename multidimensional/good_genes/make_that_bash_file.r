@@ -11,9 +11,9 @@ parameter_object$b <- 0.001      #Cost of preference
 parameter_object$c1 <- 0.2      #Cost of trait
 parameter_object$c2 <- 0.0  
 parameter_object$lambda <- 1    #Keep as 1!!!
-parameter_object$biast1 <- 0.9  #Mutation bias
+parameter_object$biast1 <- 0.5  #Mutation bias -  KEEP AS NO MUTATION FOR GOOD GENES!!!!!
 parameter_object$biast2 <- 0.5
-parameter_object$biasv <- seq(0,0.3,0.02)
+parameter_object$biasv <- seq(0,0.3,0.04)
 parameter_object$mu_p1 <- 0.05
 parameter_object$mu_p2 <- 0.0
 parameter_object$mu_t1 <- 0.05
@@ -26,7 +26,7 @@ parameter_object$sdmu_t2 <- 0.0
 parameter_object$sdmu_v <- seq(0,0.4,0.1)
 parameter_object$sex_limited_p <- 1.0
 parameter_object$sex_limited_t <- 1.0
-parameter_object$pref_type <- 0
+parameter_object$pref_type <- seq(0,3,3)
 parameter_object$init_t1 <- 0
 parameter_object$init_t2 <- 0
 parameter_object$init_p1 <- 3
