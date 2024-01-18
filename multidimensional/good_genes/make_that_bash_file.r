@@ -13,7 +13,7 @@ parameter_object$c2 <- 0.0
 parameter_object$lambda <- 1    #Keep as 1!!!
 parameter_object$biast1 <- 0.5  #Mutation bias -  KEEP AS NO MUTATION FOR GOOD GENES!!!!!
 parameter_object$biast2 <- 0.5
-parameter_object$biasv <- seq(0,0.3,0.04)
+parameter_object$biasv <- seq(0.5,1,0.05)
 parameter_object$mu_p1 <- 0.05
 parameter_object$mu_p2 <- 0.0
 parameter_object$mu_t1 <- 0.05
@@ -36,6 +36,7 @@ parameter_object$gam <- 2 #does 1 look better?
 parameter_object$thet <- 1
 parameter_object$k1 <- seq(0,1,0.1)   #How the cost of ornamentation depeneds on general viability (k=0 implies ornament cost is independent of viability)
 parameter_object$k2 <- 0.0
+parameter_object$v_opt <- 10
 
 #purlease continue adding all the parameters, except for the output file
 # (this will be done by the function itself)

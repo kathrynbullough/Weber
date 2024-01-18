@@ -495,6 +495,28 @@ plot_WEBzoom <- ggplot(WEB3) +
   facet_grid(b.~c1., labeller = label_both,scales = "free")
 plot_WEBzoom
 
+
+goodgenesALL<-read.delim("sims_output_gg_all.csv", sep=" ", header=T)
+goodgenesOE<- subset(goodgenesALL, goodgenesALL$pref.==0)
+goodgenesWEB<- subset(goodgenesALL, goodgenesALL$pref.==3)
+plot_goodgenesOE <- ggplot(goodgenesOE) + 
+  geom_point(aes(x=biasv.,y=meant1,colour="t")) + 
+  geom_point(aes(x=biasv.,y=meanp1,colour="p")) +
+  facet_grid(k1.~sdmu_v., labeller = label_both,scales = "free")
+plot_goodgenesOE
+ggsave(filename="plot_goodgenesOE.pdf",width = 15,height = 20)
+plot_goodgenesWEB <- ggplot(goodgenesWEB) + 
+  geom_point(aes(x=biasv.,y=meant1,colour="t")) + 
+  geom_point(aes(x=biasv.,y=meanp1,colour="p")) +
+  facet_grid(k1.~sdmu_v., labeller = label_both,scales = "free")
+plot_goodgenesWEB
+ggsave(filename="plot_goodgenesWEB.pdf",width = 15,height = 20)
+
+
+
+
+
+
 goodgenesOE<-read.delim("sims_output_gg_oe.csv", sep=" ", header=T)
 goodgenesOE$file2 = as.numeric(gsub(".*?([0-9]+).*", "\\1", goodgenesOE$file))
 goodgenesOE <- goodgenesOE[order(goodgenesOE$file2),]
@@ -514,6 +536,10 @@ plot_goodgenesWEB <- ggplot(goodgenesWEB) +
   facet_grid(k1.~sdmu_v., labeller = label_both,scales = "free")
 plot_goodgenesWEB
 ggsave(filename="plot_goodgenesWEB.pdf",width = 15,height = 20)
+
+
+
+
 
 #### multiple traits ####
 

@@ -144,7 +144,8 @@ void initArguments(int argc, char *argv[])
     	thet = std::stod(argv[28]);
      k[0] = std::stod(argv[29]);
      k[1] = std::stod(argv[30]);
-    	file_name = argv[31];
+     v_opt = std::stod(argv[31]);
+    	file_name = argv[32];
     //Maybe add another one to allow the change of ntraits to something other than 2?
 } // end initArguments
 
