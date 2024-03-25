@@ -698,6 +698,7 @@ void WriteData(std::ofstream &DataFile)
     double sstexpr[ntrait] = {0.0,0.0};
     double spt[ntrait] = {0.0,0.0};
     double sptexpr[ntrait] = {0.0,0.0};
+    double spv[ntrait] = {0.0,0.0};
     double meanv = 0.0;
     double ssv = 0.0;
 
@@ -716,7 +717,6 @@ void WriteData(std::ofstream &DataFile)
         		meanp[trait_idx] += p[trait_idx];
         		meant[trait_idx] += t[trait_idx];
             meantexpr[trait_idx] += texpr[trait_idx];
-
         		ssp[trait_idx] += p[trait_idx] * p[trait_idx];
         		sst[trait_idx] += t[trait_idx] * t[trait_idx];
             sstexpr[trait_idx] += texpr[trait_idx] * texpr[trait_idx];
@@ -727,6 +727,11 @@ void WriteData(std::ofstream &DataFile)
        v = 0.5 * (Males[i].v[0] + Males[i].v[1]);
        meanv += v;
        ssv += v*v;
+       
+       for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+   		{
+        spv[trait_idx] += p[trait_idx] * v;
+       }
 
         	if (i < msurvivors)
         	{
@@ -758,6 +763,11 @@ void WriteData(std::ofstream &DataFile)
        v = 0.5 * (Females[i].v[0] + Females[i].v[1]);
        meanv += v;
        ssv += v*v;
+       
+       for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+   		{
+        spv[trait_idx] += p[trait_idx] * v;
+       }
         
         	if (i < fsurvivors)
         	{
@@ -771,6 +781,7 @@ void WriteData(std::ofstream &DataFile)
     double vartexpr[ntrait] = {0.0,0.0};
     double covpt[ntrait] = {0.0,0.0};
     double covptexpr[ntrait] = {0.0,0.0};
+    double covpv[ntrait] = {0.0,0.0};
     double varv = 0.0;
 
     double sum_sexes = Nmales + Nfemales;
@@ -790,6 +801,11 @@ void WriteData(std::ofstream &DataFile)
     
     meanv /= sum_sexes;
     varv = ssv / sum_sexes - meanv * meanv;
+    
+    for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+    {
+      covpv[trait_idx] = spv[trait_idx] / sum_sexes - meanp[trait_idx] * meanv;
+    }
 
     meanfrs = sumfrs / Nfemales;
     varfrs = ssfrs / Nfemales - meanfrs * meanfrs;
@@ -813,6 +829,7 @@ void WriteData(std::ofstream &DataFile)
                 << ";" << vartexpr[trait_idx]
                 << ";" << covpt [trait_idx]
                 << ";" << covptexpr [trait_idx]
+                << ";" << covpv [trait_idx]
                 << ";";
     	}
 	DataFile << meanv
@@ -843,7 +860,8 @@ void WriteDataHeaders(std::ofstream &DataFile)
             << "vart" << (trait_idx + 1) << ";"
             << "vartexpr" << (trait_idx + 1) << ";"
             << "covpt" << (trait_idx + 1) << ";"
-            << "covptexpr" << (trait_idx + 1) << ";";
+            << "covptexpr" << (trait_idx + 1) << ";"
+            << "covpv" << (trait_idx + 1) << ";";
     }
 
     DataFile << "meanv"
