@@ -699,6 +699,7 @@ void WriteData(std::ofstream &DataFile)
     double spt[ntrait] = {0.0,0.0};
     double sptexpr[ntrait] = {0.0,0.0};
     double spv[ntrait] = {0.0,0.0};
+    double stv[ntrait] = {0.0,0.0};
     double meanv = 0.0;
     double ssv = 0.0;
 
@@ -731,6 +732,7 @@ void WriteData(std::ofstream &DataFile)
        for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
    		{
         spv[trait_idx] += p[trait_idx] * v;
+        stv[trait_idx] += t[trait_idx] * v;
        }
 
         	if (i < msurvivors)
@@ -767,6 +769,7 @@ void WriteData(std::ofstream &DataFile)
        for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
    		{
         spv[trait_idx] += p[trait_idx] * v;
+        stv[trait_idx] += t[trait_idx] * v;
        }
         
         	if (i < fsurvivors)
@@ -782,6 +785,7 @@ void WriteData(std::ofstream &DataFile)
     double covpt[ntrait] = {0.0,0.0};
     double covptexpr[ntrait] = {0.0,0.0};
     double covpv[ntrait] = {0.0,0.0};
+    double covtv[ntrait] = {0.0,0.0};
     double varv = 0.0;
 
     double sum_sexes = Nmales + Nfemales;
@@ -805,6 +809,7 @@ void WriteData(std::ofstream &DataFile)
     for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
     {
       covpv[trait_idx] = spv[trait_idx] / sum_sexes - meanp[trait_idx] * meanv;
+      covtv[trait_idx] = stv[trait_idx] / sum_sexes - meant[trait_idx] * meanv;
     }
 
     meanfrs = sumfrs / Nfemales;
@@ -830,6 +835,7 @@ void WriteData(std::ofstream &DataFile)
                 << ";" << covpt [trait_idx]
                 << ";" << covptexpr [trait_idx]
                 << ";" << covpv [trait_idx]
+                << ";" << covtv [trait_idx]
                 << ";";
     	}
 	DataFile << meanv
@@ -861,7 +867,8 @@ void WriteDataHeaders(std::ofstream &DataFile)
             << "vartexpr" << (trait_idx + 1) << ";"
             << "covpt" << (trait_idx + 1) << ";"
             << "covptexpr" << (trait_idx + 1) << ";"
-            << "covpv" << (trait_idx + 1) << ";";
+            << "covpv" << (trait_idx + 1) << ";"
+            << "covtv" << (trait_idx + 1) << ";";
     }
 
     DataFile << "meanv"
