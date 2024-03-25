@@ -691,14 +691,17 @@ void WriteData(std::ofstream &DataFile)
 	}
 
     double meanp[ntrait] = {0.0,0.0};
-    double meant[ntrait] = {0.0,0.0}; 
+    double meant[ntrait] = {0.0,0.0};
+    double meantexpr[ntrait] = {0.0,0.0};
     double ssp[ntrait] = {0.0,0.0};
     double sst[ntrait] = {0.0,0.0};
+    double sstexpr[ntrait] = {0.0,0.0};
     double spt[ntrait] = {0.0,0.0};
+    double sptexpr[ntrait] = {0.0,0.0};
     double meanv = 0.0;
     double ssv = 0.0;
 
-    double p[ntrait],t[ntrait],v,meanmrs,meanfrs,varfrs,varmrs;
+    double p[ntrait],t[ntrait],texpr[ntrait],v,meanmrs,meanfrs,varfrs,varmrs;
     double ssmrs = 0, ssfrs = 0, summrs=0, sumfrs=0;
 
     // calculate means and variances for the males
@@ -708,13 +711,17 @@ void WriteData(std::ofstream &DataFile)
    		{
 			p[trait_idx] = 0.5 * ( Males[i].p[trait_idx][0] + Males[i].p[trait_idx][1]);
 			t[trait_idx] = 0.5 * ( Males[i].t[trait_idx][0] + Males[i].t[trait_idx][1]);
+      texpr[trait_idx] = Males[i].t_expr[trait_idx];
 
         		meanp[trait_idx] += p[trait_idx];
         		meant[trait_idx] += t[trait_idx];
+            meantexpr[trait_idx] += texpr[trait_idx];
 
         		ssp[trait_idx] += p[trait_idx] * p[trait_idx];
         		sst[trait_idx] += t[trait_idx] * t[trait_idx];
+            sstexpr[trait_idx] += texpr[trait_idx] * texpr[trait_idx];
         		spt[trait_idx] += t[trait_idx] * p[trait_idx];
+            sptexpr[trait_idx] += texpr[trait_idx] * p[trait_idx];
     		}
        
        v = 0.5 * (Males[i].v[0] + Males[i].v[1]);
@@ -735,13 +742,17 @@ void WriteData(std::ofstream &DataFile)
    		{
 			p[trait_idx] = 0.5 * ( Females[i].p[trait_idx][0] + Females[i].p[trait_idx][1]);
 			t[trait_idx] = 0.5 * ( Females[i].t[trait_idx][0] + Females[i].t[trait_idx][1]);
+      texpr[trait_idx] = Females[i].t_expr[trait_idx];
 
         		meanp[trait_idx] += p[trait_idx];
         		meant[trait_idx] += t[trait_idx];
+            meantexpr[trait_idx] += texpr[trait_idx];
 
         		ssp[trait_idx] += p[trait_idx] * p[trait_idx];
         		sst[trait_idx] += t[trait_idx] * t[trait_idx];
+            sstexpr[trait_idx] += texpr[trait_idx] * texpr[trait_idx];
         		spt[trait_idx] += t[trait_idx] * p[trait_idx];
+            sptexpr[trait_idx] += texpr[trait_idx] * p[trait_idx];
     		}
        
        v = 0.5 * (Females[i].v[0] + Females[i].v[1]);
@@ -757,7 +768,9 @@ void WriteData(std::ofstream &DataFile)
 
     double varp[ntrait] = {0.0,0.0}; 
     double vart[ntrait] = {0.0,0.0}; 
+    double vartexpr[ntrait] = {0.0,0.0};
     double covpt[ntrait] = {0.0,0.0};
+    double covptexpr[ntrait] = {0.0,0.0};
     double varv = 0.0;
 
     double sum_sexes = Nmales + Nfemales;
@@ -765,10 +778,13 @@ void WriteData(std::ofstream &DataFile)
     for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
     {
         meant[trait_idx] /= sum_sexes;
+        meantexpr[trait_idx] /= sum_sexes;
         meanp[trait_idx] /= sum_sexes;
         vart[trait_idx] = sst[trait_idx] / sum_sexes - meant[trait_idx] * meant[trait_idx];
+        vartexpr[trait_idx] = sstexpr[trait_idx] / sum_sexes - meantexpr[trait_idx] * meantexpr[trait_idx];
         varp[trait_idx] = ssp[trait_idx] / sum_sexes - meanp[trait_idx] * meanp[trait_idx];
         covpt[trait_idx] = spt[trait_idx] / sum_sexes - meanp[trait_idx] * meant[trait_idx];
+        covptexpr[trait_idx] = sptexpr[trait_idx] / sum_sexes - meanp[trait_idx] * meantexpr[trait_idx];
         
     }
     
@@ -791,9 +807,12 @@ void WriteData(std::ofstream &DataFile)
     	{
 		DataFile << meanp[trait_idx]
                 << ";" << meant[trait_idx]
+                << ";" << meantexpr[trait_idx]
                 << ";" << varp[trait_idx]
                 << ";" << vart[trait_idx]
+                << ";" << vartexpr[trait_idx]
                 << ";" << covpt [trait_idx]
+                << ";" << covptexpr [trait_idx]
                 << ";";
     	}
 	DataFile << meanv
@@ -819,9 +838,12 @@ void WriteDataHeaders(std::ofstream &DataFile)
 	    DataFile 
             << "meanp" << (trait_idx + 1) << ";"
             << "meant" << (trait_idx + 1) << ";"
+            << "meantexpr" << (trait_idx + 1) << ";"
             << "varp" << (trait_idx + 1) << ";"
             << "vart" << (trait_idx + 1) << ";"
-            << "covpt" << (trait_idx + 1) << ";";
+            << "vartexpr" << (trait_idx + 1) << ";"
+            << "covpt" << (trait_idx + 1) << ";"
+            << "covptexpr" << (trait_idx + 1) << ";";
     }
 
     DataFile << "meanv"

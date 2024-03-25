@@ -496,7 +496,7 @@ plot_WEBzoom <- ggplot(WEB3) +
 plot_WEBzoom
 
 
-goodgenesALL<-read.delim("sims_output_gg_all.csv", sep=" ", header=T)
+goodgenesALL<-read.delim("sims_output_gg_all2.csv", sep=" ", header=T)
 goodgenesOE<- subset(goodgenesALL, goodgenesALL$pref.==0)
 goodgenesWEB<- subset(goodgenesALL, goodgenesALL$pref.==3)
 plot_goodgenesOE <- ggplot(goodgenesOE) + 
