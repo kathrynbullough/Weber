@@ -495,6 +495,7 @@ plot_WEBzoom <- ggplot(WEB3) +
   facet_grid(b.~c1., labeller = label_both,scales = "free")
 plot_WEBzoom
 
+#### Good genes stuff ####
 
 goodgenesALL<-read.delim("sims_output_gg_all2.csv", sep=" ", header=T)
 goodgenesOE<- subset(goodgenesALL, goodgenesALL$pref.==0)
@@ -512,8 +513,13 @@ plot_goodgenesWEB <- ggplot(goodgenesWEB) +
 plot_goodgenesWEB
 ggsave(filename="plot_goodgenesWEB.pdf",width = 15,height = 20)
 
-
-
+goodgenesDelphi<-read.delim("sims_output_gg_delphi.csv", sep=" ", header=T)
+plot_goodgenesDelphi <- ggplot(goodgenesDelphi) + 
+  geom_point(aes(x=biasv.,y=meant1,colour="t")) + 
+  geom_point(aes(x=biasv.,y=meanp1,colour="p")) +
+  facet_grid(k1.~generation, labeller = label_both,scales = "free")
+plot_goodgenesDelphi
+ggsave(filename="plot_goodgenesDelphi.pdf",width = 15,height = 20)
 
 
 
