@@ -514,12 +514,12 @@ plot_goodgenesWEB
 ggsave(filename="plot_goodgenesWEB.pdf",width = 15,height = 20)
 
 goodgenesDelphi<-read.delim("sims_output_gg_delphi.csv", sep=" ", header=T)
-plot_goodgenesDelphi <- ggplot(goodgenesDelphi) + 
-  geom_point(aes(x=biasv.,y=meant1,colour="t")) + 
+plot_goodgenesDelphiexpr <- ggplot(goodgenesDelphi) + 
+  geom_point(aes(x=biasv.,y=meantexpr1,colour="texpr")) + 
   geom_point(aes(x=biasv.,y=meanp1,colour="p")) +
   facet_grid(k1.~generation, labeller = label_both,scales = "free")
-plot_goodgenesDelphi
-ggsave(filename="plot_goodgenesDelphi.pdf",width = 15,height = 20)
+plot_goodgenesDelphiexpr
+ggsave(filename="plot_goodgenesDelphiexpr.pdf",width = 15,height = 20)
 
 
 
