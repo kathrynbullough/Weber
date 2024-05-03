@@ -101,29 +101,28 @@ void initArguments(int argc, char *argv[])
 	a = std::stod(argv[1]);
 	b = std::stod(argv[2]);
     // initially same cost for each ornament
-	c[0] = std::stod(argv[3]);
-  	c[1] = std::stod(argv[4]);
-  	lambda[0] = lambda[1] = std::stod(argv[5]);
-	biast[0] = std::stod(argv[6]);
-  	biast[1] = std::stod(argv[7]);
-	mu_p[0] = std::stod(argv[8]);
-  	mu_p[1] = std::stod(argv[9]);
-	mu_t[0] = std::stod(argv[10]);
- 	mu_t[1] = std::stod(argv[11]);
-	sdmu_p[0] = std::stod(argv[12]);
-  	sdmu_p[1] = std::stod(argv[13]);
-	sdmu_t[0] = std::stod(argv[14]);
-  	sdmu_t[1] = std::stod(argv[15]);
-	sexlimp = std::stod(argv[16]);
-	sexlimt = std::stod(argv[17]);
-    	pref = std::stoi(argv[18]);
-    	init_t[0] = std::stod(argv[19]);
-    	init_t[1] = std::stod(argv[20]);
-    	init_p[0] = std::stod(argv[21]);
-    	init_p[1] = std::stod(argv[22]);
-    	gam = std::stod(argv[23]);
-    	thet = std::stod(argv[24]);
-    	file_name = argv[25];
+	c[0] = c[1] = std::stod(argv[3]);
+  	lambda[0] = lambda[1] = std::stod(argv[4]);
+	biast[0] = std::stod(argv[5]);
+  	biast[1] = std::stod(argv[6]);
+	mu_p[0] = std::stod(argv[7]);
+  	mu_p[1] = std::stod(argv[8]);
+	mu_t[0] = std::stod(argv[9]);
+ 	mu_t[1] = std::stod(argv[10]);
+	sdmu_p[0] = std::stod(argv[11]);
+  	sdmu_p[1] = std::stod(argv[12]);
+	sdmu_t[0] = std::stod(argv[13]);
+  	sdmu_t[1] = std::stod(argv[14]);
+	sexlimp = std::stod(argv[15]);
+	sexlimt = std::stod(argv[16]);
+    	pref = std::stoi(argv[17]);
+    	init_t[0] = std::stod(argv[18]);
+    	init_t[1] = std::stod(argv[19]);
+    	init_p[0] = std::stod(argv[20]);
+    	init_p[1] = std::stod(argv[21]);
+    	gam = std::stod(argv[22]);
+    	thet = std::stod(argv[23]);
+    	file_name = argv[24];
     //Maybe add another one to allow the change of ntraits to something other than 2?
 } // end initArguments
 

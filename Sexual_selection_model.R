@@ -495,6 +495,17 @@ plot_WEBzoom <- ggplot(WEB3) +
   facet_grid(b.~c1., labeller = label_both,scales = "free")
 plot_WEBzoom
 
+GamThetOE<-read.delim("gamthet_graph.csv", sep=" ", header=T)
+plot_gamthetoe <- ggplot(GamThetOE) + 
+  geom_point(aes(x=theta.,y=meant1,colour="t1")) + 
+  geom_point(aes(x=theta.,y=meanp1,colour="p1")) +
+  geom_point(aes(x=theta.,y=meant2,colour="t2")) + 
+  geom_point(aes(x=theta.,y=meanp2,colour="p2")) +
+  facet_grid(gamma.~pref., labeller = label_both,scales = "free")
+plot_gamthetoe
+ggsave(filename="plot_gamthet.pdf",width = 15,height = 20)
+
+
 #### Good genes stuff ####
 
 goodgenesALL<-read.delim("sims_output_gg_all2.csv", sep=" ", header=T)
@@ -613,6 +624,80 @@ plotb <- ggplot(varb) +
   geom_point(aes(x=biast1.,y=meant1,colour="t")) + 
   geom_point(aes(x=biast1.,y=meanp1,colour="p"))
 plotb
+
+
+
+TEST<-read.delim("TEST.txt", sep=";", header=T)
+mid_data<-TEST[seq(1,nrow(TEST),100),]
+
+
+#Attempting graphs for paper:
+
+oe_graph<-read.delim("oe_graph.csv", sep=" ", header=T)
+web_graph<-read.delim("web_graph.csv", sep=" ", header=T)
+all_graph<-rbind(oe_graph,web_graph)
+#For jitters
+all_graph_t1<-all_graph
+all_graph_t2<-all_graph
+all_graph_t1$AbsMean<-abs(all_graph_t1$meant1)
+all_graph_t2$AbsMean<-abs(all_graph_t2$meant2)
+all_graph_t1$pref.<-as.factor(all_graph_t1$pref.)
+all_graph_t2$pref.<-as.factor(all_graph_t2$pref.)
+
+#calculate mean and sd of points
+all_mean_std_meanp1 <- all_graph %>%
+  group_by(pref.) %>%
+  summarise_at(vars(meanp1), list(mean=mean, sd=sd)) %>% 
+  as.data.frame()
+all_mean_std_meanp1$pref.<-as.factor(all_mean_std_meanp1$pref.)
+all_mean_std_meant1 <- all_graph %>%
+  group_by(pref.) %>%
+  summarise_at(vars(meant1), list(mean=mean, sd=sd)) %>% 
+  as.data.frame()
+all_mean_std_meant1$pref.<-as.factor(all_mean_std_meant1$pref.)
+all_mean_std_meanp2 <- all_graph %>%
+  group_by(pref.) %>%
+  summarise_at(vars(meanp2), list(mean=mean, sd=sd)) %>% 
+  as.data.frame()
+all_mean_std_meanp2$pref.<-as.factor(all_mean_std_meanp2$pref.)
+all_mean_std_meant2 <- all_graph %>%
+  group_by(pref.) %>%
+  summarise_at(vars(meant2), list(mean=mean, sd=sd)) %>% 
+  as.data.frame()
+all_mean_std_meant2$pref.<-as.factor(all_mean_std_meant2$pref.)
+
+all_mean_std_meant1$AbsMean<-abs(all_mean_std_meant1$mean)
+all_mean_std_meant2$AbsMean<-abs(all_mean_std_meant2$mean)
+
+plot<-ggplot(data=all_mean_std_meant1, aes(x=pref., y=AbsMean)) +
+  geom_point(data=all_mean_std_meant1, colour="red")+
+  geom_point(data=all_mean_std_meant2, colour="blue")+
+  geom_errorbar(data=all_mean_std_meant1, aes(ymin=AbsMean-sd, ymax=AbsMean+sd), width=.3, colour="red")+
+  geom_errorbar(data=all_mean_std_meant2, aes(ymin=AbsMean-sd, ymax=AbsMean+sd), width=.3, colour="blue")+
+  theme_classic()+
+  geom_jitter(data=all_graph_t1, width = 0.2, height=0.01, colour="pink")+
+  geom_jitter(data=all_graph_t2, width = 0.2, height=0.01, colour="lightblue")+
+  ylab("Absolute mean t1 & t2")+
+  xlab("Preference - 0=Open-ended 3=Weber")
+plot
+
+#Changing to boxplot:
+
+all_graph$t1abs<-abs(all_graph$meant1)
+all_graph$t2abs<-abs(all_graph$meant2)
+all_graph$pref.<-as.factor(all_graph$pref.)
+
+plotbox<-ggplot(all_graph, aes(x=pref.,y=t1abs))+
+  geom_boxplot(data=all_graph, aes(x=pref.,y=t1abs), position= position_nudge(x=-.2), width=0.25, colour="red")+
+  geom_boxplot(data=all_graph, aes(x=pref.,y=t2abs), position= position_nudge(x=.2), width=0.25, colour="blue")+
+  geom_jitter(data=all_graph, aes(x=pref.,y=t1abs), position= position_nudge(x=-.2), colour="pink")+
+  geom_jitter(data=all_graph, aes(x=pref.,y=t2abs), position= position_nudge(x=.2), colour="lightblue")+
+  theme_classic()+
+  ylab("Absolute mean t1 & t2")+
+  xlab("Preference - 0=Open-ended 3=Weber")
+plotbox
+
+
 
 
 
