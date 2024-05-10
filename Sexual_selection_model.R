@@ -554,7 +554,22 @@ plot_goodgenesWEB <- ggplot(goodgenesWEB) +
 plot_goodgenesWEB
 ggsave(filename="plot_goodgenesWEB.pdf",width = 15,height = 20)
 
+#### New good genes code ####
 
+test<-read.delim("test.csv", sep=" ", header=T)
+
+test2 <- pivot_longer(test
+                           ,cols=c(meant,meanp)
+                           ,names_to = "trait"
+                           ,values_to = "trait_value")
+
+ggplot(data = test2
+       ,mapping = aes(x = biasv, y = trait_value)) +
+  geom_point(mapping=aes(colour=trait)) +
+  scale_colour_brewer(palette="Set1") +
+  theme_classic() +
+  xlab("Probability of biased mutations on viability trait") +
+  ylab("Trait value")
 
 
 

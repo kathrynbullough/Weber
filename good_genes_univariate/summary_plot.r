@@ -1,6 +1,8 @@
+!/usr/bin/env Rscript
+
 library("tidyverse")
 
-the_data <- read_delim("summary.csv",delim=";")
+the_data <- read_delim("test.csv",delim=";")
 
 the_data_l <- pivot_longer(the_data
                            ,cols=c(meant,meanp)
