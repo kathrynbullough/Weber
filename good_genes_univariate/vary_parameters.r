@@ -6,6 +6,8 @@ nrep = 5
 
 maxgen = 10000
 
+pref = 3
+
 
 # generate a date_time stamp as a character
 date_str <- format(Sys.time(), "%d%m%Y_%H%M%S")
@@ -33,6 +35,7 @@ for (rep_i in 1:nrep)
         command_str <- paste(exe,
                         biasv_i,
                         format(maxgen,scientific=F),
+                        format(pref,scientific=F),
                         file_name_i)
 
         # append to batch file contents

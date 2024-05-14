@@ -158,6 +158,7 @@ void GoodGenes::write_parameters()
         << "max_mut_t;" << par.max_mut_t << ";" << std::endl
         << "max_mut_v;" << par.max_mut_v << ";" << std::endl
         << "biasv;" << par.biasv << ";" << std::endl
+        << "pref;" << par.pref << ";" << std::endl
         << "a;" << par.a << ";" << std::endl
         << "b;" << par.b << ";" << std::endl
         << "c;" << par.c << ";" << std::endl
@@ -275,6 +276,14 @@ unsigned GoodGenes::choose(Individual const &female)
     double p = 0.5 * (female.p[0] + female.p[1]);
 
     double x;
+    
+    switch(par.pref)
+    {
+
+    //Open-ended preferences
+    case 0:
+    
+    {
 
     for (unsigned inspected_male_idx{0}; 
             inspected_male_idx < par.choice_sample_size; 
@@ -288,6 +297,31 @@ unsigned GoodGenes::choose(Individual const &female)
         
         male_idxs.push_back(sampled_male_idx);
         male_fitness.push_back(fitness);
+    }
+    
+    } break;
+    
+    //Weber preferences
+    case 1:
+    
+    {
+
+    for (unsigned inspected_male_idx{0}; 
+            inspected_male_idx < par.choice_sample_size; 
+            ++inspected_male_idx)
+    {
+        sampled_male_idx = male_sampler(rng_r);
+
+        x = males[sampled_male_idx].x;
+
+        fitness = par.a * (x / (x + p));
+        
+        male_idxs.push_back(sampled_male_idx);
+        male_fitness.push_back(fitness);
+    }
+    
+    } break;
+    
     }
 
     // now make distribution of the fitnesses to choose from
