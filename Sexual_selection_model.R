@@ -564,7 +564,7 @@ test2 <- pivot_longer(test
                            ,values_to = "trait_value")
 
 ggplot(data = test2
-       ,mapping = aes(x = biasv, y = trait_value)) +
+       ,mapping = aes(x = biasv, y = abs(trait_value))) +
   geom_point(mapping=aes(colour=trait)) +
   scale_colour_brewer(palette="Set1") +
   theme_classic() +

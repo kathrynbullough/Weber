@@ -6,7 +6,7 @@ nrep = 5
 
 maxgen = 10000
 
-pref = 3
+pref = 1
 
 
 # generate a date_time stamp as a character

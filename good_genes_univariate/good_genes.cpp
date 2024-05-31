@@ -321,7 +321,8 @@ unsigned GoodGenes::choose(Individual const &female)
     }
     
     } break;
-    
+    default:
+    	std::cout << "Something's gone wrong!";
     }
 
     // now make distribution of the fitnesses to choose from
