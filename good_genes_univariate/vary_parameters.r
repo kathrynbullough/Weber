@@ -2,7 +2,8 @@
 
 #biasv=c(0.5,0.6,0.7,0.8,0.9,0.99)
 biasv = c(seq(0.5,0.9,0.1),0.99)
-nrep = 5
+c = seq(0.5,0.9,0.1)
+nrep = 1
 
 maxgen = 10000
 
@@ -25,6 +26,8 @@ batch_file_contents <- ""
 
 for (rep_i in 1:nrep)
 {
+  for(c_i in c)
+  {
     for (biasv_i in biasv)
     {
         counter <- counter + 1
@@ -34,6 +37,7 @@ for (rep_i in 1:nrep)
 
         command_str <- paste(exe,
                         biasv_i,
+                        c_i,
                         format(maxgen,scientific=F),
                         format(pref,scientific=F),
                         file_name_i)
@@ -45,6 +49,7 @@ for (rep_i in 1:nrep)
                 ,"\n"
                 ,command_str)
     }
+  }
 }
 
 writeLines(text=batch_file_contents)
