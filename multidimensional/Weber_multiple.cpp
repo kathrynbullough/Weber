@@ -123,7 +123,11 @@ void initArguments(int argc, char *argv[])
     	gam = std::stod(argv[22]);
     	thet = std::stod(argv[23]);
     	file_name = argv[24];
-    //Maybe add another one to allow the change of ntraits to something other than 2?
+    //Maybe add another one to allow the change of ntraits to something other than 2? - NEED TO DO THIS
+    //Get rid of fixed vector initalisation above, then use pushbacks here to keep them open-ended?
+    //c = c.push_back(std::stod(argv[4]));
+    //But then you'd need to change all the numbers of the args
+    //Unless you just keep all initialisations for each variable the same across dimensions, then don't have to worry about this at all
 } // end initArguments
 
 // mutation function:
