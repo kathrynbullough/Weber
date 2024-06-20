@@ -2,12 +2,12 @@
 
 #biasv=c(0.5,0.6,0.7,0.8,0.9,0.99)
 biasv = c(seq(0.5,0.9,0.1),0.99)
-c = seq(0.5,0.9,0.1)
-nrep = 1
+c = 0.5
+nrep = 5
 
 maxgen = 10000
 
-pref = 1
+pref = seq(0,1,1)
 
 
 # generate a date_time stamp as a character
@@ -28,8 +28,10 @@ for (rep_i in 1:nrep)
 {
   for(c_i in c)
   {
-    for (biasv_i in biasv)
+    for(pref_i in pref)
     {
+      for (biasv_i in biasv)
+      {
         counter <- counter + 1
         file_name_i <- paste0(output_file_prefix,"_",counter)
 
@@ -39,7 +41,7 @@ for (rep_i in 1:nrep)
                         biasv_i,
                         c_i,
                         format(maxgen,scientific=F),
-                        format(pref,scientific=F),
+                        pref_i,
                         file_name_i)
 
         # append to batch file contents
@@ -48,6 +50,7 @@ for (rep_i in 1:nrep)
                 ,echo_str
                 ,"\n"
                 ,command_str)
+      }
     }
   }
 }
