@@ -279,50 +279,48 @@ unsigned GoodGenes::choose(Individual const &female)
     
     switch(par.pref)
     {
+        //Open-ended preferences
+        case 0:
+            {
+                for (unsigned inspected_male_idx{0}; 
+                        inspected_male_idx < par.choice_sample_size; 
+                        ++inspected_male_idx)
+                {
+                    sampled_male_idx = male_sampler(rng_r);
 
-    //Open-ended preferences
-    case 0:
-    
-    {
+                    x = males[sampled_male_idx].x;
 
-    for (unsigned inspected_male_idx{0}; 
-            inspected_male_idx < par.choice_sample_size; 
-            ++inspected_male_idx)
-    {
-        sampled_male_idx = male_sampler(rng_r);
-
-        x = males[sampled_male_idx].x;
-
-        fitness = std::exp(par.a * p * x);
-        
-        male_idxs.push_back(sampled_male_idx);
-        male_fitness.push_back(fitness);
-    }
-    
-    } break;
+                    fitness = std::exp(par.a * p * x);
+                    
+                    male_idxs.push_back(sampled_male_idx);
+                    male_fitness.push_back(fitness);
+                }
+            }
+            break;
     
     //Weber preferences
-    case 1:
-    
-    {
+        case 1:
+            {
+                for (unsigned inspected_male_idx{0}; 
+                        inspected_male_idx < par.choice_sample_size; 
+                        ++inspected_male_idx)
+                {
+                    sampled_male_idx = male_sampler(rng_r);
 
-    for (unsigned inspected_male_idx{0}; 
-            inspected_male_idx < par.choice_sample_size; 
-            ++inspected_male_idx)
-    {
-        sampled_male_idx = male_sampler(rng_r);
+                    x = males[sampled_male_idx].x;
 
-        x = males[sampled_male_idx].x;
+                    fitness = par.a * (x / (x + p));
+                    
+                    male_idxs.push_back(sampled_male_idx);
+                    male_fitness.push_back(fitness);
+                }
+            
+            } 
+            break;
 
-        fitness = par.a * (x / (x + p));
-        
-        male_idxs.push_back(sampled_male_idx);
-        male_fitness.push_back(fitness);
-    }
-    
-    } break;
-    default:
-    	std::cout << "Something's gone wrong!";
+        default:
+            std::cout << "Something's gone wrong!";
+            break;
     }
 
     // now make distribution of the fitnesses to choose from
