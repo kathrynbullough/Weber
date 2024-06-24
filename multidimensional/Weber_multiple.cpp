@@ -63,7 +63,7 @@ double sexlimp = 0; // degree of sex-limited expression in p,t
 double sexlimt = 0;
 int pref = 0;
 int web = 3;
-double meanornsurv[2] = {0.0,0.0};
+double meanornsurv[ntrait];
 
 int popsize = N; // population size between 
 bool do_stats = 0;
@@ -241,8 +241,10 @@ void Survive(std::ofstream &DataFile)
     // mean ornament size of surviving males
     // necessary for absolute/relative preference
     // functions
-    meanornsurv[0] = 0.0;
-    meanornsurv[1] = 0.0;
+    for (int trait_idx  = 0; trait_idx < ntrait; ++trait_idx)
+    {
+    meanornsurv[trait_idx] = 0.0;
+    }
     
     double sump = 0.0;
     double sumctsq = 0.0;
