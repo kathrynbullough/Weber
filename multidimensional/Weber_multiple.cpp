@@ -41,22 +41,22 @@ const int clutch_size = 10; // number of offspring produced
 
 int const ntrait = 2;
 
-double init_t[ntrait] = {0.0,0.0}; // initial value for ornament
-double init_p[ntrait] = {0.0,0.0}; // initial value for preference
+double init_t[ntrait]; // initial value for ornament
+double init_p[ntrait]; // initial value for preference
 double a = 1.0; // choice slope
 double b = 0.5; // cost of preference 
 
 double gam = 2.0; // cost curvature of a preference (1: linear, 2: bell-shaped survival curve, 3: bell-shaped with skewness, etc etc)
 double thet = 0.5; // how do preferences interact when it comes to a combined cost, see Pomiankowski & Iwasa 1993 procb
-double c[ntrait] = {0.5,0.5}; // cost of trait
-double lambda[ntrait] = {1.0,1.0}; // cost of trait
+double c[ntrait]; // cost of trait
+double lambda[ntrait]; // cost of trait
 
-double biast[ntrait] = {0.0,0.0}; // mutation bias: 0.5 means no bias. > 0.5 means bias towards reduction in tratt.
+double biast[ntrait]; // mutation bias: 0.5 means no bias. > 0.5 means bias towards reduction in tratt.
 
-double mu_p[ntrait] 	  = {0.05,0.05};            // mutation rate preference
-double mu_t[ntrait] 	  = {0.05,0.05};            // mutation rate ornament
-double sdmu_p[ntrait]         = {0.4,0.4};			 // standard deviation mutation stepsize
-double sdmu_t[ntrait]         = {0.4,0.4};			 // standard deviation mutation stepsize
+double mu_p[ntrait];            // mutation rate preference
+double mu_t[ntrait];            // mutation rate ornament
+double sdmu_p[ntrait];			 // standard deviation mutation stepsize
+double sdmu_t[ntrait];			 // standard deviation mutation stepsize
 const double NumGen = 150000; // number of generations
 const int skip = 10; // n generations interval before data is printed
 double sexlimp = 0; // degree of sex-limited expression in p,t
@@ -98,28 +98,23 @@ int Parents[N*clutch_size][2];
 // for definitions of the various parameters see top of the file
 void initArguments(int argc, char *argv[])
 {
+  for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+  {
 	a = std::stod(argv[1]);
 	b = std::stod(argv[2]);
     // initially same cost for each ornament
-	c[0] = c[1] = std::stod(argv[3]);
-  	lambda[0] = lambda[1] = std::stod(argv[4]);
-	biast[0] = std::stod(argv[5]);
-  	biast[1] = std::stod(argv[6]);
-	mu_p[0] = std::stod(argv[7]);
-  	mu_p[1] = std::stod(argv[8]);
-	mu_t[0] = std::stod(argv[9]);
- 	mu_t[1] = std::stod(argv[10]);
-	sdmu_p[0] = std::stod(argv[11]);
-  	sdmu_p[1] = std::stod(argv[12]);
-	sdmu_t[0] = std::stod(argv[13]);
-  	sdmu_t[1] = std::stod(argv[14]);
+	c[trait_idx] = std::stod(argv[3]);
+  	lambda[trait_idx] = std::stod(argv[4]);
+	biast[trait_idx] = std::stod(argv[5]);
+	mu_p[trait_idx] = std::stod(argv[7]);
+	mu_t[trait_idx] = std::stod(argv[9]);
+	sdmu_p[trait_idx] = std::stod(argv[11]);
+	sdmu_t[trait_idx] = std::stod(argv[13]);
 	sexlimp = std::stod(argv[15]);
 	sexlimt = std::stod(argv[16]);
     	pref = std::stoi(argv[17]);
-    	init_t[0] = std::stod(argv[18]);
-    	init_t[1] = std::stod(argv[19]);
-    	init_p[0] = std::stod(argv[20]);
-    	init_p[1] = std::stod(argv[21]);
+    	init_t[trait_idx] = std::stod(argv[18]);
+    	init_p[trait_idx] = std::stod(argv[20]);
     	gam = std::stod(argv[22]);
     	thet = std::stod(argv[23]);
     	file_name = argv[24];
@@ -128,6 +123,7 @@ void initArguments(int argc, char *argv[])
     //c = c.push_back(std::stod(argv[4]));
     //But then you'd need to change all the numbers of the args
     //Unless you just keep all initialisations for each variable the same across dimensions, then don't have to worry about this at all
+    }
 } // end initArguments
 
 // mutation function:
@@ -151,25 +147,17 @@ void WriteParameters(std::ofstream &DataFile)
 		<< "type:;" << "gonochorist_fisherian" << ";" << std::endl
 		<< "popsize_init:;" << N << ";" << std::endl
 		<< "n_mate_sample:;" << N_mate_sample << ";"<< std::endl
-		<< "init_t1:;" << init_t[0] << ";" << std::endl
-    		<< "init_t2:;" << init_t[1] << ";" << std::endl
-		<< "init_p1:;" << init_p[0] << ";" << std::endl
-    		<< "init_p2:;" << init_p[1] << ";" << std::endl
+		<< "init_t:;" << init_t[0] << ";" << std::endl
+		<< "init_p:;" << init_p[0] << ";" << std::endl
 		<< "a:;" <<  a << ";"<< std::endl
 		<< "b:;" <<  b << ";"<< std::endl
-		<< "c1:;" <<  c[0] << ";"<< std::endl
-   		<< "c2:;" <<  c[1] << ";"<< std::endl
+		<< "c:;" <<  c[0] << ";"<< std::endl
 		<< "pref:;" <<  pref << ";"<< std::endl
-		<< "mu_p1:;" <<  mu_p[0] << ";" << std::endl
-    		<< "mu_p2:;" <<  mu_p[1] << ";" << std::endl
-		<< "mu_t1:;" <<  mu_t[0] << ";" << std::endl
-    		<< "mu_t2:;" <<  mu_t[1] << ";" << std::endl
-		<< "mu_std_p1:;" <<  sdmu_p[0] << ";" << std::endl
-    		<< "mu_std_p2:;" <<  sdmu_p[1] << ";" << std::endl
-		<< "mu_std_t1:;" <<  sdmu_t[0] << ";"<< std::endl
-    		<< "mu_std_t2:;" <<  sdmu_t[1] << ";" << std::endl
-		<< "biast1:;" <<  biast[0] << ";" << std::endl
-    		<< "biast2:;" <<  biast[1] << ";" << std::endl
+		<< "mu_p:;" <<  mu_p[0] << ";" << std::endl
+		<< "mu_t:;" <<  mu_t[0] << ";" << std::endl
+		<< "mu_std_p:;" <<  sdmu_p[0] << ";" << std::endl
+		<< "mu_std_t:;" <<  sdmu_t[0] << ";"<< std::endl
+		<< "biast:;" <<  biast[0] << ";" << std::endl
 		<< "sexlimp:;" <<  sexlimp << ";"<< std::endl
 		<< "sexlimt:;" <<  sexlimt << ";"<< std::endl
     		<< "gamma:;" <<  gam << ";"<< std::endl
@@ -619,11 +607,11 @@ void WriteData(std::ofstream &DataFile)
 		exit(1);
 	}
 
-    double meanp[ntrait] = {0.0,0.0};
-    double meant[ntrait] = {0.0,0.0}; 
-    double ssp[ntrait] = {0.0,0.0};
-    double sst[ntrait] = {0.0,0.0};
-    double spt[ntrait] = {0.0,0.0};
+    double meanp[ntrait];
+    double meant[ntrait]; 
+    double ssp[ntrait];
+    double sst[ntrait];
+    double spt[ntrait];
 
     double p[ntrait],t[ntrait],meanmrs,meanfrs,varfrs,varmrs;
     double ssmrs = 0, ssfrs = 0, summrs=0, sumfrs=0;
@@ -674,9 +662,9 @@ void WriteData(std::ofstream &DataFile)
         	}
 	} 
 
-    double varp[ntrait] = {0.0,0.0}; 
-    double vart[ntrait] = {0.0,0.0}; 
-    double covpt[ntrait] = {0.0,0.0};
+    double varp[ntrait]; 
+    double vart[ntrait]; 
+    double covpt[ntrait];
 
     double sum_sexes = Nmales + Nfemales;
 

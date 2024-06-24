@@ -1,7 +1,8 @@
 #!/usr/bin/env Rscript
 
 #biasv=c(0.5,0.6,0.7,0.8,0.9,0.99)
-biasv = c(seq(0.5,0.9,0.1),0.99)
+#c(seq(0.5,0.9,0.1),0.99)
+biasv = c(seq(0.9,1,0.01))
 c = 0.5
 nrep = 5
 
