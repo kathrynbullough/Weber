@@ -39,7 +39,9 @@ const int N = 5000; // population size
 const int N_mate_sample = 10; // number of mates sampled
 const int clutch_size = 10; // number of offspring produced
 
-int const ntrait = 2;
+int ntrait = 2;
+//This is causing problems - can't have variable length arrays
+//Stack overflow suggesting using std::vector instead???
 
 double init_t[ntrait]; // initial value for ornament
 double init_p[ntrait]; // initial value for preference
@@ -98,6 +100,9 @@ int Parents[N*clutch_size][2];
 // for definitions of the various parameters see top of the file
 void initArguments(int argc, char *argv[])
 {
+  ntrait = std::stoi(argv[1]);
+  //Can we initialise ntrait's value here if we're then using it just below to initialise everything else???
+  
   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
   {
 	a = std::stod(argv[1]);
