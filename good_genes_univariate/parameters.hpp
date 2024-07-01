@@ -20,6 +20,7 @@ class Parameters
         double c{0.5};
         
         int pref{0};
+        int const ntrait{2};
 
         unsigned choice_sample_size{10};
 

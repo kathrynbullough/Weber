@@ -47,12 +47,15 @@ void GoodGenes::survival()
     
     for (auto female_iter{females.begin()}; female_iter != females.end(); )
     {
-        p = 0.5 * (female_iter->p[0] + female_iter->p[1]);
+      for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+	     {
+        p[trait_idx] = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
         v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
 
-        surv = std::exp(-par.b * p * p - std::fabs(par.v_opt - v)) ;
+        surv = std::exp(-par.b * p[trait_idx] * p[trait_idx] - std::fabs(par.v_opt - v)) ;
 
         mean_p_survive_f += surv;
+       }
 
         // individual dies
         if (uniform(rng_r) > surv)
@@ -71,14 +74,17 @@ void GoodGenes::survival()
 
     for (auto male_iter{males.begin()}; male_iter != males.end(); )
     {
-        t = 0.5 * (male_iter->t[0] + male_iter->t[1]);
+      for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+	     {
+        t[trait_idx] = 0.5 * (male_iter->t[0][trait_idx] + male_iter->t[1][trait_idx]);
         v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
 
-        x = male_iter->x = t * std::exp(-std::fabs(par.v_opt - v));
+        x[trait_idx] = male_iter->x[trait_idx] = t[trait_idx] * std::exp(-std::fabs(par.v_opt - v));
 
-        surv = std::exp(-par.c * x * x - std::fabs(par.v_opt - v)) ;
+        surv = std::exp(-par.c * x[trait_idx] * x[trait_idx] - std::fabs(par.v_opt - v)) ;
         
         mean_p_survive_m += surv;
+       }
 
         // individual dies
         if (uniform(rng_r) > surv)
@@ -159,6 +165,7 @@ void GoodGenes::write_parameters()
         << "max_mut_v;" << par.max_mut_v << ";" << std::endl
         << "biasv;" << par.biasv << ";" << std::endl
         << "pref;" << par.pref << ";" << std::endl
+        << "ntrait;" << par.ntrait << ";" << std::endl
         << "a;" << par.a << ";" << std::endl
         << "b;" << par.b << ";" << std::endl
         << "c;" << par.c << ";" << std::endl
@@ -173,14 +180,14 @@ void GoodGenes::write_parameters()
 
 void GoodGenes::write_data()
 {
-    double meanp{0.0};
-    double ssp{0.0};
-    double meant{0.0};
-    double sst{0.0};
+    double meanp[ntrait];
+    double ssp[ntrait];
+    double meant[ntrait];
+    double sst[ntrait];
     double meanv{0.0};
     double ssv{0.0};
-    double meanx{0.0};
-    double ssx{0.0};
+    double meanx[ntrait];
+    double ssx[ntrait];
 
 
     // keep track of population sizes
@@ -194,13 +201,16 @@ void GoodGenes::write_data()
             female_iter != females.end();
             ++female_iter)
     {
-        p = 0.5 * (female_iter->p[0] + female_iter->p[1]);
-        meanp += p;
-        ssp += p*p;
+      for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+	     {
+        p[trait_idx] = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
+        meanp[trait_idx] += p[trait_idx];
+        ssp[trait_idx] += p[trait_idx]*p[trait_idx];
         
-        t = 0.5 * (female_iter->t[0] + female_iter->t[1]);
-        meant += t;
-        sst += t*t;
+        t[trait_idx] = 0.5 * (female_iter->t[0][trait_idx] + female_iter->t[1][trait_idx]);
+        meant[trait_idx] += t[trait_idx];
+        sst[trait_idx] += t[trait_idx]*t[trait_idx];
+       }
 
         v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
         meanv += v;
@@ -211,43 +221,54 @@ void GoodGenes::write_data()
             male_iter != males.end();
             ++male_iter)
     {
-        p = 0.5 * (male_iter->p[0] + male_iter->p[1]);
-        meanp += p;
-        ssp += p*p;
+      for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+	     {
+        p[trait_idx] = 0.5 * (male_iter->p[0][trait_idx] + male_iter->p[1][trait_idx]);
+        meanp[trait_idx] += p[trait_idx];
+        ssp[trait_idx] += p[trait_idx]*p[trait_idx];
         
-        t = 0.5 * (male_iter->t[0] + male_iter->t[1]);
-        meant += t;
-        sst += t*t;
+        t[trait_idx] = 0.5 * (male_iter->t[0][trait_idx] + male_iter->t[1][trait_idx]);
+        meant[trait_idx] += t[trait_idx];
+        sst[trait_idx] += t[trait_idx]*t[trait_idx];
+        
+        x[trait_idx] = male_iter->x[trait_idx];
+        meanx[trait_idx] += x[trait_idx];
+        ssx[trait_idx] += x[trait_idx]*x[trait_idx];
+       }
 
         v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
         meanv += v;
         ssv += v*v;
         
-        x = male_iter->x;
-        meanx += x;
-        ssx += x*x;
+       
     }
 
-
-    meanp /= (nf + nm);
-    meant /= (nf + nm);
+  for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+	     {
+        meanp[trait_idx] /= (nf + nm);
+        meant[trait_idx] /= (nf + nm);
+        meanx[trait_idx] /= nm;
+        double varp[trait_idx] = ssp[trait_idx] / (nf + nm) - meanp[trait_idx] * meanp[trait_idx];
+        double vart[trait_idx] = sst[trait_idx] / (nf + nm) - meant[trait_idx] * meant[trait_idx];
+        double varx[trait_idx] = ssx[trait_idx] / nm - meanx[trait_idx] * meanx[trait_idx];
+       }
+        
     meanv /= (nf + nm);
-    meanx /= nm;
-    
-    double varp = ssp / (nf + nm) - meanp * meanp;
-    double vart = sst / (nf + nm) - meant * meant;
     double varv = ssv / (nf + nm) - meanv * meanv;
-    double varx = ssx / nm - meanx * meanx;
 
-    data_file << time_step << ";"
-        << meanp << ";"
-        << meant << ";"
-        << meanv << ";"
-        << meanx << ";"
-        << varp << ";"
-        << vart << ";"
+
+    data_file << time_step << ";";
+    for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+	     {
+        data_file << meanp[trait_idx] << ";"
+        << meant[trait_idx] << ";"
+        << meanx[trait_idx] << ";"
+        << varp[trait_idx] << ";"
+        << vart[trait_idx] << ";"
+        << varx[trait_idx] << ";";
+       }
+        data_file << meanv << ";"
         << varv << ";"
-        << varx << ";"
         << mean_p_survive_f << ";"
         << mean_p_survive_m << ";"
         << nf << ";"
@@ -255,8 +276,26 @@ void GoodGenes::write_data()
 } // write_data()
 
 void GoodGenes::write_data_headers()
-{
-    data_file << "generation;meanp;meant;meanv;meanx;varp;vart;varv;varx;surv_f;surv_m;nf;nm;" << std::endl;
+{   
+    data_file << "generation" << ";";
+    for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+    {
+	    data_file 
+            << "meanp" << (trait_idx + 1) << ";"
+            << "meant" << (trait_idx + 1) << ";"
+            << "meanx" << (trait_idx + 1) << ";"
+            << "varp" << (trait_idx + 1) << ";"
+            << "vart" << (trait_idx + 1) << ";"
+            << "varx" << (trait_idx + 1) << ";"
+    }
+
+    data_file << "meanv"
+    << ";varv"
+    << ";surv_f"
+        << ";surv_m"
+        << ";nf"
+        << ";nm"
+	<< std::endl;
 }
 
 // choose surviving male according to its ornament 
@@ -273,9 +312,9 @@ unsigned GoodGenes::choose(Individual const &female)
     
     double fitness;
 
-    double p = 0.5 * (female.p[0] + female.p[1]);
+    double p[ntrait] = 0.5 * (female.p[0][ntrait] + female.p[1][ntrait]);
 
-    double x;
+    double x[ntrait];
     
     switch(par.pref)
     {
@@ -286,11 +325,14 @@ unsigned GoodGenes::choose(Individual const &female)
                         inspected_male_idx < par.choice_sample_size; 
                         ++inspected_male_idx)
                 {
+                  for (int trait_idx  = 0; trait_idx < ntrait; ++trait_idx)
+                  {
                     sampled_male_idx = male_sampler(rng_r);
 
-                    x = males[sampled_male_idx].x;
+                    x[trait_idx] = males[sampled_male_idx].x[trait_idx];
 
-                    fitness = std::exp(par.a * p * x);
+                    fitness = std::exp(par.a * p[trait_idx] * x[trait_idx]);
+                  }
                     
                     male_idxs.push_back(sampled_male_idx);
                     male_fitness.push_back(fitness);
@@ -305,11 +347,14 @@ unsigned GoodGenes::choose(Individual const &female)
                         inspected_male_idx < par.choice_sample_size; 
                         ++inspected_male_idx)
                 {
+                  for (int trait_idx  = 0; trait_idx < ntrait; ++trait_idx)
+                  {
                     sampled_male_idx = male_sampler(rng_r);
 
-                    x = males[sampled_male_idx].x;
+                    x[trait_idx] = males[sampled_male_idx].x[trait_idx];
 
-                    fitness = par.a * (x / (x + p));
+                    fitness = par.a * (x[trait_idx] / (x[trait_idx] + p[trait_idx]));
+                  }
                     
                     male_idxs.push_back(sampled_male_idx);
                     male_fitness.push_back(fitness);
