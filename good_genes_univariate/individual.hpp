@@ -10,6 +10,7 @@ class Individual
         double t[2]{0.0,0.0};
         double p[2]{0.0,0.0};
         double v[2]{0.0,0.0};
+        //Need to make these n-dimensional
 
         // realized ornament
         double x{0.0};

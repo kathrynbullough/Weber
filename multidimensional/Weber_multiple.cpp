@@ -39,33 +39,32 @@ const int N = 5000; // population size
 const int N_mate_sample = 10; // number of mates sampled
 const int clutch_size = 10; // number of offspring produced
 
+const int ntrait_max = 10;
 int ntrait = 2;
-//This is causing problems - can't have variable length arrays
-//Stack overflow suggesting using std::vector instead???
 
-double init_t[ntrait]; // initial value for ornament
-double init_p[ntrait]; // initial value for preference
+double init_t[ntrait_max]; // initial value for ornament
+double init_p[ntrait_max]; // initial value for preference
 double a = 1.0; // choice slope
 double b = 0.5; // cost of preference 
 
 double gam = 2.0; // cost curvature of a preference (1: linear, 2: bell-shaped survival curve, 3: bell-shaped with skewness, etc etc)
 double thet = 0.5; // how do preferences interact when it comes to a combined cost, see Pomiankowski & Iwasa 1993 procb
-double c[ntrait]; // cost of trait
-double lambda[ntrait]; // cost of trait
+double c[ntrait_max]; // cost of trait
+double lambda[ntrait_max]; // cost of trait
 
-double biast[ntrait]; // mutation bias: 0.5 means no bias. > 0.5 means bias towards reduction in tratt.
+double biast[ntrait_max]; // mutation bias: 0.5 means no bias. > 0.5 means bias towards reduction in tratt.
 
-double mu_p[ntrait];            // mutation rate preference
-double mu_t[ntrait];            // mutation rate ornament
-double sdmu_p[ntrait];			 // standard deviation mutation stepsize
-double sdmu_t[ntrait];			 // standard deviation mutation stepsize
+double mu_p[ntrait_max];            // mutation rate preference
+double mu_t[ntrait_max];            // mutation rate ornament
+double sdmu_p[ntrait_max];			 // standard deviation mutation stepsize
+double sdmu_t[ntrait_max];			 // standard deviation mutation stepsize
 const double NumGen = 150000; // number of generations
 const int skip = 10; // n generations interval before data is printed
 double sexlimp = 0; // degree of sex-limited expression in p,t
 double sexlimt = 0;
 int pref = 0;
 int web = 3;
-double meanornsurv[ntrait];
+double meanornsurv[ntrait_max];
 
 int popsize = N; // population size between 
 bool do_stats = 0;
@@ -84,10 +83,10 @@ std::string file_name = "output.csv";
 // the components of an actual individual
 struct Individual
 {
-	double t[ntrait][2]; // diploid, additive loci for t,p
-	double p[ntrait][2];
-    	double t_expr[ntrait]; // and store their expressed values
-    	double p_expr[ntrait];
+	double t[ntrait_max][2]; // diploid, additive loci for t,p
+	double p[ntrait_max][2];
+    	double t_expr[ntrait_max]; // and store their expressed values
+    	double p_expr[ntrait_max];
 	// amount to be allocated to male vs. female function
 };
 
@@ -100,8 +99,6 @@ int Parents[N*clutch_size][2];
 // for definitions of the various parameters see top of the file
 void initArguments(int argc, char *argv[])
 {
-  ntrait = std::stoi(argv[1]);
-  //Can we initialise ntrait's value here if we're then using it just below to initialise everything else???
   
   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
   {
@@ -122,7 +119,8 @@ void initArguments(int argc, char *argv[])
     	init_p[trait_idx] = std::stod(argv[14]);
     	gam = std::stod(argv[15]);
     	thet = std::stod(argv[16]);
-    	file_name = argv[17];
+     ntrait = std::stoi(argv[17]);
+    	file_name = argv[18];
     //Maybe add another one to allow the change of ntraits to something other than 2? - NEED TO DO THIS
     //Get rid of fixed vector initalisation above, then use pushbacks here to keep them open-ended?
     //c = c.push_back(std::stod(argv[4]));
@@ -167,6 +165,7 @@ void WriteParameters(std::ofstream &DataFile)
 		<< "sexlimt:;" <<  sexlimt << ";"<< std::endl
     		<< "gamma:;" <<  gam << ";"<< std::endl
     		<< "theta:;" <<  thet << ";"<< std::endl
+       <<"ntrait:;" << ntrait << ";" << std::endl
 		<< "seed:;" << seed << ";"<< std::endl;
 }
 
@@ -614,19 +613,19 @@ void WriteData(std::ofstream &DataFile)
 		exit(1);
 	}
 
-    double meanp[ntrait];
-    double meant[ntrait]; 
-    double ssp[ntrait];
-    double sst[ntrait];
-    double spt[ntrait];
+    double meanp[ntrait_max];
+    double meant[ntrait_max]; 
+    double ssp[ntrait_max];
+    double sst[ntrait_max];
+    double spt[ntrait_max];
 
-    double p[ntrait],t[ntrait],meanmrs,meanfrs,varfrs,varmrs;
+    double p[ntrait_max],t[ntrait_max],meanmrs,meanfrs,varfrs,varmrs;
     double ssmrs = 0, ssfrs = 0, summrs=0, sumfrs=0;
 
     // calculate means and variances for the males
 	for (int i = 0; i < Nmales; ++i)
 	{
-   		for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+   		for (int trait_idx = 0; trait_idx < ntrait_max; ++trait_idx)
    		{
 			p[trait_idx] = 0.5 * ( Males[i].p[trait_idx][0] + Males[i].p[trait_idx][1]);
 			t[trait_idx] = 0.5 * ( Males[i].t[trait_idx][0] + Males[i].t[trait_idx][1]);
@@ -649,7 +648,7 @@ void WriteData(std::ofstream &DataFile)
     // calculate means and variances for the females
 	for (int i = 0; i < Nfemales; ++i)
 	{
-   		for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+   		for (int trait_idx = 0; trait_idx < ntrait_max; ++trait_idx)
    		{
 			p[trait_idx] = 0.5 * ( Females[i].p[trait_idx][0] + Females[i].p[trait_idx][1]);
 			t[trait_idx] = 0.5 * ( Females[i].t[trait_idx][0] + Females[i].t[trait_idx][1]);
@@ -669,13 +668,13 @@ void WriteData(std::ofstream &DataFile)
         	}
 	} 
 
-    double varp[ntrait]; 
-    double vart[ntrait]; 
-    double covpt[ntrait];
+    double varp[ntrait_max]; 
+    double vart[ntrait_max]; 
+    double covpt[ntrait_max];
 
     double sum_sexes = Nmales + Nfemales;
 
-    for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+    for (int trait_idx = 0; trait_idx < ntrait_max; ++trait_idx)
     {
         meant[trait_idx] /= sum_sexes;
         meanp[trait_idx] /= sum_sexes;
@@ -699,7 +698,7 @@ void WriteData(std::ofstream &DataFile)
 
     // output of all the statistics
 	DataFile << generation << ";";
-    	for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+    	for (int trait_idx = 0; trait_idx < ntrait_max; ++trait_idx)
     	{
 		DataFile << meanp[trait_idx]
                 << ";" << meant[trait_idx]
@@ -724,7 +723,7 @@ void WriteDataHeaders(std::ofstream &DataFile)
 {
     DataFile << "generation" << ";";
 
-    for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
+    for (int trait_idx = 0; trait_idx < ntrait_max; ++trait_idx)
     {
 	    DataFile 
             << "meanp" << (trait_idx + 1) << ";"
