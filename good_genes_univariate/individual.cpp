@@ -3,18 +3,20 @@
 
 // standard constructor
 Individual::Individual(Parameters const &params) :
-    t{params.init_t, params.init_t}[params.ntrait],
-    p{params.init_p, params.init_p}[params.ntrait],
-    v{params.init_v, params.init_v},
-    x{0.0}[params.ntrait]
+    t{std::vector<double>(params.ntrait,0.0),
+      std::vector<double>(params.ntrait,0.0)},
+    p{std::vector<double>(params.ntrait,0.0),
+      std::vector<double>(params.ntrait,0.0)},
+    x{std::vector<double>(params.ntrait,0.0)},
+    v{params.init_v, params.init_v}
 {
 }
 
 Individual::Individual(Individual const &other) :
-    t{other.t[0], other.t[1]}[other.ntrait],
-    p{other.p[0], other.p[1]}[other.ntrait],
+    t{other.t[0], other.t[1]},
+    p{other.p[0], other.p[1]},
     v{other.v[0], other.v[1]},
-    x{other.x}[other.ntrait]
+    x{other.x}
 {}
 
 
@@ -45,7 +47,7 @@ Individual::Individual(
     {
       for (int trait_idx = 0; trait_idx < params.ntrait; ++trait_idx)
 	     {
-        if (uniform(rng_r) < params.mu_p[trait_idx])
+        if (uniform(rng_r) < params.mu_p)
         {
             incr = uniform(rng_r) * params.max_mut_p;
 
@@ -57,7 +59,7 @@ Individual::Individual(
             }
         }
 
-        if (uniform(rng_r) < params.mu_t[trait_idx])
+        if (uniform(rng_r) < params.mu_t)
         {
             incr = uniform(rng_r) * params.max_mut_t;
             t[allele_idx][trait_idx] = t[allele_idx][trait_idx] + (uniform(rng_r) < 0.5 ? -incr : incr);
