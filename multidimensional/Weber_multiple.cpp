@@ -188,6 +188,23 @@ void Init()
 		Females[i].t_expr[trait_idx] = init_t[trait_idx];
 		Females[i].p_expr[trait_idx] = init_p[trait_idx];
 	  } // end for trait_idx
+     
+     //Set anything above ntrait up to ntrait_max to be 0
+     for(int trait_idx = 0; trait_idx < ntrait_max && trait_idx >= ntrait; ++trait_idx)
+     {
+       		// initialize both diploid loci
+		    for (int j = 0; j < 2; ++j)
+		    {
+			    Females[i].t[trait_idx][j] = 0.0;
+			    Females[i].p[trait_idx][j] = 0.0;
+	      	}
+		
+		    // and the expressed values
+		    Females[i].t_expr[trait_idx] = 0.0;
+		    Females[i].p_expr[trait_idx] = 0.0;
+       
+     }
+     
 	} // end for Nfemales
 
     // initialize the male part of the population
@@ -204,6 +221,23 @@ void Init()
 		Males[i].t_expr[trait_idx] = init_t[trait_idx];
 		Males[i].p_expr[trait_idx] = init_p[trait_idx];
 	   }
+    
+    //Set anything above ntrait up to ntrait_max to be 0
+     for(int trait_idx = 0; trait_idx < ntrait_max && trait_idx >= ntrait; ++trait_idx)
+     {
+       		// initialize both diploid loci
+		    for (int j = 0; j < 2; ++j)
+		    {
+			    Males[i].t[trait_idx][j] = 0.0;
+			    Males[i].p[trait_idx][j] = 0.0;
+	      	}
+		
+		    // and the expressed values
+		    Males[i].t_expr[trait_idx] = 0.0;
+		    Males[i].p_expr[trait_idx] = 0.0;
+       
+     }
+       
 	}
 } // end Init
 
