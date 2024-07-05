@@ -15,8 +15,8 @@ Individual::Individual(Parameters const &params) :
 Individual::Individual(Individual const &other) :
     t{other.t[0], other.t[1]},
     p{other.p[0], other.p[1]},
-    v{other.v[0], other.v[1]},
-    x{other.x}
+    x{other.x},
+    v{other.v[0], other.v[1]}
 {}
 
 
@@ -83,7 +83,7 @@ void Individual::operator=(Individual const &other)
 {
     for (unsigned allele_idx{0}; allele_idx < 2; ++allele_idx)
     {
-      for (int trait_idx = 0; trait_idx < other.ntrait; ++trait_idx)
+      for (int trait_idx = 0; trait_idx < other.t[0].size(); ++trait_idx)
 	     {
         p[allele_idx][trait_idx] = other.p[allele_idx][trait_idx];
         t[allele_idx][trait_idx] = other.t[allele_idx][trait_idx];

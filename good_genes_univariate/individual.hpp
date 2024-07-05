@@ -9,10 +9,11 @@ class Individual
     public:
         std::vector<double> t[2];
         std::vector<double> p[2];
-        double v[2]{0.0,0.0};
-
+        
         // realized ornament
         std::vector<double> x;
+        
+        double v[2]{0.0,0.0};
 
         // male survival prob
 

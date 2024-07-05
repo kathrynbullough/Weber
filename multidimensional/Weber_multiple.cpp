@@ -128,7 +128,7 @@ void initArguments(int argc, char *argv[])
     //Unless you just keep all initialisations for each variable the same across dimensions, then don't have to worry about this at all
     }
     
-   for(int trait_idx = 0; trait_idx < ntrait_max && trait_idx >= ntrait; ++trait_idx)
+   for(int trait_idx = ntrait; trait_idx < ntrait_max; ++trait_idx)
      {
 	      c[trait_idx] = 0.0;
   	    lambda[trait_idx] = 0.0;
@@ -203,7 +203,7 @@ void Init()
 	  } // end for trait_idx
      
      //Set anything above ntrait up to ntrait_max to be 0
-     for(int trait_idx = 0; trait_idx < ntrait_max && trait_idx >= ntrait; ++trait_idx)
+     for(int trait_idx = ntrait; trait_idx < ntrait_max; ++trait_idx)
      {
        		// initialize both diploid loci
 		    for (int j = 0; j < 2; ++j)
@@ -236,7 +236,7 @@ void Init()
 	   }
     
     //Set anything above ntrait up to ntrait_max to be 0
-     for(int trait_idx = 0; trait_idx < ntrait_max && trait_idx >= ntrait; ++trait_idx)
+     for(int trait_idx = ntrait; trait_idx < ntrait_max; ++trait_idx)
      {
        		// initialize both diploid loci
 		    for (int j = 0; j < 2; ++j)

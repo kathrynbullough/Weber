@@ -47,6 +47,7 @@ void GoodGenes::survival()
     
     for (auto female_iter{females.begin()}; female_iter != females.end(); )
     {
+      surv = 0.0;
       for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
         p[trait_idx] = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
@@ -74,6 +75,7 @@ void GoodGenes::survival()
 
     for (auto male_iter{males.begin()}; male_iter != males.end(); )
     {
+      surv = 0.0;
       for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
         t[trait_idx] = 0.5 * (male_iter->t[0][trait_idx] + male_iter->t[1][trait_idx]);
