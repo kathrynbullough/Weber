@@ -127,6 +127,19 @@ void initArguments(int argc, char *argv[])
     //But then you'd need to change all the numbers of the args
     //Unless you just keep all initialisations for each variable the same across dimensions, then don't have to worry about this at all
     }
+    
+   for(int trait_idx = 0; trait_idx < ntrait_max && trait_idx >= ntrait; ++trait_idx)
+     {
+	      c[trait_idx] = 0.0;
+  	    lambda[trait_idx] = 0.0;
+        biast[trait_idx] = 0.5;
+	      mu_p[trait_idx] = 0.0;
+	      mu_t[trait_idx] = 0.0;
+        sdmu_p[trait_idx] = 0.0;
+	      sdmu_t[trait_idx] = 0.0;
+  	    init_t[trait_idx] = 0.0;
+    	  init_p[trait_idx] = 0.0;
+     }
 } // end initArguments
 
 // mutation function:
