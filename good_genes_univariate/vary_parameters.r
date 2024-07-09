@@ -9,6 +9,7 @@ nrep = 5
 maxgen = 10000
 
 pref = seq(0,1,1)
+ntrait = 2
 
 
 # generate a date_time stamp as a character
@@ -31,8 +32,10 @@ for (rep_i in 1:nrep)
   {
     for(pref_i in pref)
     {
-      for (biasv_i in biasv)
+      for(ntrait_i in ntrait)
       {
+        for (biasv_i in biasv)
+        {
         counter <- counter + 1
         file_name_i <- paste0(output_file_prefix,"_",counter)
 
@@ -43,6 +46,7 @@ for (rep_i in 1:nrep)
                         c_i,
                         format(maxgen,scientific=F),
                         pref_i,
+                        ntrait_i,
                         file_name_i)
 
         # append to batch file contents
@@ -51,6 +55,7 @@ for (rep_i in 1:nrep)
                 ,echo_str
                 ,"\n"
                 ,command_str)
+        }
       }
     }
   }

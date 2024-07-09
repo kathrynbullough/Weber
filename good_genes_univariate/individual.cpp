@@ -91,3 +91,4 @@ void Individual::operator=(Individual const &other)
         v[allele_idx] = other.v[allele_idx];
     }
 }//end operator=
+//

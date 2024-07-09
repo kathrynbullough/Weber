@@ -99,7 +99,8 @@ int Parents[N*clutch_size][2];
 // for definitions of the various parameters see top of the file
 void initArguments(int argc, char *argv[])
 {
-  
+  ntrait = std::stoi(argv[17]);
+
   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
   {
 	a = std::stod(argv[1]);
@@ -119,7 +120,6 @@ void initArguments(int argc, char *argv[])
     	init_p[trait_idx] = std::stod(argv[14]);
     	gam = std::stod(argv[15]);
     	thet = std::stod(argv[16]);
-     ntrait = std::stoi(argv[17]);
     	file_name = argv[18];
     //Maybe add another one to allow the change of ntraits to something other than 2? - NEED TO DO THIS
     //Get rid of fixed vector initalisation above, then use pushbacks here to keep them open-ended?
@@ -131,7 +131,7 @@ void initArguments(int argc, char *argv[])
    for(int trait_idx = ntrait; trait_idx < ntrait_max; ++trait_idx)
      {
 	      c[trait_idx] = 0.0;
-  	    lambda[trait_idx] = 0.0;
+  	    lambda[trait_idx] = 1.0;
         biast[trait_idx] = 0.5;
 	      mu_p[trait_idx] = 0.0;
 	      mu_t[trait_idx] = 0.0;
@@ -163,14 +163,14 @@ void WriteParameters(std::ofstream &DataFile)
 		<< "type:;" << "gonochorist_fisherian" << ";" << std::endl
 		<< "popsize_init:;" << N << ";" << std::endl
 		<< "n_mate_sample:;" << N_mate_sample << ";"<< std::endl
-		<< "init_t:;" << init_t[0] << ";" << std::endl
-		<< "init_p:;" << init_p[0] << ";" << std::endl
+		<< "init_t:;" << init_t[6] << ";" << std::endl
+		<< "init_p:;" << init_p[7] << ";" << std::endl
 		<< "a:;" <<  a << ";"<< std::endl
 		<< "b:;" <<  b << ";"<< std::endl
 		<< "c:;" <<  c[0] << ";"<< std::endl
 		<< "pref:;" <<  pref << ";"<< std::endl
-		<< "mu_p:;" <<  mu_p[0] << ";" << std::endl
-		<< "mu_t:;" <<  mu_t[0] << ";" << std::endl
+		<< "mu_p:;" <<  mu_p[4] << ";" << std::endl
+		<< "mu_t:;" <<  mu_t[5] << ";" << std::endl
 		<< "mu_std_p:;" <<  sdmu_p[0] << ";" << std::endl
 		<< "mu_std_t:;" <<  sdmu_t[0] << ";"<< std::endl
 		<< "biast:;" <<  biast[0] << ";" << std::endl
@@ -201,23 +201,6 @@ void Init()
 		Females[i].t_expr[trait_idx] = init_t[trait_idx];
 		Females[i].p_expr[trait_idx] = init_p[trait_idx];
 	  } // end for trait_idx
-     
-     //Set anything above ntrait up to ntrait_max to be 0
-     for(int trait_idx = ntrait; trait_idx < ntrait_max; ++trait_idx)
-     {
-       		// initialize both diploid loci
-		    for (int j = 0; j < 2; ++j)
-		    {
-			    Females[i].t[trait_idx][j] = 0.0;
-			    Females[i].p[trait_idx][j] = 0.0;
-	      	}
-		
-		    // and the expressed values
-		    Females[i].t_expr[trait_idx] = 0.0;
-		    Females[i].p_expr[trait_idx] = 0.0;
-       
-     }
-     
 	} // end for Nfemales
 
     // initialize the male part of the population
@@ -233,24 +216,7 @@ void Init()
 				
 		Males[i].t_expr[trait_idx] = init_t[trait_idx];
 		Males[i].p_expr[trait_idx] = init_p[trait_idx];
-	   }
-    
-    //Set anything above ntrait up to ntrait_max to be 0
-     for(int trait_idx = ntrait; trait_idx < ntrait_max; ++trait_idx)
-     {
-       		// initialize both diploid loci
-		    for (int j = 0; j < 2; ++j)
-		    {
-			    Males[i].t[trait_idx][j] = 0.0;
-			    Males[i].p[trait_idx][j] = 0.0;
-	      	}
-		
-		    // and the expressed values
-		    Males[i].t_expr[trait_idx] = 0.0;
-		    Males[i].p_expr[trait_idx] = 0.0;
-       
-     }
-       
+	   } 
 	}
 } // end Init
 
