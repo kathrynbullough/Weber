@@ -130,8 +130,17 @@ void initArguments(int argc, char *argv[])
     
    for(int trait_idx = ntrait; trait_idx < ntrait_max; ++trait_idx)
      {
+       	a = std::stod(argv[1]);
+	      b = std::stod(argv[2]);
+  	    lambda[trait_idx] = std::stod(argv[4]);
+	      sexlimp = std::stod(argv[10]);
+	      sexlimt = std::stod(argv[11]);
+    	  pref = std::stoi(argv[12]);
+    	  gam = std::stod(argv[15]);
+    	  thet = std::stod(argv[16]);
+    	  file_name = argv[18];
+     
 	      c[trait_idx] = 0.0;
-  	    lambda[trait_idx] = 1.0;
         biast[trait_idx] = 0.5;
 	      mu_p[trait_idx] = 0.0;
 	      mu_t[trait_idx] = 0.0;
