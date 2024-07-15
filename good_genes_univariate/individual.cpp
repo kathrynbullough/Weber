@@ -1,3 +1,4 @@
+#include <iostream>
 #include "individual.hpp"
 #include "parameters.hpp"
 
@@ -24,8 +25,14 @@ Individual::Individual(
                 Individual const &mother,
                 Individual const &father,
                 std::mt19937 &rng_r,
-                Parameters const &params)
+                Parameters const &params) :
+    t{std::vector<double>(params.ntrait,0.0),
+      std::vector<double>(params.ntrait,0.0)},
+    p{std::vector<double>(params.ntrait,0.0),
+      std::vector<double>(params.ntrait,0.0)},
+    x{std::vector<double>(params.ntrait,0.0)}               
 {
+
     std::bernoulli_distribution segregator{0.5};
     std::uniform_real_distribution<double> uniform{0.0,1.0};
     

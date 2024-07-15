@@ -2,9 +2,12 @@
 
 #biasv=c(0.5,0.6,0.7,0.8,0.9,0.99)
 #c(seq(0.5,0.9,0.1),0.99)
-biasv = c(seq(0.9,1,0.01))
-c = 0.5
-nrep = 5
+biasv = c(seq(0.5,0.9,0.1),0.99)
+c = 0.2
+b = 0.001
+init_t = 0
+init_p = 3
+nrep = 1
 
 maxgen = 10000
 
@@ -30,12 +33,18 @@ for (rep_i in 1:nrep)
 {
   for(c_i in c)
   {
-    for(pref_i in pref)
+    for(b_i in b)
     {
-      for(ntrait_i in ntrait)
+    for(init_t_i in init_t)
+    {
+    for(init_p_i in init_p)
+    {
+      for(pref_i in pref)
       {
-        for (biasv_i in biasv)
+        for(ntrait_i in ntrait)
         {
+          for (biasv_i in biasv)
+          {
         counter <- counter + 1
         file_name_i <- paste0(output_file_prefix,"_",counter)
 
@@ -44,6 +53,9 @@ for (rep_i in 1:nrep)
         command_str <- paste(exe,
                         biasv_i,
                         c_i,
+                        b_i,
+                        init_t_i,
+                        init_p_i,
                         format(maxgen,scientific=F),
                         pref_i,
                         ntrait_i,
@@ -58,6 +70,9 @@ for (rep_i in 1:nrep)
         }
       }
     }
+  }
+  }
+  }
   }
 }
 

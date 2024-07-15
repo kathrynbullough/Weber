@@ -38,7 +38,10 @@ transform.sym  <- function(x)
 
 jsonstuff <- '[
     {"xvar" : "generation",
-        "yvar" : ["meanp","meant"]
+        "yvar" : ["meanp1","meant1"]
+    },
+    {"xvar" : "generation",
+        "yvar" : ["meanp2","meant2"]
     },
     {
         "xvar" : "generation",
@@ -46,23 +49,23 @@ jsonstuff <- '[
     },
     {
         "xvar" : "generation",
-        "yvar" : "meanx"
+        "yvar" : "meanx1"
     },
     {
         "xvar" : "generation",
-        "yvar" : ["varp","vart","varv"]
-    },
-    {
-        "xvar" : "generation",
-        "yvar" : ["nf","nm"]
+        "yvar" : ["varp1","vart1","varv"]
     },
     {
         "xvar" : "generation",
         "yvar" : ["surv_f","surv_m"]
     },
     {
-        "xvar" : "meanp",
-        "yvar" : "meant"
+        "xvar" : "meanp1",
+        "yvar" : "meant1"
+    },
+    {
+        "xvar" : "meanp2",
+        "yvar" : "meant2"
     }
 ]
 '

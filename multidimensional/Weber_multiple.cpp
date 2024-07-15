@@ -210,6 +210,20 @@ void Init()
 		Females[i].t_expr[trait_idx] = init_t[trait_idx];
 		Females[i].p_expr[trait_idx] = init_p[trait_idx];
 	  } // end for trait_idx
+     
+     for(int trait_idx = ntrait; trait_idx < ntrait_max; ++trait_idx)
+     {
+     		// initialize both diploid loci
+		for (int j = 0; j < 2; ++j)
+		{
+			Females[i].t[trait_idx][j] = init_t[trait_idx];
+			Females[i].p[trait_idx][j] = init_p[trait_idx];
+		}
+		
+		// and the expressed values
+		Females[i].t_expr[trait_idx] = init_t[trait_idx];
+		Females[i].p_expr[trait_idx] = init_p[trait_idx];
+     }
 	} // end for Nfemales
 
     // initialize the male part of the population
@@ -225,7 +239,19 @@ void Init()
 				
 		Males[i].t_expr[trait_idx] = init_t[trait_idx];
 		Males[i].p_expr[trait_idx] = init_p[trait_idx];
-	   } 
+	   }
+     
+     for(int trait_idx = ntrait; trait_idx < ntrait_max; ++trait_idx)
+     {
+     			for (int j = 0; j < 2; ++j)
+			{
+				Males[i].t[trait_idx][j] = init_t[trait_idx];
+				Males[i].p[trait_idx][j] = init_p[trait_idx];
+			}
+				
+		Males[i].t_expr[trait_idx] = init_t[trait_idx];
+		Males[i].p_expr[trait_idx] = init_p[trait_idx];
+     } 
 	}
 } // end Init
 
@@ -249,6 +275,22 @@ void Create_Kid(int mother, int father, Individual &kid)
 		kid.p[trait_idx][1] = MaleSurvivors[father].p[trait_idx][segregator(rng_r)];
     		mutate(kid.p[trait_idx][1], mu_p[trait_idx], sdmu_p[trait_idx]);
  	}
+  
+  for(int trait_idx = ntrait; trait_idx < ntrait_max; ++trait_idx)
+  {
+    	   // inherit ornament
+		kid.t[trait_idx][0] = FemaleSurvivors[mother].t[trait_idx][segregator(rng_r)];
+   		mutate(kid.t[trait_idx][0], mu_t[trait_idx], sdmu_t[trait_idx], biast[trait_idx]);
+		kid.t[trait_idx][1] = MaleSurvivors[father].t[trait_idx][segregator(rng_r)];
+    		mutate(kid.t[trait_idx][1], mu_t[trait_idx], sdmu_t[trait_idx], biast[trait_idx]);
+
+    	  // inherit preference
+		kid.p[trait_idx][0] = FemaleSurvivors[mother].p[trait_idx][segregator(rng_r)];
+   		mutate(kid.p[trait_idx][0], mu_p[trait_idx], sdmu_p[trait_idx]);
+		kid.p[trait_idx][1] = MaleSurvivors[father].p[trait_idx][segregator(rng_r)];
+    		mutate(kid.p[trait_idx][1], mu_p[trait_idx], sdmu_p[trait_idx]);
+  }
+  
 } // end Create_Kid
 
 // survival stage
@@ -597,6 +639,16 @@ void NextGen()
                 Males[sons].t_expr[trait_idx] = t;
                 Males[sons].p_expr[trait_idx] = p;
             }
+            
+            for(int trait_idx = ntrait; trait_idx < ntrait_max; ++trait_idx)
+            {
+                double t = 0.5 * ( Males[sons].t[trait_idx][0] + Males[sons].t[trait_idx][1]);
+                double p = 0.5 * ( Males[sons].p[trait_idx][0] + Males[sons].p[trait_idx][1]);
+
+                Males[sons].t_expr[trait_idx] = t;
+                Males[sons].p_expr[trait_idx] = p;
+            }
+            
             ++sons;
         }
         else
@@ -610,6 +662,15 @@ void NextGen()
                 Females[daughters].t_expr[trait_idx] = t;
                 Females[daughters].p_expr[trait_idx] = p;
             }
+            
+            for(int trait_idx = ntrait; trait_idx < ntrait_max; ++trait_idx)
+            {
+                double t = 0.5 * ( Females[daughters].t[trait_idx][0] + Females[daughters].t[trait_idx][1]);
+                double p = 0.5 * ( Females[daughters].p[trait_idx][0] + Females[daughters].p[trait_idx][1]);
+                Females[daughters].t_expr[trait_idx] = t;
+                Females[daughters].p_expr[trait_idx] = p;
+            }
+            
             ++daughters;
         }
     }

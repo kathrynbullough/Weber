@@ -125,6 +125,8 @@ void GoodGenes::reproduction()
         
         assert(male_idx >= 0);
         assert(male_idx < males.size());
+        
+//        std::cout << male_idx << " " << males.size() << " " << female_idx << " " << females.size() << std::endl;
 
         Individual Kid(
                 females[female_idx],
@@ -299,7 +301,7 @@ void GoodGenes::write_data_headers()
     << ";surv_f"
         << ";surv_m"
         << ";nf"
-        << ";nm"
+        << ";nm;"
 	<< std::endl;
 }
 

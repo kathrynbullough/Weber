@@ -571,6 +571,74 @@ ggplot(data = test2
   xlab("Probability of biased mutations on viability trait") +
   ylab("Trait value")
 
+test_Web<-read.delim("test_Web.csv", sep=" ", header=T)
+
+testWeb2 <- pivot_longer(test_Web
+                      ,cols=c(meant,meanp)
+                      ,names_to = "trait"
+                      ,values_to = "trait_value")
+
+ggplot(data = testWeb2
+       ,mapping = aes(x = biasv, y = trait_value)) +
+  geom_point(mapping=aes(colour=trait)) +
+  scale_colour_brewer(palette="Set1") +
+  theme_classic() +
+  xlab("Probability of biased mutations on viability trait") +
+  ylab("Trait value")
+
+
+ind_sim<-read.delim("indsim.txt", sep=";", header=T)
+plot_p1_t1 <- ggplot(data=ind_sim, aes(x=meanp, y=meant)) + geom_point(size=1) +
+  geom_path(mapping=aes(x=meanp,y=meant))
+plot_p1_t1
+
+
+ptpositive<-read.delim("ptpositive.csv", sep=" ", header=T)
+
+ptpositive2 <- pivot_longer(ptpositive
+                      ,cols=c(meant,meanp)
+                      ,names_to = "trait"
+                      ,values_to = "trait_value")
+
+ggplot(data = subset(ptpositive2, pref==0)
+       ,mapping = aes(x = biasv, y = trait_value)) +
+  geom_point(mapping=aes(colour=trait)) +
+  scale_colour_brewer(palette="Set1") +
+  theme_classic() +
+  xlab("Probability of biased mutations on viability trait") +
+  ylab("Trait value")
+
+ggplot(data = subset(ptpositive2, pref==1)
+       ,mapping = aes(x = biasv, y = trait_value)) +
+  geom_point(mapping=aes(colour=trait)) +
+  scale_colour_brewer(palette="Set1") +
+  theme_classic() +
+  xlab("Probability of biased mutations on viability trait") +
+  ylab("Trait value")
+
+
+pos_narrow_bias<-read.delim("pos_narrow_bias.csv", sep=" ", header=T)
+
+pos_narrow_bias2 <- pivot_longer(pos_narrow_bias
+                            ,cols=c(meant,meanp)
+                            ,names_to = "trait"
+                            ,values_to = "trait_value")
+
+ggplot(data = subset(pos_narrow_bias2, pref==0)
+       ,mapping = aes(x = biasv, y = trait_value)) +
+  geom_point(mapping=aes(colour=trait)) +
+  scale_colour_brewer(palette="Set1") +
+  theme_classic() +
+  xlab("Probability of biased mutations on viability trait") +
+  ylab("Trait value")
+
+ggplot(data = subset(pos_narrow_bias2, pref==1)
+       ,mapping = aes(x = biasv, y = trait_value)) +
+  geom_point(mapping=aes(colour=trait)) +
+  scale_colour_brewer(palette="Set1") +
+  theme_classic() +
+  xlab("Probability of biased mutations on viability trait") +
+  ylab("Trait value")
 
 
 #### multiple traits ####
@@ -713,8 +781,17 @@ plotbox<-ggplot(all_graph, aes(x=pref.,y=t1abs))+
 plotbox
 
 
+# n-dimensions
 
+#Fisher
+twodim<-read.delim("outputfix_5.txt", sep=";", header=T)
 
+#Good genes
+twodimgg<-read.table("sim_good_genes.txt", header=T, sep=";")
+twodimF<-read.table("sim_good_genes_F.txt", header=T, sep=";")
+twodimW<-read.table("sim_good_genes_W.txt", header=T, sep=";")
 
-
+plot_p_t <- ggplot(data=twodimW,aes(x=meanp1, y=meant1))  +
+  geom_path(mapping=aes(x=meanp1,y=meant1), colour="red") + geom_path(mapping=aes(x=meanp2,y=meant2), colour="blue")
+plot_p_t
 
