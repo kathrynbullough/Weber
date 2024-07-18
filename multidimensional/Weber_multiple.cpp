@@ -216,13 +216,13 @@ void Init()
      		// initialize both diploid loci
 		for (int j = 0; j < 2; ++j)
 		{
-			Females[i].t[trait_idx][j] = init_t[trait_idx];
-			Females[i].p[trait_idx][j] = init_p[trait_idx];
+			Females[i].t[trait_idx][j] = 0.0;
+			Females[i].p[trait_idx][j] = 0.0;
 		}
 		
 		// and the expressed values
-		Females[i].t_expr[trait_idx] = init_t[trait_idx];
-		Females[i].p_expr[trait_idx] = init_p[trait_idx];
+		Females[i].t_expr[trait_idx] = 0.0;
+		Females[i].p_expr[trait_idx] = 0.0;
      }
 	} // end for Nfemales
 
@@ -243,14 +243,14 @@ void Init()
      
      for(int trait_idx = ntrait; trait_idx < ntrait_max; ++trait_idx)
      {
-     			for (int j = 0; j < 2; ++j)
-			{
-				Males[i].t[trait_idx][j] = init_t[trait_idx];
-				Males[i].p[trait_idx][j] = init_p[trait_idx];
-			}
+	for (int j = 0; j < 2; ++j)
+	{
+		Males[i].t[trait_idx][j] = 0.0;
+		Males[i].p[trait_idx][j] = 0.0;
+	}
 				
-		Males[i].t_expr[trait_idx] = init_t[trait_idx];
-		Males[i].p_expr[trait_idx] = init_p[trait_idx];
+	Males[i].t_expr[trait_idx] = 0.0;
+	Males[i].p_expr[trait_idx] = 0.0;
      } 
 	}
 } // end Init
@@ -701,6 +701,15 @@ void WriteData(std::ofstream &DataFile)
     double ssp[ntrait_max];
     double sst[ntrait_max];
     double spt[ntrait_max];
+
+	for (int trait_idx = 0; trait_idx < ntrait_max; ++trait_idx)
+	{
+		meanp[trait_idx] = 0.0;
+		meant[trait_idx] = 0.0;
+		ssp[trait_idx] = 0.0;
+		sst[trait_idx] = 0.0;
+		spt[trait_idx] = 0.0;
+	}
 
     double p[ntrait_max],t[ntrait_max],meanmrs,meanfrs,varfrs,varmrs;
     double ssmrs = 0, ssfrs = 0, summrs=0, sumfrs=0;

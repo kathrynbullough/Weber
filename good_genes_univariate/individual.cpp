@@ -4,10 +4,10 @@
 
 // standard constructor
 Individual::Individual(Parameters const &params) :
-    t{std::vector<double>(params.ntrait,0.0),
-      std::vector<double>(params.ntrait,0.0)},
-    p{std::vector<double>(params.ntrait,0.0),
-      std::vector<double>(params.ntrait,0.0)},
+    t{std::vector<double>(params.ntrait,params.init_t),
+      std::vector<double>(params.ntrait,params.init_t)},
+    p{std::vector<double>(params.ntrait,params.init_p),
+      std::vector<double>(params.ntrait,params.init_p)},
     x{std::vector<double>(params.ntrait,0.0)},
     v{params.init_v, params.init_v}
 {
