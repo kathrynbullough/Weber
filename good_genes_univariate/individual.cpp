@@ -8,7 +8,7 @@ Individual::Individual(Parameters const &params) :
       std::vector<double>(params.ntrait,params.init_t)},
     p{std::vector<double>(params.ntrait,params.init_p),
       std::vector<double>(params.ntrait,params.init_p)},
-    x{std::vector<double>(params.ntrait,0.0)},
+    x{std::vector<double>(params.ntrait,(params.init_t*params.init_p))},
     v{params.init_v, params.init_v}
 {
 }
