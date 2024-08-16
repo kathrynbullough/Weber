@@ -24,6 +24,11 @@ GoodGenes::GoodGenes(Parameters const &params) :
         survival();
         reproduction();
 
+        // move the expression of the male phenotype 
+        // out of the survival function and put it in a separate
+        // function, say, phenotypes()
+        phenotypes();
+
         if (time_step % par.numoutgen == 0)
         {
             write_data();
