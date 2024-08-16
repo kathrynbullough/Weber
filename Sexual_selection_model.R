@@ -788,7 +788,7 @@ twodim<-read.delim("outputfix_5.txt", sep=";", header=T)
 
 #Good genes
 twodimgg<-read.table("sim_good_genes.txt", header=T, sep=";")
-twodimF<-read.table("sim_good_genes_F.txt", header=T, sep=";")
+twodimO<-read.table("sim_good_genes_O.txt", header=T, sep=";")
 twodimW<-read.table("sim_good_genes_W.txt", header=T, sep=";")
 
 plot_p_t <- ggplot(data=twodimW,aes(x=meanp1, y=meant1))  +

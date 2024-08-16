@@ -29,6 +29,7 @@ class GoodGenes
 
         void reproduction();
         void survival();
+	void phenotypes();
         unsigned choose(Individual const &female);
 
         void write_data();

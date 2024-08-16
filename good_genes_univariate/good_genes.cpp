@@ -39,6 +39,20 @@ GoodGenes::GoodGenes(Parameters const &params) :
 
 } // end GoodGenes() constructor
 
+void GoodGenes::phenotypes()
+{
+	double t[par.ntrait],v;
+	for (auto male_iter{males.begin()}; male_iter !=males.end(); ++male_iter)
+	{
+		for (int trait_idx=0; trait_idx<par.ntrait; ++trait_idx)
+		{
+			t[trait_idx] = 0.5 * (male_iter->t[0][trait_idx] + male_iter->t[1][trait_idx]);
+			v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
+			male_iter->x[trait_idx] = t[trait_idx] * std::exp(-std::fabs(par.v_opt - v));
+		}
+	}
+}
+
 void GoodGenes::survival()
 {
     // aux variables to store trait values
