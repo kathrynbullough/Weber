@@ -57,13 +57,8 @@ Individual::Individual(
         if (uniform(rng_r) < params.mu_p)
         {
             incr = uniform(rng_r) * params.max_mut_p;
-
             p[allele_idx][trait_idx] = p[allele_idx][trait_idx] + (uniform(rng_r) < 0.5 ? -incr : incr);
-            
-            if (p[allele_idx][trait_idx] < 0)
-            {
-                p[allele_idx][trait_idx] = 0;
-            }
+           
         }
 
         if (uniform(rng_r) < params.mu_t)
@@ -71,10 +66,6 @@ Individual::Individual(
             incr = uniform(rng_r) * params.max_mut_t;
             t[allele_idx][trait_idx] = t[allele_idx][trait_idx] + (uniform(rng_r) < 0.5 ? -incr : incr);
             
-            if (t[allele_idx][trait_idx] < 0)
-            {
-                t[allele_idx][trait_idx] = 0;
-            }
         }
        }
         

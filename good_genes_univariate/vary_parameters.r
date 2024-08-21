@@ -12,7 +12,7 @@ nrep = 1
 maxgen = 10000
 
 pref = seq(0,1,1)
-ntrait = 2
+ntrait = 1
 
 
 # generate a date_time stamp as a character

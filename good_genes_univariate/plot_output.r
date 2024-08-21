@@ -40,9 +40,6 @@ jsonstuff <- '[
     {"xvar" : "generation",
         "yvar" : ["meanp1","meant1"]
     },
-    {"xvar" : "generation",
-        "yvar" : ["meanp2","meant2"]
-    },
     {
         "xvar" : "generation",
         "yvar" : "meanv"
@@ -51,12 +48,9 @@ jsonstuff <- '[
         "xvar" : "generation",
         "yvar" : "meanx1"
     },
-    {	"xvar" : "generation",
-    	"yvar" : "meanx2"
-    },
     {
         "xvar" : "generation",
-        "yvar" : ["varp1","vart1","varp2","vart2","varv"]
+        "yvar" : ["varp1","vart1","varv"]
     },
     {
         "xvar" : "generation",
@@ -65,10 +59,6 @@ jsonstuff <- '[
     {
         "xvar" : "meanp1",
         "yvar" : "meant1"
-    },
-    {
-        "xvar" : "meanp2",
-        "yvar" : "meant2"
     }
 ]
 '

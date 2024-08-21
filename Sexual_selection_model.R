@@ -640,6 +640,21 @@ ggplot(data = subset(pos_narrow_bias2, pref==1)
   xlab("Probability of biased mutations on viability trait") +
   ylab("Trait value")
 
+#Facet plots:
+
+OE_gg<-read.delim("large_vary_gg_UNI.csv", sep=" ", header=T)
+plot_OE <- ggplot(subset(OE_gg,pref==0)) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  facet_grid(b~c, labeller = label_both,scales = "fixed")
+plot_OE
+plot_WEB <- ggplot(subset(OE_gg,pref==1)) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  facet_grid(b~c, labeller = label_both,scales = "fixed")
+plot_WEB
+
+
 
 #### multiple traits ####
 

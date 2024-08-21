@@ -4,7 +4,7 @@ library("simulation.utils")
 library("readr")
 
 all.bloody.data <- summarize.sims(simulations_path="."
-        ,simulation_file_pattern="sim_good_genes_24\\d"
+        ,simulation_file_pattern="sim_good_genes_19\\d"
         ,parameter_start_pattern="^seed"
         ,data_end_pattern="^$"
         )
