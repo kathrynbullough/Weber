@@ -648,12 +648,27 @@ plot_OE <- ggplot(subset(OE_gg,pref==0)) +
   geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
   facet_grid(b~c, labeller = label_both,scales = "fixed")
 plot_OE
+ggsave(filename="plot_goodgenesOE.pdf",width = 15,height = 20)
 plot_WEB <- ggplot(subset(OE_gg,pref==1)) + 
   geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
   geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
   facet_grid(b~c, labeller = label_both,scales = "fixed")
 plot_WEB
+ggsave(filename="plot_goodgenesWEB.pdf",width = 15,height = 20)
 
+OE_gg_PN<-read.delim("large_vary_gg_PN.csv", sep=" ", header=T)
+plot_OE <- ggplot(subset(OE_gg_PN,pref==0)) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  facet_grid(b~c, labeller = label_both,scales = "fixed")
+plot_OE
+ggsave(filename="plot_goodgenesOE_PN.pdf",width = 15,height = 20)
+plot_WEB <- ggplot(subset(OE_gg_PN,pref==1)) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  facet_grid(b~c, labeller = label_both,scales = "fixed")
+plot_WEB
+ggsave(filename="plot_goodgenesWEB_PN.pdf",width = 15,height = 20)
 
 
 #### multiple traits ####
@@ -809,4 +824,23 @@ twodimW<-read.table("sim_good_genes_W.txt", header=T, sep=";")
 plot_p_t <- ggplot(data=twodimW,aes(x=meanp1, y=meant1))  +
   geom_path(mapping=aes(x=meanp1,y=meant1), colour="red") + geom_path(mapping=aes(x=meanp2,y=meant2), colour="blue")
 plot_p_t
+
+
+#Plot for paper
+
+test<-read.delim("outputn2_1.txt", sep=";", header=T)
+
+filtered_test <- test %>%
+  filter(generation %% 1000 == 0)
+
+ggplot(data=test, aes(x=meanp1, y=meant1)) + 
+  geom_path(mapping=aes(x=meanp1,y=meant1), colour="deepskyblue") +
+  geom_path(mapping=aes(x=meanp2,y=meant2), colour="pink") +
+  geom_point(data = filtered_test, aes(x=meanp1, y=meant1), size=1, colour="darkblue") +
+  geom_point(data = filtered_test, mapping=aes(x=meanp2,y=meant2), size=1, colour="red") +
+  geom_point(aes(x = meanp1[1], y = meant1[1]), shape = 17, color = "darkblue", size = 6) +
+  geom_point(aes(x = meanp2[1], y = meant2[1]), shape = 17, color = "red", size = 6) +
+  geom_point(aes(x = meanp1[nrow(test)], y = meant1[nrow(test)]), shape = 21, fill = "white", color = "darkblue", size = 5) +
+  geom_point(aes(x = meanp2[nrow(test)], y = meant2[nrow(test)]), shape = 21, fill = "white", color = "red", size = 5) +
+  theme_classic()
 

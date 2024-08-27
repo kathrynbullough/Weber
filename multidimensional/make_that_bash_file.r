@@ -22,7 +22,7 @@ parameter_object$init_t <- 0
 parameter_object$init_p <- 3
 parameter_object$gam <- 2 #2
 parameter_object$thet <- 1 #1
-parameter_object$ntrait <- 5
+parameter_object$ntrait <- 2
 
 #purlease continue adding all the parameters, except for the output file
 # (this will be done by the function itself)
