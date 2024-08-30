@@ -1,6 +1,7 @@
 #include <iostream>
 #include "individual.hpp"
 #include "parameters.hpp"
+#include <cmath>
 
 // standard constructor
 Individual::Individual(Parameters const &params) :
@@ -8,7 +9,7 @@ Individual::Individual(Parameters const &params) :
       std::vector<double>(params.ntrait,params.init_t)},
     p{std::vector<double>(params.ntrait,params.init_p),
       std::vector<double>(params.ntrait,params.init_p)},
-    x{std::vector<double>(params.ntrait,(params.init_t*params.init_p))},
+    x{std::vector<double>(params.ntrait,(params.init_t*std::exp(-std::fabs(params.v_opt - params.init_v))))},
     v{params.init_v, params.init_v}
 {
 }
@@ -88,5 +89,11 @@ void Individual::operator=(Individual const &other)
        }
         v[allele_idx] = other.v[allele_idx];
     }
+
+    for (int trait_idx = 0; trait_idx < other.x.size(); ++trait_idx)
+    {
+	x[trait_idx] = other.x[trait_idx];
+    }
+
 }//end operator=
 //

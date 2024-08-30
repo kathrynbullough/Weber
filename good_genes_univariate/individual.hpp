@@ -11,7 +11,7 @@ class Individual
         std::vector<double> p[2];
         
         // realized ornament
-        std::vector<double> x;
+        std::vector<double> x{0.0};
         
         double v[2]{0.0,0.0};
 

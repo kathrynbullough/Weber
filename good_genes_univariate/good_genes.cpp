@@ -18,6 +18,9 @@ GoodGenes::GoodGenes(Parameters const &params) :
 {
     write_data_headers();
 
+    // set phenotypes for first generation
+    phenotypes();
+
     for (time_step = 0; 
             time_step <= par.max_num_gen; ++time_step)
     {
@@ -90,17 +93,16 @@ void GoodGenes::survival()
         }
     } // end for females
 
-    double t[par.ntrait],x[par.ntrait];
+    double x[par.ntrait];
 
     for (auto male_iter{males.begin()}; male_iter != males.end(); )
     {
       surv = 0.0;
       for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
-        t[trait_idx] = 0.5 * (male_iter->t[0][trait_idx] + male_iter->t[1][trait_idx]);
         v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
 
-        x[trait_idx] = male_iter->x[trait_idx] = t[trait_idx] * std::exp(-std::fabs(par.v_opt - v));
+        x[trait_idx] = male_iter->x[trait_idx];
 
         surv = std::exp(-par.c * x[trait_idx] * x[trait_idx] - std::fabs(par.v_opt - v)) ;
         
@@ -214,6 +216,12 @@ void GoodGenes::write_data()
     double varp[par.ntrait];
     double vart[par.ntrait];
     double varx[par.ntrait];
+    double stv[par.ntrait];
+    double stp[par.ntrait];
+    double spv[par.ntrait];
+    double covtp[par.ntrait];
+    double covtv[par.ntrait];
+    double covpv[par.ntrait];
 
 
     // keep track of population sizes
@@ -227,6 +235,10 @@ void GoodGenes::write_data()
             female_iter != females.end();
             ++female_iter)
     {
+	v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
+	meanv += v;
+	ssv += v*v;
+
       for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
         p[trait_idx] = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
@@ -236,17 +248,23 @@ void GoodGenes::write_data()
         t[trait_idx] = 0.5 * (female_iter->t[0][trait_idx] + female_iter->t[1][trait_idx]);
         meant[trait_idx] += t[trait_idx];
         sst[trait_idx] += t[trait_idx]*t[trait_idx];
+
+	stp[trait_idx] += t[trait_idx] * p[trait_idx];
+	spv[trait_idx] += p[trait_idx] * v;
+	stv[trait_idx] += t[trait_idx] * v;
+
        }
 
-        v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
-        meanv += v;
-        ssv += v*v;
     }
     
     for (auto male_iter{males.begin()};
             male_iter != males.end();
             ++male_iter)
     {
+        v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
+        meanv += v;
+        ssv += v*v;
+
       for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
         p[trait_idx] = 0.5 * (male_iter->p[0][trait_idx] + male_iter->p[1][trait_idx]);
@@ -260,14 +278,17 @@ void GoodGenes::write_data()
         x[trait_idx] = male_iter->x[trait_idx];
         meanx[trait_idx] += x[trait_idx];
         ssx[trait_idx] += x[trait_idx]*x[trait_idx];
-       }
+      
+	stp[trait_idx] += t[trait_idx] * p[trait_idx];
+	spv[trait_idx] += p[trait_idx] * v;
+	stv[trait_idx] += t[trait_idx] * v;
 
-        v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
-        meanv += v;
-        ssv += v*v;
-        
+	}
        
     }
+
+    meanv /= (nf + nm);
+    double varv = ssv / (nf + nm) - meanv * meanv;
 
   for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
@@ -277,11 +298,10 @@ void GoodGenes::write_data()
         varp[trait_idx] = ssp[trait_idx] / (nf + nm) - meanp[trait_idx] * meanp[trait_idx];
         vart[trait_idx] = sst[trait_idx] / (nf + nm) - meant[trait_idx] * meant[trait_idx];
         varx[trait_idx] = ssx[trait_idx] / nm - meanx[trait_idx] * meanx[trait_idx];
-       }
-        
-    meanv /= (nf + nm);
-    double varv = ssv / (nf + nm) - meanv * meanv;
-
+        covtp[trait_idx] = stp[trait_idx] / (nf + nm) - meant[trait_idx] * meanp[trait_idx];
+        covtv[trait_idx] = stv[trait_idx] / (nf + nm) - meant[trait_idx] * meanv;
+        covpv[trait_idx] = spv[trait_idx] / (nf + nm) - meanp[trait_idx] * meanv;
+	     }
 
     data_file << time_step << ";";
     for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
@@ -291,7 +311,10 @@ void GoodGenes::write_data()
         << meanx[trait_idx] << ";"
         << varp[trait_idx] << ";"
         << vart[trait_idx] << ";"
-        << varx[trait_idx] << ";";
+        << varx[trait_idx] << ";"
+	<< covtp[trait_idx] << ";"
+	<< covtv[trait_idx] << ";"
+	<< covpv[trait_idx] << ";";
        }
         data_file << meanv << ";"
         << varv << ";"
@@ -312,7 +335,10 @@ void GoodGenes::write_data_headers()
             << "meanx" << (trait_idx + 1) << ";"
             << "varp" << (trait_idx + 1) << ";"
             << "vart" << (trait_idx + 1) << ";"
-            << "varx" << (trait_idx + 1) << ";";
+            << "varx" << (trait_idx + 1) << ";"
+	    << "covtp" << (trait_idx +1) << ";"
+	    << "covtv" << (trait_idx +1) << ";"
+	    << "covpv" << (trait_idx +1) << ";";
     }
 
     data_file << "meanv"
