@@ -59,7 +59,7 @@ void GoodGenes::phenotypes()
 void GoodGenes::survival()
 {
     // aux variables to store trait values
-    double p[par.ntrait],v,sum_surv,sump;
+    double p[par.ntrait],v,sum_surv;
 
     unsigned nm = males.size();
     unsigned nf = females.size();
@@ -70,13 +70,11 @@ void GoodGenes::survival()
     for (auto female_iter{females.begin()}; female_iter != females.end(); )
     {
       sum_surv = 0.0;
-      sump = 0.0;
 
       for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
 
-	sump += 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
-       // p[trait_idx] = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
+        p[trait_idx] = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
         v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
 
         sum_surv += std::exp(-par.b * p[trait_idx] * p[trait_idx] - std::fabs(par.v_opt - v)) ;
