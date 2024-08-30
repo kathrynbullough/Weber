@@ -59,7 +59,7 @@ void GoodGenes::phenotypes()
 void GoodGenes::survival()
 {
     // aux variables to store trait values
-    double p[par.ntrait],v,surv;
+    double p[par.ntrait],v,sum_surv,sump;
 
     unsigned nm = males.size();
     unsigned nf = females.size();
@@ -69,19 +69,23 @@ void GoodGenes::survival()
     
     for (auto female_iter{females.begin()}; female_iter != females.end(); )
     {
-      surv = 0.0;
+      sum_surv = 0.0;
+      sump = 0.0;
+
       for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
-        p[trait_idx] = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
+
+	sump += 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
+       // p[trait_idx] = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
         v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
 
-        surv = std::exp(-par.b * p[trait_idx] * p[trait_idx] - std::fabs(par.v_opt - v)) ;
+        sum_surv += std::exp(-par.b * p[trait_idx] * p[trait_idx] - std::fabs(par.v_opt - v)) ;
 
-        mean_p_survive_f += surv;
+        mean_p_survive_f += sum_surv;
        }
 
         // individual dies
-        if (uniform(rng_r) > surv)
+        if (uniform(rng_r) > sum_surv)
         {
             std::swap(*female_iter, females.back()); // swap this female with final elmt
             females.pop_back(); // remove final elmt
@@ -97,20 +101,20 @@ void GoodGenes::survival()
 
     for (auto male_iter{males.begin()}; male_iter != males.end(); )
     {
-      surv = 0.0;
+      sum_surv = 0.0;
       for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
         v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
 
         x[trait_idx] = male_iter->x[trait_idx];
 
-        surv = std::exp(-par.c * x[trait_idx] * x[trait_idx] - std::fabs(par.v_opt - v)) ;
+        sum_surv += std::exp(-par.c * x[trait_idx] * x[trait_idx] - std::fabs(par.v_opt - v)) ;
         
-        mean_p_survive_m += surv;
+        mean_p_survive_m += sum_surv;
        }
 
         // individual dies
-        if (uniform(rng_r) > surv)
+        if (uniform(rng_r) > sum_surv)
         {
             std::swap(*male_iter, males.back()); // swap this male with final elmt
             males.pop_back(); // remove final elmt
