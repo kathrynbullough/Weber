@@ -364,7 +364,7 @@ unsigned GoodGenes::choose(Individual const &female)
 
     unsigned sampled_male_idx;
     
-    double fitness;
+    double sum_fitness;
 
     double p[par.ntrait];
     p[par.ntrait] = 0.5 * (female.p[0][par.ntrait] + female.p[1][par.ntrait]);
@@ -386,11 +386,11 @@ unsigned GoodGenes::choose(Individual const &female)
 
                     x[trait_idx] = males[sampled_male_idx].x[trait_idx];
 
-                    fitness = std::exp(par.a * p[trait_idx] * x[trait_idx]);
+                    sum_fitness += std::exp(par.a * p[trait_idx] * x[trait_idx]);
                   }
                     
                     male_idxs.push_back(sampled_male_idx);
-                    male_fitness.push_back(fitness);
+                    male_fitness.push_back(sum_fitness);
                 }
             }
             break;
@@ -408,11 +408,11 @@ unsigned GoodGenes::choose(Individual const &female)
 
                     x[trait_idx] = males[sampled_male_idx].x[trait_idx];
 
-                    fitness = par.a * (x[trait_idx] / (x[trait_idx] + p[trait_idx]));
+                    sum_fitness = par.a * (x[trait_idx] / (x[trait_idx] + p[trait_idx]));
                   }
                     
                     male_idxs.push_back(sampled_male_idx);
-                    male_fitness.push_back(fitness);
+                    male_fitness.push_back(sum_fitness);
                 }
             
             } 
