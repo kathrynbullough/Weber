@@ -80,6 +80,7 @@ void GoodGenes::survival()
 
 	sum_p += pow(par.lambda*p[trait_idx],1.0/par.thet);
 
+	//These are wrong
         mean_p_survive_f += sum_surv;
        }
 
@@ -114,13 +115,16 @@ void GoodGenes::survival()
 
 	sum_x += (par.c/(1+par.k*v))*pow(x[trait_idx],2);
 
+	//These are wrong
         mean_p_survive_m += sum_surv;
        }
 
       //Again isn't vopt-v meant to be squared??
       sum_surv = std::exp(-sum_x - std::fabs(par.v_opt - v));
 
-        // individual dies
+  //    std::cout << x[0] << " " << x[1] << " " << std::endl;
+
+      // individual dies
         if (uniform(rng_r) > sum_surv)
         {
             std::swap(*male_iter, males.back()); // swap this male with final elmt
@@ -133,6 +137,9 @@ void GoodGenes::survival()
         }
     }
 
+   //   std::cout << x[0] << " " << x[1] << " " << std::endl;
+   
+     //Change these to sum_surv instead of mean_p_surv??
     mean_p_survive_f /= nf;
     mean_p_survive_m /= nm;
 } // end survival
