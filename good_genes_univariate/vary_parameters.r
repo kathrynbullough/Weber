@@ -9,7 +9,7 @@ init_t = 0
 init_p = 3
 nrep = 1
 
-maxgen = 20000
+maxgen = 10000
 
 pref = seq(0,1,1)
 ntrait = 1

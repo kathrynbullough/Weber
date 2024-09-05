@@ -29,6 +29,11 @@ class Parameters
         double init_v{5.0};
         double v_opt{10.0};
 
+	double lambda{1.0};
+	double gam{2.0};
+	double thet{1.0};
+	double k{1.0};
+
         unsigned max_num_gen{1000};
         unsigned numoutgen{10};
 
