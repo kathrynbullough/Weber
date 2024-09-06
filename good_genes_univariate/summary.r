@@ -11,3 +11,4 @@ all.bloody.data <- summarize.sims(simulations_path="."
 
 # some shizzle like this to get the file on disk
 write_delim(file="pos_narrow_bias.csv", x=all.bloody.data)
+#test
