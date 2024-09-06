@@ -670,12 +670,13 @@ plot_WEB <- ggplot(subset(OE_gg_PN,pref==1)) +
 plot_WEB
 ggsave(filename="plot_goodgenesWEB_PN.pdf",width = 15,height = 20)
 
-gg_fix<-read.delim("large_vary_gg_maybefix.csv", sep=" ", header=T)
+gg_fix<-read.delim("fixedagain.csv", sep=" ", header=T)
 plot_OE <- ggplot(subset(gg_fix,pref==0)) + 
   geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
   geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
   facet_grid(b~c, labeller = label_both,scales = "fixed")
 plot_OE
+ggsave(filename="plot_didntwork.pdf",width = 15,height = 20)
 
 
 
