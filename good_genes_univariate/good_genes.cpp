@@ -270,7 +270,21 @@ void GoodGenes::write_data()
 
     for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
     {
-        meanx[trait_idx] = 0.0;
+        meanp[trait_idx] = 0.0;
+	ssp[trait_idx] = 0.0;
+	meant[trait_idx] = 0.0;
+	sst[trait_idx] = 0.0;
+	meanx[trait_idx] = 0.0;
+   	ssx[trait_idx] = 0.0;
+   	varp[trait_idx] = 0.0;
+	vart[trait_idx] = 0.0;
+    	varx[trait_idx] = 0.0;
+    	stv[trait_idx] = 0.0;
+    	stp[trait_idx] = 0.0;
+    	spv[trait_idx] = 0.0;
+    	covtp[trait_idx] = 0.0;
+    	covtv[trait_idx] = 0.0;
+    	covpv[trait_idx] = 0.0;
     }
 
     // aux variables to store trait values
