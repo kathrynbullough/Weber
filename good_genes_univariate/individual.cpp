@@ -1,7 +1,8 @@
 #include <iostream>
+#include <cmath>
+#include <cassert>
 #include "individual.hpp"
 #include "parameters.hpp"
-#include <cmath>
 
 // standard constructor
 Individual::Individual(Parameters const &params) :
@@ -83,6 +84,8 @@ void Individual::operator=(Individual const &other)
 {
     for (unsigned allele_idx{0}; allele_idx < 2; ++allele_idx)
     {
+        assert(other.t[0].size() == other.t[1].size());
+        assert(other.p[0].size() == other.p[1].size());
       for (int trait_idx = 0; trait_idx < other.t[0].size(); ++trait_idx)
 	     {
         p[allele_idx][trait_idx] = other.p[allele_idx][trait_idx];

@@ -67,6 +67,9 @@ void GoodGenes::survival()
 
     mean_p_survive_f = 0.0;
     mean_p_survive_m = 0.0;
+
+    // calculate theta inverse
+    double thet_inv = 1.0/par.thet;
     
     for (auto female_iter{females.begin()}; female_iter != females.end(); )
     {
@@ -79,7 +82,7 @@ void GoodGenes::survival()
 	  {
         p = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
 
-        sum_p += pow(par.lambda*p,1.0/par.thet);
+        sum_p += pow(par.lambda*p,thet_inv);
 
         //TODO: These are wrong
         mean_p_survive_f += sum_surv;
@@ -112,7 +115,6 @@ void GoodGenes::survival()
 
       for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
-
             x = male_iter->x[trait_idx];
 
             sum_x += (par.c/(1+par.k*v))*pow(x,2);
