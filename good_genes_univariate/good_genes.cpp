@@ -107,10 +107,11 @@ void GoodGenes::survival()
     {
       sum_surv = 0.0;
       sum_x = 0.0;
+        
+      v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
 
       for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
-            v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
 
             x = male_iter->x[trait_idx];
 
