@@ -60,7 +60,7 @@ void GoodGenes::phenotypes()
 void GoodGenes::survival()
 {
     // aux variables to store trait values
-    double p[par.ntrait],v,sum_surv,sum_p;
+    double p,v,sum_surv,sum_p;
 
     unsigned nm = males.size();
     unsigned nf = females.size();
@@ -72,21 +72,21 @@ void GoodGenes::survival()
     {
       sum_surv = 0.0;
       sum_p = 0.0;
+        
+      v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
 
       for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
-	     {
+	  {
+        p = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
 
-        p[trait_idx] = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
-        v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
+        sum_p += pow(par.lambda*p,1.0/par.thet);
 
-	sum_p += pow(par.lambda*p[trait_idx],1.0/par.thet);
-
-	//These are wrong
+        //TODO: These are wrong
         mean_p_survive_f += sum_surv;
        }
 
-      //Does the v_opt-v here not need to be squared??
-      sum_surv = std::exp(-par.b*pow(sum_p,(par.gam*par.thet))-std::fabs(par.v_opt - v));
+        //Does the v_opt-v here not need to be squared??
+        sum_surv = std::exp(-par.b*pow(sum_p,(par.gam*par.thet))-std::fabs(par.v_opt - v));
 
         // individual dies
         if (uniform(rng_r) > sum_surv)
@@ -101,7 +101,7 @@ void GoodGenes::survival()
         }
     } // end for females
 
-    double x[par.ntrait],sum_x;
+    double x,sum_x;
 
     for (auto male_iter{males.begin()}; male_iter != males.end(); )
     {
@@ -110,14 +110,14 @@ void GoodGenes::survival()
 
       for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
-        v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
+            v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
 
-        x[trait_idx] = male_iter->x[trait_idx];
+            x = male_iter->x[trait_idx];
 
-	sum_x += (par.c/(1+par.k*v))*pow(x[trait_idx],2);
+            sum_x += (par.c/(1+par.k*v))*pow(x,2);
 
-	//These are wrong
-        mean_p_survive_m += sum_surv;
+            //These are wrong
+            mean_p_survive_m += sum_surv;
        }
 
       //Again isn't vopt-v meant to be squared??
