@@ -78,6 +78,9 @@ void GoodGenes::survival()
         
       v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
 
+      assert(female_iter->p[0].size() == par.ntrait);
+      assert(female_iter->p[1].size() == par.ntrait);
+
       for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	  {
         p = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
@@ -112,6 +115,9 @@ void GoodGenes::survival()
       sum_x = 0.0;
         
       v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
+      
+      assert(male_iter->t[0].size() == par.ntrait);
+      assert(male_iter->t[1].size() == par.ntrait);
 
       for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
