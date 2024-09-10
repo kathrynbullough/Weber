@@ -63,6 +63,8 @@ jsonstuff <- '[
 ]
 '
 
+file.name <- "sim_good_genes_10092024_162339_1"
+
 if (!exists("file.name"))
 {
     

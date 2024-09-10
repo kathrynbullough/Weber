@@ -16,6 +16,7 @@ GoodGenes::GoodGenes(Parameters const &params) :
     males(par.n/2,Individual(par)),
     females(par.n/2,Individual(par))
 {
+    write_parameters();
     write_data_headers();
 
     // set phenotypes for first generation
@@ -38,22 +39,33 @@ GoodGenes::GoodGenes(Parameters const &params) :
         }
     }
 
-    write_parameters();
 
 } // end GoodGenes() constructor
 
 void GoodGenes::phenotypes()
 {
-	double t[par.ntrait], v;
+	double t, v;
+
 
 	for (auto male_iter{males.begin()}; male_iter !=males.end(); ++male_iter)
 	{
+        v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
+
 		for (int trait_idx=0; trait_idx < par.ntrait; ++trait_idx)
 		{
-			t[trait_idx] = 0.5 * (male_iter->t[0][trait_idx] + male_iter->t[1][trait_idx]);
-			v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
-			male_iter->x[trait_idx] = t[trait_idx] * std::exp(-std::fabs(par.v_opt - v));
+            assert(male_iter->t[0].size() == par.ntrait);
+            assert(male_iter->t[1].size() == par.ntrait);
+            assert(male_iter->x.size() == par.ntrait);
+
+			t = 0.5 * (male_iter->t[0][trait_idx] + male_iter->t[1][trait_idx]);
+
+            assert(t == 0.0);
+
+			male_iter->x[trait_idx] = t * std::exp(-std::fabs(par.v_opt - v));
+
+            assert(male_iter->x[trait_idx] == 0.0);
 		}
+
 	}
 }
 
@@ -256,6 +268,11 @@ void GoodGenes::write_data()
     unsigned long nf{females.size()};
     unsigned long nm{males.size()};
 
+    for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
+    {
+        meanx[trait_idx] = 0.0;
+    }
+
     // aux variables to store trait values
     double p[par.ntrait],t[par.ntrait],v,x[par.ntrait];
 
@@ -317,15 +334,15 @@ void GoodGenes::write_data()
 
   for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
-        meanp[trait_idx] /= (nf + nm);
-        meant[trait_idx] /= (nf + nm);
-        meanx[trait_idx] /= nm;
-        varp[trait_idx] = ssp[trait_idx] / (nf + nm) - meanp[trait_idx] * meanp[trait_idx];
-        vart[trait_idx] = sst[trait_idx] / (nf + nm) - meant[trait_idx] * meant[trait_idx];
-        varx[trait_idx] = ssx[trait_idx] / nm - meanx[trait_idx] * meanx[trait_idx];
-        covtp[trait_idx] = stp[trait_idx] / (nf + nm) - meant[trait_idx] * meanp[trait_idx];
-        covtv[trait_idx] = stv[trait_idx] / (nf + nm) - meant[trait_idx] * meanv;
-        covpv[trait_idx] = spv[trait_idx] / (nf + nm) - meanp[trait_idx] * meanv;
+            meanp[trait_idx] /= (nf + nm);
+            meant[trait_idx] /= (nf + nm);
+            meanx[trait_idx] /= nm;
+            varp[trait_idx] = ssp[trait_idx] / (nf + nm) - meanp[trait_idx] * meanp[trait_idx];
+            vart[trait_idx] = sst[trait_idx] / (nf + nm) - meant[trait_idx] * meant[trait_idx];
+            varx[trait_idx] = ssx[trait_idx] / nm - meanx[trait_idx] * meanx[trait_idx];
+            covtp[trait_idx] = stp[trait_idx] / (nf + nm) - meant[trait_idx] * meanp[trait_idx];
+            covtv[trait_idx] = stv[trait_idx] / (nf + nm) - meant[trait_idx] * meanv;
+            covpv[trait_idx] = spv[trait_idx] / (nf + nm) - meanp[trait_idx] * meanv;
 	     }
 
     data_file << time_step << ";";

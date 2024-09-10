@@ -8,8 +8,8 @@ class Parameters
     public:
         unsigned n{5000};
         double mu_p{0.05};
-        double mu_t{0.05};
-        double mu_v{0.05};
+        double mu_t{0.0};
+        double mu_v{0.0};
         double max_mut_p{0.4};
         double max_mut_t{0.4};
         double max_mut_v{0.8};
@@ -26,7 +26,7 @@ class Parameters
 
         double init_t{0.0};
         double init_p{1.0};
-        double init_v{5.0};
+        double init_v{10.0};
         double v_opt{10.0};
 
 	double lambda{1.0};
