@@ -44,10 +44,11 @@ GoodGenes::GoodGenes(Parameters const &params) :
 
 void GoodGenes::phenotypes()
 {
-	double t[par.ntrait],v;
+	double t[par.ntrait], v;
+
 	for (auto male_iter{males.begin()}; male_iter !=males.end(); ++male_iter)
 	{
-		for (int trait_idx=0; trait_idx<par.ntrait; ++trait_idx)
+		for (int trait_idx=0; trait_idx < par.ntrait; ++trait_idx)
 		{
 			t[trait_idx] = 0.5 * (male_iter->t[0][trait_idx] + male_iter->t[1][trait_idx]);
 			v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
@@ -253,26 +254,24 @@ void GoodGenes::write_data()
             female_iter != females.end();
             ++female_iter)
     {
-	v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
-	meanv += v;
-	ssv += v*v;
+        v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
+        meanv += v;
+        ssv += v*v;
 
-      for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
-	     {
-        p[trait_idx] = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
-        meanp[trait_idx] += p[trait_idx];
-        ssp[trait_idx] += p[trait_idx]*p[trait_idx];
+        for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
+        {
+            p[trait_idx] = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
+            meanp[trait_idx] += p[trait_idx];
+            ssp[trait_idx] += p[trait_idx]*p[trait_idx];
         
-        t[trait_idx] = 0.5 * (female_iter->t[0][trait_idx] + female_iter->t[1][trait_idx]);
-        meant[trait_idx] += t[trait_idx];
-        sst[trait_idx] += t[trait_idx]*t[trait_idx];
+            t[trait_idx] = 0.5 * (female_iter->t[0][trait_idx] + female_iter->t[1][trait_idx]);
+            meant[trait_idx] += t[trait_idx];
+            sst[trait_idx] += t[trait_idx]*t[trait_idx];
 
-	stp[trait_idx] += t[trait_idx] * p[trait_idx];
-	spv[trait_idx] += p[trait_idx] * v;
-	stv[trait_idx] += t[trait_idx] * v;
-
-       }
-
+            stp[trait_idx] += t[trait_idx] * p[trait_idx];
+            spv[trait_idx] += p[trait_idx] * v;
+            stv[trait_idx] += t[trait_idx] * v;
+        }
     }
     
     for (auto male_iter{males.begin()};
@@ -283,25 +282,24 @@ void GoodGenes::write_data()
         meanv += v;
         ssv += v*v;
 
-      for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
-	     {
-        p[trait_idx] = 0.5 * (male_iter->p[0][trait_idx] + male_iter->p[1][trait_idx]);
-        meanp[trait_idx] += p[trait_idx];
-        ssp[trait_idx] += p[trait_idx]*p[trait_idx];
-        
-        t[trait_idx] = 0.5 * (male_iter->t[0][trait_idx] + male_iter->t[1][trait_idx]);
-        meant[trait_idx] += t[trait_idx];
-        sst[trait_idx] += t[trait_idx]*t[trait_idx];
-        
-        x[trait_idx] = male_iter->x[trait_idx];
-        meanx[trait_idx] += x[trait_idx];
-        ssx[trait_idx] += x[trait_idx]*x[trait_idx];
-      
-	stp[trait_idx] += t[trait_idx] * p[trait_idx];
-	spv[trait_idx] += p[trait_idx] * v;
-	stv[trait_idx] += t[trait_idx] * v;
-
-	}
+          for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
+         {
+            p[trait_idx] = 0.5 * (male_iter->p[0][trait_idx] + male_iter->p[1][trait_idx]);
+            meanp[trait_idx] += p[trait_idx];
+            ssp[trait_idx] += p[trait_idx]*p[trait_idx];
+            
+            t[trait_idx] = 0.5 * (male_iter->t[0][trait_idx] + male_iter->t[1][trait_idx]);
+            meant[trait_idx] += t[trait_idx];
+            sst[trait_idx] += t[trait_idx]*t[trait_idx];
+            
+            x[trait_idx] = male_iter->x[trait_idx];
+            meanx[trait_idx] += x[trait_idx];
+            ssx[trait_idx] += x[trait_idx]*x[trait_idx];
+          
+            stp[trait_idx] += t[trait_idx] * p[trait_idx];
+            spv[trait_idx] += p[trait_idx] * v;
+            stv[trait_idx] += t[trait_idx] * v;
+        }
        
     }
 
@@ -380,9 +378,10 @@ unsigned GoodGenes::choose(Individual const &female)
 
     unsigned sampled_male_idx;
     
-    double sum_fitness;
+    double sum_fitness = 0.0;
 
     double p[par.ntrait];
+
     p[par.ntrait] = 0.5 * (female.p[0][par.ntrait] + female.p[1][par.ntrait]);
 
     double x[par.ntrait];

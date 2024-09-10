@@ -19,7 +19,8 @@ Individual::Individual(Individual const &other) :
     p{other.p[0], other.p[1]},
     x{other.x},
     v{other.v[0], other.v[1]}
-{}
+{
+}
 
 
 Individual::Individual(
@@ -92,7 +93,7 @@ void Individual::operator=(Individual const &other)
 
     for (int trait_idx = 0; trait_idx < other.x.size(); ++trait_idx)
     {
-	x[trait_idx] = other.x[trait_idx];
+        x[trait_idx] = other.x[trait_idx];
     }
 
 }//end operator=
