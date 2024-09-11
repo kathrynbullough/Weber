@@ -10,9 +10,9 @@ class Parameters
         double mu_p{0.05};
         double mu_t{0.05};
         double mu_v{0.05};
-        double max_mut_p{0.4};
-        double max_mut_t{0.4};
-        double max_mut_v{0.8};
+        double max_mut_p{0.0};
+        double max_mut_t{0.0};
+        double max_mut_v{0.0};
         double biasv{0.99};
 
         double a{1.0};
