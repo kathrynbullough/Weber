@@ -393,7 +393,7 @@ unsigned GoodGenes::choose(Individual const &female)
 
     unsigned sampled_male_idx;
     
-    double x;
+    double x, sum_fitness;
 
     double p[par.ntrait];
 
@@ -402,58 +402,59 @@ unsigned GoodGenes::choose(Individual const &female)
         p[trait_idx] = 0.5 * (female.p[0][trait_idx] + female.p[1][trait_idx]);
     }
     
-    double sum_fitness = 0.0;
-
     switch(par.pref)
     {
         //Open-ended preferences
         case 0:
+        {
+            for (unsigned inspected_male_idx{0}; 
+                    inspected_male_idx < par.choice_sample_size; 
+                    ++inspected_male_idx)
             {
-                for (unsigned inspected_male_idx{0}; 
-                        inspected_male_idx < par.choice_sample_size; 
-                        ++inspected_male_idx)
+                sum_fitness = 0.0;
+
+                for (unsigned trait_idx  = 0; trait_idx < par.ntrait; ++trait_idx)
                 {
-                  for (unsigned trait_idx  = 0; trait_idx < par.ntrait; ++trait_idx)
-                  {
                     sampled_male_idx = male_sampler(rng_r);
 
                     x = males[sampled_male_idx].x[trait_idx];
 
                     sum_fitness += par.a * p[trait_idx] * x;
-                  }
-
-                  sum_fitness = std::exp(sum_fitness);
-
-                  assert(isnormal(sum_fitness));
-                    
-                    male_idxs.push_back(sampled_male_idx);
-                    male_fitness.push_back(sum_fitness);
                 }
+
+                sum_fitness = std::exp(sum_fitness);
+
+                assert(isnormal(sum_fitness));
+
+                male_idxs.push_back(sampled_male_idx);
+                male_fitness.push_back(sum_fitness);
             }
-            break;
+        }
+        break;
     
     //Weber preferences
         case 1:
+        {
+            for (unsigned inspected_male_idx{0}; 
+                    inspected_male_idx < par.choice_sample_size; 
+                    ++inspected_male_idx)
             {
-                for (unsigned inspected_male_idx{0}; 
-                        inspected_male_idx < par.choice_sample_size; 
-                        ++inspected_male_idx)
+                sum_fitness = 0.0;
+
+                for (unsigned trait_idx  = 0; trait_idx < par.ntrait; ++trait_idx)
                 {
-                  for (unsigned trait_idx  = 0; trait_idx < par.ntrait; ++trait_idx)
-                  {
                     sampled_male_idx = male_sampler(rng_r);
 
                     x = males[sampled_male_idx].x[trait_idx];
 
                     sum_fitness += par.a * (x / (x + p[trait_idx]));
-                  }
-                    
-                    male_idxs.push_back(sampled_male_idx);
-                    male_fitness.push_back(sum_fitness);
                 }
-            
-            } 
-            break;
+                
+                male_idxs.push_back(sampled_male_idx);
+                male_fitness.push_back(sum_fitness);
+            }
+        } 
+        break;
 
         default:
             std::cout << "Something's gone wrong!";
