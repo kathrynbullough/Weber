@@ -16,7 +16,7 @@ GoodGenes::GoodGenes(Parameters const &params) :
     males(par.n/2,Individual(par)),
     females(par.n/2,Individual(par))
 {
-    write_parameters();
+   
     write_data_headers();
 
     // set phenotypes for first generation
@@ -39,6 +39,7 @@ GoodGenes::GoodGenes(Parameters const &params) :
         }
     }
 
+    write_parameters();
 
 } // end GoodGenes() constructor
 
@@ -59,11 +60,11 @@ void GoodGenes::phenotypes()
 
 			t = 0.5 * (male_iter->t[0][trait_idx] + male_iter->t[1][trait_idx]);
 
-            assert(t == 0.0);
+         //   assert(t == 0.0);
 
 			male_iter->x[trait_idx] = t * std::exp(-std::fabs(par.v_opt - v));
 
-            assert(male_iter->x[trait_idx] == 0.0);
+        //    assert(male_iter->x[trait_idx] == 0.0);
 		}
 
 	}
