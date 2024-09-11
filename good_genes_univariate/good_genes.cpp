@@ -146,6 +146,14 @@ void GoodGenes::survival()
 
 void GoodGenes::reproduction()
 {
+    if (females.size() < 1 || males.size() < 1)
+    {
+        write_data();
+        write_parameters();
+        exit(1);
+    }
+
+
     long unsigned female_idx,male_idx;
 
     // reset stats that keeps track of the value of the preference function
