@@ -59,6 +59,14 @@ void GoodGenes::phenotypes()
 
 			t = 0.5 * (male_iter->t[0][trait_idx] + male_iter->t[1][trait_idx]);
 
+            if (t != 0.0)
+            {
+                std::cout << t << " " << 
+                    male_iter->t[0][trait_idx] << " " <<
+                    male_iter->t[1][trait_idx] << " " <<
+                    trait_idx << std::endl;
+            }
+
             assert(t == 0.0);
 
 			male_iter->x[trait_idx] = t * std::exp(-std::fabs(par.v_opt - v));
