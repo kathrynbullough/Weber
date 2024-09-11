@@ -424,7 +424,7 @@ unsigned GoodGenes::choose(Individual const &female)
 
                 sum_fitness = std::exp(sum_fitness);
 
-                assert(isnormal(sum_fitness));
+                assert(std::isnormal(sum_fitness));
 
                 male_idxs.push_back(sampled_male_idx);
                 male_fitness.push_back(sum_fitness);
