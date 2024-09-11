@@ -8,7 +8,7 @@ biasv = c(seq(0.5,0.9,0.1),0.99)
 c = 0.5
 b = 0.0025
 
-init_t = 0
+init_t = 1
 init_p = 3
 nrep = 30
 

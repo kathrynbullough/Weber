@@ -24,7 +24,7 @@ class Parameters
 
         unsigned choice_sample_size{10};
 
-        double init_t{0.0};
+        double init_t{2.0};
         double init_p{3.0};
         double init_v{5.0};
         double v_opt{10.0};

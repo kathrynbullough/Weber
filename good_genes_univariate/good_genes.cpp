@@ -81,14 +81,16 @@ void GoodGenes::survival()
         
       v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
 
-      for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
-	  {
-        p = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
+        for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
+        {
+            p = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
 
-        sum_p += pow(par.lambda*p,thet_inv);
+            sum_p += pow(par.lambda*p,thet_inv);
        }
         
         sum_surv = std::exp(-par.b*pow(sum_p,(par.gam*par.thet))-std::fabs(par.v_opt - v));
+
+        mean_p_survive_f += sum_surv;
 
         // individual dies
         if (uniform(rng_r) > sum_surv)
@@ -103,12 +105,12 @@ void GoodGenes::survival()
         }
     } // end for females
 
-    double x,sum_x;
+    double x,sum_cxx;
 
     for (auto male_iter{males.begin()}; male_iter != males.end(); )
     {
       sum_surv = 0.0;
-      sum_x = 0.0;
+      sum_cxx = 0.0;
         
       v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
       
@@ -116,14 +118,12 @@ void GoodGenes::survival()
         {
             x = male_iter->x[trait_idx];
 
-            sum_x += (par.c/(1+par.k*v))*pow(x,2);
-
-            //These are wrong
-            mean_p_survive_m += sum_surv;
+            sum_cxx += (par.c/(1.0 + par.k*v))*x*x;
        }
 
-      //Again isn't vopt-v meant to be squared??
-      sum_surv = std::exp(-sum_x - std::fabs(par.v_opt - v));
+        sum_surv = std::exp(-sum_cxx - std::fabs(par.v_opt - v));
+
+        mean_p_survive_m += sum_surv;
 
       // individual dies
         if (uniform(rng_r) > sum_surv)
@@ -148,6 +148,10 @@ void GoodGenes::reproduction()
 {
     long unsigned female_idx,male_idx;
 
+    // reset stats that keeps track of the value of the preference function
+    // of the male that actually gets chosen
+    sampled_preffunc = 0.0;
+
     std::vector<Individual> nextgen{};
 
     std::uniform_int_distribution<unsigned> female_sampler(0, females.size() - 1);
@@ -166,6 +170,8 @@ void GoodGenes::reproduction()
 
         nextgen.push_back(Kid);
     }
+
+    sampled_preffunc /= par.n;
 
     females.clear();
     males.clear();
@@ -343,6 +349,7 @@ void GoodGenes::write_data()
         << varv << ";"
         << mean_p_survive_f << ";"
         << mean_p_survive_m << ";"
+        << sampled_preffunc << ";"
         << nf << ";"
         << nm << ";" << std::endl;
 } // write_data()
@@ -368,6 +375,7 @@ void GoodGenes::write_data_headers()
     << ";varv"
     << ";surv_f"
         << ";surv_m"
+        << ";preffunc"
         << ";nf"
         << ";nm;"
 	<< std::endl;
@@ -415,6 +423,8 @@ unsigned GoodGenes::choose(Individual const &female)
                   }
 
                   sum_fitness = std::exp(sum_fitness);
+
+                  assert(isnormal(sum_fitness));
                     
                     male_idxs.push_back(sampled_male_idx);
                     male_fitness.push_back(sum_fitness);
@@ -455,6 +465,9 @@ unsigned GoodGenes::choose(Individual const &female)
             male_fitness.end());
 
     unsigned the_chosen_male = male_idxs[choose_male(rng_r)];
+
+    // keep track of the value of the preference function
+    sampled_preffunc += male_fitness[the_chosen_male];
 
     return(the_chosen_male);
 } // choose()

@@ -23,6 +23,7 @@ class GoodGenes
 
         double mean_p_survive_f{0.0};
         double mean_p_survive_m{0.0};
+        double sampled_preffunc{0.0};
 
         std::vector<Individual> males;
         std::vector<Individual> females;
