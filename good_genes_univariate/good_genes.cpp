@@ -51,7 +51,7 @@ void GoodGenes::phenotypes()
 	{
         v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
 
-		for (int trait_idx=0; trait_idx < par.ntrait; ++trait_idx)
+		for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 		{
             assert(male_iter->t[0].size() == par.ntrait);
             assert(male_iter->t[1].size() == par.ntrait);
@@ -67,13 +67,8 @@ void GoodGenes::phenotypes()
                     trait_idx << std::endl;
             }
 
-            assert(t == 0.0);
-
 			male_iter->x[trait_idx] = t * std::exp(-std::fabs(par.v_opt - v));
-
-            assert(male_iter->x[trait_idx] == 0.0);
 		}
-
 	}
 }
 
@@ -101,18 +96,16 @@ void GoodGenes::survival()
       assert(female_iter->p[0].size() == par.ntrait);
       assert(female_iter->p[1].size() == par.ntrait);
 
-      for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
+      for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	  {
         p = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
 
         sum_p += pow(par.lambda*p,thet_inv);
-
-        //TODO: These are wrong
-        mean_p_survive_f += sum_surv;
        }
-
-        //Does the v_opt-v here not need to be squared??
+        
         sum_surv = std::exp(-par.b*pow(sum_p,(par.gam*par.thet))-std::fabs(par.v_opt - v));
+
+        assert(sum_surv <= 1.0);
 
         // individual dies
         if (uniform(rng_r) > sum_surv)
@@ -139,8 +132,8 @@ void GoodGenes::survival()
       assert(male_iter->t[0].size() == par.ntrait);
       assert(male_iter->t[1].size() == par.ntrait);
 
-      for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
-	     {
+        for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
+        {
             x = male_iter->x[trait_idx];
 
             sum_x += (par.c/(1+par.k*v))*pow(x,2);
@@ -306,7 +299,7 @@ void GoodGenes::write_data()
         meanv += v;
         ssv += v*v;
 
-        for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
+        for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
         {
             p[trait_idx] = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
             meanp[trait_idx] += p[trait_idx];
@@ -330,7 +323,7 @@ void GoodGenes::write_data()
         meanv += v;
         ssv += v*v;
 
-          for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
+          for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
          {
             p[trait_idx] = 0.5 * (male_iter->p[0][trait_idx] + male_iter->p[1][trait_idx]);
             meanp[trait_idx] += p[trait_idx];
@@ -354,7 +347,7 @@ void GoodGenes::write_data()
     meanv /= (nf + nm);
     double varv = ssv / (nf + nm) - meanv * meanv;
 
-  for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
+  for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
             meanp[trait_idx] /= (nf + nm);
             meant[trait_idx] /= (nf + nm);
@@ -368,7 +361,7 @@ void GoodGenes::write_data()
 	     }
 
     data_file << time_step << ";";
-    for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
+    for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	     {
         data_file << meanp[trait_idx] << ";"
         << meant[trait_idx] << ";"
@@ -391,7 +384,7 @@ void GoodGenes::write_data()
 void GoodGenes::write_data_headers()
 {   
     data_file << "generation" << ";";
-    for (int trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
+    for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
     {
 	    data_file 
             << "meanp" << (trait_idx + 1) << ";"
@@ -420,20 +413,23 @@ unsigned GoodGenes::choose(Individual const &female)
     std::vector <double> male_fitness{};
     std::vector <unsigned> male_idxs{};
 
-    // distribution to sample males from
+    // uniform distribution to sample males from
     std::uniform_int_distribution<unsigned> 
         male_sampler(0, males.size() - 1);
 
     unsigned sampled_male_idx;
     
-    double sum_fitness = 0.0;
+    double x;
 
     double p[par.ntrait];
 
-    p[par.ntrait] = 0.5 * (female.p[0][par.ntrait] + female.p[1][par.ntrait]);
-
-    double x[par.ntrait];
+    for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
+    {
+        p[trait_idx] = 0.5 * (female.p[0][trait_idx] + female.p[1][trait_idx]);
+    }
     
+    double sum_fitness = 0.0;
+
     switch(par.pref)
     {
         //Open-ended preferences
@@ -443,16 +439,16 @@ unsigned GoodGenes::choose(Individual const &female)
                         inspected_male_idx < par.choice_sample_size; 
                         ++inspected_male_idx)
                 {
-                  for (int trait_idx  = 0; trait_idx < par.ntrait; ++trait_idx)
+                  for (unsigned trait_idx  = 0; trait_idx < par.ntrait; ++trait_idx)
                   {
                     sampled_male_idx = male_sampler(rng_r);
 
-                    x[trait_idx] = males[sampled_male_idx].x[trait_idx];
+                    x = males[sampled_male_idx].x[trait_idx];
 
-                    sum_fitness += par.a * p[trait_idx] * x[trait_idx];
+                    sum_fitness += par.a * p[trait_idx] * x;
                   }
 
-		  sum_fitness = std::exp(sum_fitness);
+                  sum_fitness = std::exp(sum_fitness);
                     
                     male_idxs.push_back(sampled_male_idx);
                     male_fitness.push_back(sum_fitness);
@@ -467,13 +463,13 @@ unsigned GoodGenes::choose(Individual const &female)
                         inspected_male_idx < par.choice_sample_size; 
                         ++inspected_male_idx)
                 {
-                  for (int trait_idx  = 0; trait_idx < par.ntrait; ++trait_idx)
+                  for (unsigned trait_idx  = 0; trait_idx < par.ntrait; ++trait_idx)
                   {
                     sampled_male_idx = male_sampler(rng_r);
 
-                    x[trait_idx] = males[sampled_male_idx].x[trait_idx];
+                    x = males[sampled_male_idx].x[trait_idx];
 
-                    sum_fitness += par.a * (x[trait_idx] / (x[trait_idx] + p[trait_idx]));
+                    sum_fitness += par.a * (x / (x + p[trait_idx]));
                   }
                     
                     male_idxs.push_back(sampled_male_idx);

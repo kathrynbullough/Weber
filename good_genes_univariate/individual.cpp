@@ -39,7 +39,7 @@ Individual::Individual(
     std::bernoulli_distribution segregator{0.5};
     std::uniform_real_distribution<double> uniform{0.0,1.0};
     
-   for (int trait_idx = 0; trait_idx < params.ntrait; ++trait_idx)
+   for (unsigned trait_idx = 0; trait_idx < params.ntrait; ++trait_idx)
 	   {
       p[0][trait_idx] = mother.p[segregator(rng_r)][trait_idx];
       p[1][trait_idx] = father.p[segregator(rng_r)][trait_idx];
@@ -55,19 +55,21 @@ Individual::Individual(
   
     for (unsigned allele_idx{0}; allele_idx < 2; ++allele_idx)
     {
-      for (int trait_idx = 0; trait_idx < params.ntrait; ++trait_idx)
+      for (unsigned trait_idx = 0; trait_idx < params.ntrait; ++trait_idx)
 	     {
         if (uniform(rng_r) < params.mu_p)
         {
             incr = uniform(rng_r) * params.max_mut_p;
-            p[allele_idx][trait_idx] = p[allele_idx][trait_idx] + (uniform(rng_r) < 0.5 ? -incr : incr);
+            p[allele_idx][trait_idx] = p[allele_idx][trait_idx] + 
+                (uniform(rng_r) < 0.5 ? -incr : incr);
            
         }
 
         if (uniform(rng_r) < params.mu_t)
         {
             incr = uniform(rng_r) * params.max_mut_t;
-            t[allele_idx][trait_idx] = t[allele_idx][trait_idx] + (uniform(rng_r) < 0.5 ? -incr : incr);
+            t[allele_idx][trait_idx] = t[allele_idx][trait_idx] + 
+                (uniform(rng_r) < 0.5 ? -incr : incr);
             
         }
        }
@@ -75,7 +77,8 @@ Individual::Individual(
         if (uniform(rng_r) < params.mu_v)
         {
             incr = uniform(rng_r) * params.max_mut_v;
-            v[allele_idx] = v[allele_idx] + (uniform(rng_r) < params.biasv ? -incr : incr);
+            v[allele_idx] = v[allele_idx] + 
+                (uniform(rng_r) < params.biasv ? -incr : incr);
         }
     } // end for allele_idx
 } // end Individual()
@@ -87,7 +90,7 @@ void Individual::operator=(Individual const &other)
         assert(other.t[0].size() == other.t[1].size());
         assert(other.p[0].size() == other.p[1].size());
 
-      for (int trait_idx = 0; trait_idx < other.t[0].size(); ++trait_idx)
+      for (unsigned trait_idx = 0; trait_idx < other.t[0].size(); ++trait_idx)
 	     {
         p[allele_idx][trait_idx] = other.p[allele_idx][trait_idx];
         t[allele_idx][trait_idx] = other.t[allele_idx][trait_idx];
@@ -98,7 +101,7 @@ void Individual::operator=(Individual const &other)
     assert(other.p[0].size() == other.x.size());
     assert(x.size() == other.x.size());
 
-    for (int trait_idx = 0; trait_idx < other.x.size(); ++trait_idx)
+    for (unsigned trait_idx = 0; trait_idx < other.x.size(); ++trait_idx)
     {
         x[trait_idx] = other.x[trait_idx];
     }
