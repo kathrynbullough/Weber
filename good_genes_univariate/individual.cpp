@@ -87,8 +87,6 @@ void Individual::operator=(Individual const &other)
 {
     for (unsigned allele_idx{0}; allele_idx < 2; ++allele_idx)
     {
-        assert(other.t[0].size() == other.t[1].size());
-        assert(other.p[0].size() == other.p[1].size());
 
       for (unsigned trait_idx = 0; trait_idx < other.t[0].size(); ++trait_idx)
 	     {
@@ -97,9 +95,6 @@ void Individual::operator=(Individual const &other)
        }
         v[allele_idx] = other.v[allele_idx];
     }
-
-    assert(other.p[0].size() == other.x.size());
-    assert(x.size() == other.x.size());
 
     for (unsigned trait_idx = 0; trait_idx < other.x.size(); ++trait_idx)
     {

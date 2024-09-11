@@ -16,7 +16,6 @@ GoodGenes::GoodGenes(Parameters const &params) :
     males(par.n/2,Individual(par)),
     females(par.n/2,Individual(par))
 {
-   
     write_data_headers();
 
     // set phenotypes for first generation
@@ -54,19 +53,7 @@ void GoodGenes::phenotypes()
 
 		for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 		{
-            assert(male_iter->t[0].size() == par.ntrait);
-            assert(male_iter->t[1].size() == par.ntrait);
-            assert(male_iter->x.size() == par.ntrait);
-
 			t = 0.5 * (male_iter->t[0][trait_idx] + male_iter->t[1][trait_idx]);
-
-            if (t != 0.0)
-            {
-                std::cout << t << " " << 
-                    male_iter->t[0][trait_idx] << " " <<
-                    male_iter->t[1][trait_idx] << " " <<
-                    trait_idx << std::endl;
-            }
 
 			male_iter->x[trait_idx] = t * std::exp(-std::fabs(par.v_opt - v));
 		}
@@ -94,9 +81,6 @@ void GoodGenes::survival()
         
       v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
 
-      assert(female_iter->p[0].size() == par.ntrait);
-      assert(female_iter->p[1].size() == par.ntrait);
-
       for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
 	  {
         p = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
@@ -105,8 +89,6 @@ void GoodGenes::survival()
        }
         
         sum_surv = std::exp(-par.b*pow(sum_p,(par.gam*par.thet))-std::fabs(par.v_opt - v));
-
-        assert(sum_surv <= 1.0);
 
         // individual dies
         if (uniform(rng_r) > sum_surv)
@@ -130,9 +112,6 @@ void GoodGenes::survival()
         
       v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
       
-      assert(male_iter->t[0].size() == par.ntrait);
-      assert(male_iter->t[1].size() == par.ntrait);
-
         for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
         {
             x = male_iter->x[trait_idx];
@@ -145,8 +124,6 @@ void GoodGenes::survival()
 
       //Again isn't vopt-v meant to be squared??
       sum_surv = std::exp(-sum_x - std::fabs(par.v_opt - v));
-
-  //    std::cout << x[0] << " " << x[1] << " " << std::endl;
 
       // individual dies
         if (uniform(rng_r) > sum_surv)
@@ -161,8 +138,6 @@ void GoodGenes::survival()
         }
     }
 
-   //   std::cout << x[0] << " " << x[1] << " " << std::endl;
-   
      //Change these to sum_surv instead of mean_p_surv??
     mean_p_survive_f /= nf;
     mean_p_survive_m /= nm;
@@ -181,16 +156,8 @@ void GoodGenes::reproduction()
     {
         female_idx = female_sampler(rng_r);
 
-        assert(female_idx >= 0);
-        assert(female_idx < females.size());
-
         male_idx = choose(females[female_idx]);
         
-        assert(male_idx >= 0);
-        assert(male_idx < males.size());
-        
-//        std::cout << male_idx << " " << males.size() << " " << female_idx << " " << females.size() << std::endl;
-
         Individual Kid(
                 females[female_idx],
                 males[male_idx],
@@ -199,8 +166,6 @@ void GoodGenes::reproduction()
 
         nextgen.push_back(Kid);
     }
-
-    assert(nextgen.size() == par.n);
 
     females.clear();
     males.clear();
