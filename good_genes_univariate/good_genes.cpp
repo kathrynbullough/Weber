@@ -11,11 +11,12 @@ GoodGenes::GoodGenes(Parameters const &params) :
     data_file{par.file_name},
     uniform{0.0,1.0},
     rd{},
-    seed{rd()},
+    seed{2926392496},
     rng_r{seed},
     males(par.n/2,Individual(par)),
     females(par.n/2,Individual(par))
 {
+    write_parameters();
     write_data_headers();
 
     // set phenotypes for first generation
@@ -38,7 +39,6 @@ GoodGenes::GoodGenes(Parameters const &params) :
         }
     }
 
-    write_parameters();
 
 } // end GoodGenes() constructor
 

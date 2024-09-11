@@ -5,8 +5,9 @@
 biasv = c(seq(0.5,0.9,0.1),0.99)
 #c = c(0.01,0.255,0.5,0.745,0.99)
 #b = c(0.01,0.07,0.013,0.019,0.025)
-c = 0.5
+a = 0.5
 b = 0.0025
+c = 0.5
 
 init_t = 1
 init_p = 3
@@ -34,49 +35,53 @@ batch_file_contents <- ""
 
 for (rep_i in 1:nrep)
 {
-  for(c_i in c)
-  {
-    for(b_i in b)
+    for (a_i in a)
     {
-    for(init_t_i in init_t)
-    {
-    for(init_p_i in init_p)
-    {
-      for(pref_i in pref)
+      for(c_i in c)
       {
-        for(ntrait_i in ntrait)
-        {
-          for (biasv_i in biasv)
-          {
-        counter <- counter + 1
-        file_name_i <- paste0(output_file_prefix,"_",counter)
+            for(b_i in b)
+            {
+            for(init_t_i in init_t)
+            {
+            for(init_p_i in init_p)
+            {
+              for(pref_i in pref)
+              {
+                for(ntrait_i in ntrait)
+                {
+                  for (biasv_i in biasv)
+                  {
+                counter <- counter + 1
+                file_name_i <- paste0(output_file_prefix,"_",counter)
 
-        echo_str <- paste("echo",counter)
+                echo_str <- paste("echo",counter)
 
-        command_str <- paste(exe,
-                        biasv_i,
-                        c_i,
-                        b_i,
-                        init_t_i,
-                        init_p_i,
-                        format(maxgen,scientific=F),
-                        pref_i,
-                        ntrait_i,
-                        file_name_i)
+                command_str <- paste(exe,
+                                biasv_i,
+                                a_i,
+                                b_i,
+                                c_i,
+                                init_t_i,
+                                init_p_i,
+                                format(maxgen,scientific=F),
+                                pref_i,
+                                ntrait_i,
+                                file_name_i)
 
-        # append to batch file contents
-        batch_file_contents <- paste0(batch_file_contents
-                ,"\n"
-                ,echo_str
-                ,"\n"
-                ,command_str)
-        }
-      }
-    }
-  }
-  }
-  }
-  }
-}
+                # append to batch file contents
+                batch_file_contents <- paste0(batch_file_contents
+                        ,"\n"
+                        ,echo_str
+                        ,"\n"
+                        ,command_str)
+                }
+              }
+            }
+          }
+          }
+          } # end b
+      } # end c
+    } # end a 
+} # end for loop
 
 writeLines(text=batch_file_contents)
