@@ -16,7 +16,6 @@ GoodGenes::GoodGenes(Parameters const &params) :
     males(par.n/2,Individual(par)),
     females(par.n/2,Individual(par))
 {
-    write_parameters();
     write_data_headers();
 
     // set phenotypes for first generation
@@ -39,6 +38,7 @@ GoodGenes::GoodGenes(Parameters const &params) :
         }
     }
 
+    write_parameters();
 
 } // end GoodGenes() constructor
 
