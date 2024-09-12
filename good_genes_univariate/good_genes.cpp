@@ -11,7 +11,7 @@ GoodGenes::GoodGenes(Parameters const &params) :
     data_file{par.file_name},
     uniform{0.0,1.0},
     rd{},
-    seed{2926392496},
+    seed{rd()},
     rng_r{seed},
     males(par.n/2,Individual(par)),
     females(par.n/2,Individual(par))
