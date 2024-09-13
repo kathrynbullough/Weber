@@ -15,7 +15,7 @@ nrep = 15
 
 maxgen = 20000
 
-pref = c(0)
+pref = c(0,1)
 ntrait = 1
 
 

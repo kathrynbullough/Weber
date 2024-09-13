@@ -556,15 +556,17 @@ ggsave(filename="plot_goodgenesWEB.pdf",width = 15,height = 20)
 
 #### New good genes code ####
 
-test<-read.delim("test.csv", sep=" ", header=T)
+bias<-read.delim("oe_web_bias.csv", sep=" ", header=T)
 
-test2 <- pivot_longer(test
-                           ,cols=c(meant,meanp)
+bias2 <- pivot_longer(bias
+                           ,cols=c(meant1,meanp1)
                            ,names_to = "trait"
                            ,values_to = "trait_value")
 
-ggplot(data = test2
-       ,mapping = aes(x = biasv, y = abs(trait_value))) +
+bias_subset <- bias2[bias2$pref %in% "1", ]
+
+ggplot(data=bias_subset
+       ,mapping = aes(x = biasv, y = trait_value)) +
   geom_point(mapping=aes(colour=trait)) +
   scale_colour_brewer(palette="Set1") +
   theme_classic() +
@@ -587,9 +589,9 @@ ggplot(data = testWeb2
   ylab("Trait value")
 
 
-ind_sim<-read.delim("indsim.txt", sep=";", header=T)
-plot_p1_t1 <- ggplot(data=ind_sim, aes(x=meanp, y=meant)) + geom_point(size=1) +
-  geom_path(mapping=aes(x=meanp,y=meant))
+oe_run<-read.delim("oe_run.txt", sep=";", header=T)
+plot_p1_t1 <- ggplot(data=oe_run, aes(x=meanp1, y=meant1)) + geom_point(size=1) +
+  geom_path(mapping=aes(x=meanp1,y=meant1))
 plot_p1_t1
 
 
