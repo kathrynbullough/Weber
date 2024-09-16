@@ -56,8 +56,8 @@ print(head(sim_data))
 #      geom_line(mapping=aes(x=generation,y=meanp1))
 
 #Plot dynamics between p1 and t1
-#plot_p3_t3 <- ggplot(data=sim_data, aes(x=meanp3, y=meant3)) + geom_point(size=1) +
-#    geom_path(mapping=aes(x=meanp3,y=meant3))
+plot_p1_t1 <- ggplot(data=sim_data, aes(x=meanp1, y=meant1)) + geom_point(size=1) +
+    geom_path(mapping=aes(x=meanp1,y=meant1))
 
 #PLOT DYNAMICS NICE PUBLISHABLE CODE
 filtered_sim_data <- sim_data %>%
@@ -72,13 +72,11 @@ plot_pt_pub <- ggplot(data=sim_data, aes(x=meanp1, y=meant1)) +
   geom_point(aes(x = meanp2[1], y = meant2[1]), shape = 17, color = "red", size = 6) +
   geom_point(aes(x = meanp1[nrow(sim_data)], y = meant1[nrow(sim_data)]), shape = 21, fill = "white", color = "darkblue", size = 5) +
   geom_point(aes(x = meanp2[nrow(sim_data)], y = meant2[nrow(sim_data)]), shape = 21, fill = "white", color = "red", size = 5) +
-  xlim(-18,18) +
-  ylim(-2,2) +
   theme_classic()
     
 #Plot dynamics between p2 and t2
-#plot_p2_t2 <- ggplot(data=sim_data, aes(x=meanp2, y=meant2)) + geom_point(size=1) +
-#    geom_path(mapping=aes(x=meanp2,y=meant2))
+plot_p2_t2 <- ggplot(data=sim_data, aes(x=meanp2, y=meant2)) + geom_point(size=1) +
+    geom_path(mapping=aes(x=meanp2,y=meant2))
     
 #All traits and preferences on the same graph
 plot_pt<-ggplot(data=sim_data, aes(x=meanp1, y=meant1)) + 

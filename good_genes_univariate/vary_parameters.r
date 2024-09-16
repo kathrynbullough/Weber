@@ -9,14 +9,17 @@ a = 1.0
 b = 0.0025
 c = 0.5
 
+gam = c(0.0,1.0,2.0,3.0) 
+thet = c(0.0,0.2,0.4,0.6,0.8,1.0)
+
 init_t = 1
 init_p = 3
-nrep = 15
+nrep = 1
 
 maxgen = 20000
 
 pref = c(0,1)
-ntrait = 1
+ntrait = 2
 
 
 # generate a date_time stamp as a character
@@ -41,16 +44,20 @@ for (rep_i in 1:nrep)
       {
             for(b_i in b)
             {
-            for(init_t_i in init_t)
-            {
-            for(init_p_i in init_p)
-            {
-              for(pref_i in pref)
-              {
-                for(ntrait_i in ntrait)
-                {
-                  for (biasv_i in biasv)
-                  {
+		for(gam_i in gam)
+		{
+			for(thet_i in thet)
+			{
+        		    for(init_t_i in init_t)
+           		    {
+           			 for(init_p_i in init_p)
+           			 {
+             				 for(pref_i in pref)
+             				 {
+               					 for(ntrait_i in ntrait)
+               					 {
+                 					 for (biasv_i in biasv)
+                 					 {
                 counter <- counter + 1
                 file_name_i <- paste0(output_file_prefix,"_",counter)
 
@@ -61,6 +68,8 @@ for (rep_i in 1:nrep)
                                 a_i,
                                 b_i,
                                 c_i,
+				gam_i,
+				thet_i,
                                 init_t_i,
                                 init_p_i,
                                 format(maxgen,scientific=F),
@@ -79,6 +88,8 @@ for (rep_i in 1:nrep)
             }
           }
           }
+		}
+		}
           } # end b
       } # end c
     } # end a 

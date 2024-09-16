@@ -563,7 +563,7 @@ bias2 <- pivot_longer(bias
                            ,names_to = "trait"
                            ,values_to = "trait_value")
 
-bias_subset <- bias2[bias2$pref %in% "1", ]
+bias_subset <- bias2[bias2$pref %in% "0", ]
 
 ggplot(data=bias_subset
        ,mapping = aes(x = biasv, y = trait_value)) +
@@ -589,7 +589,7 @@ ggplot(data = testWeb2
   ylab("Trait value")
 
 
-oe_run<-read.delim("oe_run.txt", sep=";", header=T)
+oe_run<-read.delim("2dimoe.txt", sep=";", header=T)
 plot_p1_t1 <- ggplot(data=oe_run, aes(x=meanp1, y=meant1)) + geom_point(size=1) +
   geom_path(mapping=aes(x=meanp1,y=meant1))
 plot_p1_t1
