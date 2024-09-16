@@ -215,6 +215,8 @@ void GoodGenes::write_parameters()
         << "a;" << par.a << ";" << std::endl
         << "b;" << par.b << ";" << std::endl
         << "c;" << par.c << ";" << std::endl
+	<< "gam;" << par.gam << ";" << std::endl
+	<< "thet;" << par.thet << ";" << std::endl
         << "choice_sample_size;" << par.choice_sample_size << ";" << std::endl
         << "init_t;" << par.init_t << ";" << std::endl
         << "init_p;" << par.init_p << ";" << std::endl
