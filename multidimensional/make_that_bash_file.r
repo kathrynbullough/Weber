@@ -17,11 +17,11 @@ parameter_object$sdmu_p <- 0.05
 parameter_object$sdmu_t <- 0.05
 parameter_object$sex_limited_p <- 1.0
 parameter_object$sex_limited_t <- 1.0
-parameter_object$pref_type <- seq(0,3,3)
+parameter_object$pref_type <- 0
 parameter_object$init_t <- 0
 parameter_object$init_p <- 3
-parameter_object$gam <- 2 #2
-parameter_object$thet <- 1 #1
+parameter_object$gam <- c(0.1,1.0,2.0,3.0)  #2
+parameter_object$thet <- c(0.01,0.2,0.4,0.6,0.8 #1
 parameter_object$ntrait <- 2
 
 #purlease continue adding all the parameters, except for the output file

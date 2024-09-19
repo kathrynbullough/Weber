@@ -403,6 +403,8 @@ unsigned GoodGenes::choose(Individual const &female)
 
     unsigned sampled_male_idx;
 
+    double x, sum_fitness;
+
     double p[par.ntrait];
 
     for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
@@ -450,6 +452,7 @@ unsigned GoodGenes::choose(Individual const &female)
                 sum_fitness = 0.0;
 
                 sampled_male_idx = male_sampler(rng_r);
+
                 for (unsigned trait_idx  = 0; trait_idx < par.ntrait; ++trait_idx)
                 {
                     x = males[sampled_male_idx].x[trait_idx];

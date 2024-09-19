@@ -40,25 +40,24 @@ jsonstuff <- '[
     {"xvar" : "generation",
         "yvar" : ["meanp1","meant1"]
     },
+    {"xvar" : "generation",
+    	"yvar" : ["meanp2","meant2"]
+    },
     {
         "xvar" : "generation",
         "yvar" : "meanv"
     },
     {
         "xvar" : "generation",
-        "yvar" : "meanx1"
+        "yvar" : ["meanx1","meanx2"]
     },
     {
         "xvar" : "generation",
-        "yvar" : ["varp1","vart1","varv"]
+        "yvar" : ["varp1","vart1","varv","varp2","vart2"]
     },
     {
         "xvar" : "generation",
         "yvar" : ["surv_f","surv_m"]
-    },
-    {
-        "xvar" : "meanp1",
-        "yvar" : "meant1"
     }
 ]
 '
