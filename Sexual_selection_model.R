@@ -556,14 +556,35 @@ ggsave(filename="plot_goodgenesWEB.pdf",width = 15,height = 20)
 
 #### New good genes code ####
 
-bias<-read.delim("oe_web_bias.csv", sep=" ", header=T)
+#11.11.24
+
+narrow<-read.delim("narrow.csv", sep=" ", header=T)
+plot_narrow <- ggplot(subset(narrow,generation==20000)) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
+  geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
+  facet_grid(gam~thet, labeller = label_both, scales="free")
+plot_narrow
+
+old<-read.delim("oe_web_bias_n2.csv", sep=" ", header=T)
+plot_narrow <- ggplot(subset(narrow,generation==20000)) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
+  geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
+  facet_grid(gam~thet, labeller = label_both, scales="free")
+plot_narrow
+
+
+bias<-read.delim("oe_web_bias_n2.csv", sep=" ", header=T)
 
 bias2 <- pivot_longer(bias
-                           ,cols=c(meant1,meanp1)
+                           ,cols=c(meant1,meanp1,meant2,meanp2)
                            ,names_to = "trait"
                            ,values_to = "trait_value")
 
-bias_subset <- bias2[bias2$pref %in% "0", ]
+bias_subset <- bias2[bias2$pref %in% 1, ]
 
 ggplot(data=bias_subset
        ,mapping = aes(x = biasv, y = trait_value)) +
@@ -641,6 +662,7 @@ ggplot(data = subset(pos_narrow_bias2, pref==1)
   theme_classic() +
   xlab("Probability of biased mutations on viability trait") +
   ylab("Trait value")
+
 
 #Facet plots:
 

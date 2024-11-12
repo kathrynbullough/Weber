@@ -1,10 +1,12 @@
 #!/usr/bin/env Rscript
 
+library("devtools")
+devtools::install_github("bramkuijper/simulation.utils")
 library("simulation.utils")
 library("readr")
 
 all.bloody.data <- summarize.sims(simulations_path="."
-        ,simulation_file_pattern="sim_good_genes_16\\d"
+        ,simulation_file_pattern="sim_good_genes_11\\d"
         ,parameter_start_pattern="^seed"
         ,data_end_pattern="^$"
         )
