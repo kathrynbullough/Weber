@@ -576,6 +576,48 @@ plot_narrow <- ggplot(subset(narrow,generation==20000)) +
   facet_grid(gam~thet, labeller = label_both, scales="free")
 plot_narrow
 
+#12.11.24
+
+gg_gamthet<-read.delim("gg_gamthet.csv", sep=" ", header=T)
+plot_gg_gamthet <- ggplot(gg_gamthet) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
+  geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
+  facet_grid(gam~thet, labeller = label_both, scales="free")
+plot_gg_
+plot_gg_gamthet <- ggplot(subset(narrow,generation==20000)) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
+  geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
+  facet_grid(gam~thet, labeller = label_both, scales="free")
+plot_narrow
+
+bias_check<-read.delim("gg_uni.csv", sep=" ", header=T)
+bias_check_pivot <- pivot_longer(bias_check
+                      ,cols=c(meant1,meanp1)
+                      ,names_to = "trait"
+                      ,values_to = "trait_value")
+ggplot(data=bias_check_pivot
+       ,mapping = aes(x = biasv, y = trait_value)) +
+  geom_point(mapping=aes(colour=trait)) +
+  scale_colour_brewer(palette="Set1") +
+  theme_classic() +
+  xlab("Probability of biased mutations on viability trait") +
+  ylab("Trait value")
+
+#13.11.24
+fish_gam<-read.delim("gambc_graph.csv", sep=" ", header=T)
+plot_fishgam <- ggplot(fish_gam) + 
+  geom_point(aes(x=gamma.,y=meant1,colour="t1")) + 
+  geom_point(aes(x=gamma.,y=meanp1,colour="p1")) +
+  geom_point(aes(x=gamma.,y=meanp2,colour="p2")) +
+  geom_point(aes(x=gamma.,y=meant2,colour="t2")) +
+  facet_grid(c.~b., labeller = label_both,scales = "fixed")
+plot_fishgam
+ggsave(filename="plot_fishgam.pdf",width = 15,height = 10)
+
 
 bias<-read.delim("oe_web_bias_n2.csv", sep=" ", header=T)
 
