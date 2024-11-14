@@ -36,7 +36,7 @@ transform.sym  <- function(x)
     }
 }
 
-jsonstuff <- '[
+jsonstuff2trait <- '[
     {"xvar" : "generation",
         "yvar" : ["meanp1","meant1"]
     },
@@ -54,6 +54,36 @@ jsonstuff <- '[
     {
         "xvar" : "generation",
         "yvar" : ["varp1","vart1","varv","varp2","vart2"]
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : ["covtp1","covpv1","covtv1","covtp2","covpv2","covtv2"]
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : ["surv_f","surv_m"]
+    }
+]'
+
+jsonstuff1trait <- '[
+    {"xvar" : "generation",
+        "yvar" : ["meanp1","meant1"]
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : "meanv"
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : "meanx1"
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : ["varp1","vart1","varv"]
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : ["covtp1","covpv1","covtv1"]
     },
     {
         "xvar" : "generation",
@@ -97,7 +127,12 @@ params <- data.tibble.params %>% pivot_wider(
         names_from = name
         ,values_from = value)
 
-plot.structure <- fromJSON(jsonstuff, simplifyVector = F)
+plot.structure <- fromJSON(jsonstuff1trait, simplifyVector = F)
+
+if ("meanp2" %in% names(data.tibble))
+{
+    plot.structure <- fromJSON(jsonstuff2trait, simplifyVector = F)
+}
 
 plot.structure.l <- length(plot.structure)
 
