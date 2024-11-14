@@ -1,5 +1,8 @@
 #!/usr/bin/env Rscript
 
+library("devtools")
+devtools::install_github("bramkuijper/simulation.utils")
+
 library("simulation.utils")
 library("readr")
 
@@ -10,4 +13,4 @@ all.bloody.data <- summarize.sims(simulations_path="."
         )
 
 # some shizzle like this to get the file on disk
-write_delim(file="thetbc_graph.csv", x=all.bloody.data)
+write_delim(file="gambc_graph.csv", x=all.bloody.data)
