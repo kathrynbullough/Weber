@@ -326,7 +326,7 @@ void Survive(std::ofstream &DataFile)
 	   {
             	double p_expr = Females[i].p_expr[trait_idx];
    
-            	sump += pow(lambda[trait_idx]*p_expr,1.0/thet);
+            	sump += std::fabs(pow(lambda[trait_idx]*p_expr,1.0/thet));
 	   }
 
 	   // after summing over all traits, take power over gam * thet and multiply
