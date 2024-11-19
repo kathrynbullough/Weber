@@ -9,17 +9,20 @@ a = 1.0
 b = 0.0025
 c = 0.5
 
-gam = c(0.1,1.0,2.0,3.0) 
-thet = c(0.01,0.2,0.4,0.6,0.8,1.0)
+#gam = c(0.1,1.0,2.0,3.0) 
+#thet = c(0.01,0.2,0.4,0.6,0.8,1.0)
+
+gam <- 2.0
+thet <- 1.0
 
 init_t = 1
 init_p = 3
-nrep = 1
+nrep = 20
 
 maxgen = 20000
 
 pref = 0
-ntrait = 2
+ntrait = 1
 
 
 # generate a date_time stamp as a character

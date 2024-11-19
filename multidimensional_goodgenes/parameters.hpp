@@ -18,6 +18,8 @@ class Parameters
         double a{1.0};
         double b{0.0025};
         double c{0.5};
+
+        double baseline_survival{0.0};
         
         int pref{0};
         unsigned ntrait{1};

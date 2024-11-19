@@ -24,6 +24,7 @@ GoodGenes::GoodGenes(Parameters const &params) :
     for (time_step = 0; 
             time_step <= par.max_num_gen; ++time_step)
     {
+//        std::cout << "time: " << time_step << std::endl;
         survival();
         reproduction();
 
@@ -73,8 +74,10 @@ void GoodGenes::survival()
 
     // calculate theta inverse
     double thet_inv = 1.0/par.thet;
+
+    std::vector <double> survival_distribution;
     
-    for (auto female_iter{females.begin()}; female_iter != females.end(); )
+    for (auto female_iter{females.begin()}; female_iter != females.end(); ++female_iter)
     {
       sum_surv = 0.0;
       sum_p = 0.0;
@@ -88,26 +91,58 @@ void GoodGenes::survival()
             sum_p += std::fabs(pow(par.lambda*p,thet_inv));
        }
         
-        sum_surv = std::exp(-par.b*pow(sum_p,(par.gam*par.thet))-std::fabs(par.v_opt - v));
+        sum_surv = par.baseline_survival + (1.0 - par.baseline_survival) * 
+            std::exp(-par.b*pow(sum_p,(par.gam*par.thet))-std::fabs(par.v_opt - v));
+
+        survival_distribution.push_back(sum_surv);
 
         mean_p_survive_f += sum_surv;
+    }
 
-        // individual dies
-        if (uniform(rng_r) > sum_surv)
-        {
-            std::swap(*female_iter, females.back()); // swap this female with final elmt
-            females.pop_back(); // remove final elmt
-                                // this is way faster than std::erase() 
-        }
-        else
-        {
-            ++female_iter;
-        }
+    // make survival distribution
+    std::discrete_distribution<unsigned> female_survival_distribution(
+            survival_distribution.begin(),
+            survival_distribution.end());
+
+    unsigned max_survivors_per_sex = 0.25 * par.n;
+
+    std::vector <Individual> surviving_females;
+
+    for (unsigned surviving_female_idx{0};
+            surviving_female_idx < max_survivors_per_sex;
+            ++surviving_female_idx)
+    {
+        surviving_females.push_back(
+                females[female_survival_distribution(rng_r)]
+                );
+
+//        // individual dies
+//        if (uniform(rng_r) > sum_surv)
+//        {
+//            Individual last = females.back();
+//
+//            std::swap(*female_iter, females.back()); // swap this female with final elmt
+//        
+//            assert(female_iter->p[0][0] == last.p[0][0]);
+//            assert(female_iter->v[0] == last.v[0]);
+//            assert(female_iter->v[1] == last.v[1]);
+//
+//            females.pop_back(); // remove final elmt
+//                                // this is way faster than std::erase() 
+//        }
+//        else
+//        {
+//            ++female_iter;
+//        }
     } // end for females
+
+    females = surviving_females;
+
+    survival_distribution.clear();
 
     double x,sum_cxx;
 
-    for (auto male_iter{males.begin()}; male_iter != males.end(); )
+    for (auto male_iter{males.begin()}; male_iter != males.end(); ++male_iter)
     {
       sum_surv = 0.0;
       sum_cxx = 0.0;
@@ -121,22 +156,70 @@ void GoodGenes::survival()
             sum_cxx += (par.c/(1.0 + par.k*v))*x*x;
        }
 
-        sum_surv = std::exp(-sum_cxx - std::fabs(par.v_opt - v));
+        sum_surv = par.baseline_survival + (1 - par.baseline_survival) * 
+            std::exp(-sum_cxx - std::fabs(par.v_opt - v));
 
         mean_p_survive_m += sum_surv;
 
-      // individual dies
-        if (uniform(rng_r) > sum_surv)
-        {
-            std::swap(*male_iter, males.back()); // swap this male with final elmt
-            males.pop_back(); // remove final elmt
-                                // this is way faster than std::erase() 
-        }
-        else
-        {
-            ++male_iter;
-        }
+        survival_distribution.push_back(sum_surv);
+//
+//      // individual dies
+//        if (uniform(rng_r) > sum_surv)
+//        {
+//            Individual last = males.back();
+//            std::swap(*male_iter, males.back()); // swap this male with final elmt
+//            
+//            assert(male_iter->p[0][0] == last.p[0][0]);
+//            assert(male_iter->t[0][0] == last.t[0][0]);
+//            assert(male_iter->v[0] == last.v[0]);
+//            assert(male_iter->v[1] == last.v[1]);
+//            
+//            males.pop_back(); // remove final elmt
+//                                // this is way faster than std::erase() 
+//        }
+//        else
+//        {
+//            ++male_iter;
+//        }
     }
+    
+
+    // make survival distribution
+    std::discrete_distribution<unsigned> male_survival_distribution(
+            survival_distribution.begin(),
+            survival_distribution.end());
+
+    std::vector <Individual> surviving_males;
+
+    for (unsigned surviving_male_idx{0};
+            surviving_male_idx < max_survivors_per_sex;
+            ++surviving_male_idx)
+    {
+        surviving_males.push_back(
+                males[male_survival_distribution(rng_r)]
+                );
+
+//        // individual dies
+//        if (uniform(rng_r) > sum_surv)
+//        {
+//            Individual last = females.back();
+//
+//            std::swap(*female_iter, females.back()); // swap this female with final elmt
+//        
+//            assert(female_iter->p[0][0] == last.p[0][0]);
+//            assert(female_iter->v[0] == last.v[0]);
+//            assert(female_iter->v[1] == last.v[1]);
+//
+//            females.pop_back(); // remove final elmt
+//                                // this is way faster than std::erase() 
+//        }
+//        else
+//        {
+//            ++female_iter;
+//        }
+    } // end for females
+
+    males = surviving_males;
 
      //Change these to sum_surv instead of mean_p_surv??
     mean_p_survive_f /= nf;
