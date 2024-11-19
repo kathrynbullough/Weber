@@ -471,7 +471,8 @@ OE<-read.delim("sims_output_OE.csv", sep=" ", header=T)
 plot_OE <- ggplot(OE) + 
   geom_point(aes(x=biast1.,y=meant1,colour="t")) + 
   geom_point(aes(x=biast1.,y=meanp1,colour="p")) +
-  facet_grid(b.~c1., labeller = label_both,scales = "free")
+  facet_grid(b.~c1., labeller = label_both,scales = "free") +
+  geom_hline(yintercept=0.0)
 plot_OE
 
 WEB<-read.delim("sims_output_WEBFACET.csv", sep=" ", header=T)
@@ -492,7 +493,8 @@ WEB3 <- subset(WEB2, WEB2$c1.!=0.01)
 plot_WEBzoom <- ggplot(WEB3) + 
   geom_point(aes(x=biast1.,y=meant1,colour="t")) + 
   geom_point(aes(x=biast1.,y=meanp1,colour="p")) +
-  facet_grid(b.~c1., labeller = label_both,scales = "free")
+  facet_grid(b.~c1., labeller = label_both,scales = "free") +
+  geom_hline(yintercept=0.0)
 plot_WEBzoom
 
 GamThetOE<-read.delim("gamthet_graph.csv", sep=" ", header=T)
@@ -614,9 +616,20 @@ plot_fishgam <- ggplot(fish_gam) +
   geom_point(aes(x=gamma.,y=meanp1,colour="p1")) +
   geom_point(aes(x=gamma.,y=meanp2,colour="p2")) +
   geom_point(aes(x=gamma.,y=meant2,colour="t2")) +
-  facet_grid(c.~b., labeller = label_both,scales = "fixed")
+  facet_grid(c.~b., labeller = label_both,scales = "fixed") +
+  geom_hline(yintercept=0.0)
 plot_fishgam
 ggsave(filename="plot_fishgam.pdf",width = 15,height = 10)
+
+#14.11.24
+gg_gamthet<-read.delim("gg_gam_thet.csv", sep=" ", header=T)
+plot_gg_gamthet <- ggplot(subset(gg_gamthet,generation==20000)) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
+  geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
+  facet_grid(gam~thet, labeller = label_both, scales="free")
+plot_gg_gamthet
 
 
 bias<-read.delim("oe_web_bias_n2.csv", sep=" ", header=T)
