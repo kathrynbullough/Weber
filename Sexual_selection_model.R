@@ -561,22 +561,23 @@ ggsave(filename="plot_goodgenesWEB.pdf",width = 15,height = 20)
 #11.11.24
 
 narrow<-read.delim("narrow.csv", sep=" ", header=T)
-plot_narrow <- ggplot(subset(narrow,generation==20000)) + 
+plot_narrow <- ggplot(subset(narrow)) + 
   geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
   geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
   geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
   geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
-  facet_grid(gam~thet, labeller = label_both, scales="free")
+  facet_grid(gam~thet, labeller = label_both, scales="free") +
+  geom_hline(yintercept=0.0)
 plot_narrow
 
 old<-read.delim("oe_web_bias_n2.csv", sep=" ", header=T)
-plot_narrow <- ggplot(subset(narrow,generation==20000)) + 
+plot_old <- ggplot(subset(old)) + 
   geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
   geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
   geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
   geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
   facet_grid(gam~thet, labeller = label_both, scales="free")
-plot_narrow
+plot_old
 
 #12.11.24
 
@@ -587,8 +588,8 @@ plot_gg_gamthet <- ggplot(gg_gamthet) +
   geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
   geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
   facet_grid(gam~thet, labeller = label_both, scales="free")
-plot_gg_
-plot_gg_gamthet <- ggplot(subset(narrow,generation==20000)) + 
+plot_gg_gamthet
+plot_narrow <- ggplot(subset(narrow,generation==20000)) + 
   geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
   geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
   geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
@@ -623,13 +624,41 @@ ggsave(filename="plot_fishgam.pdf",width = 15,height = 10)
 
 #14.11.24
 gg_gamthet<-read.delim("gg_gam_thet.csv", sep=" ", header=T)
-plot_gg_gamthet <- ggplot(subset(gg_gamthet,generation==20000)) + 
+plot_gg_gamthet <- ggplot(subset(gg_gamthet)) + 
   geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
   geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
   geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
   geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
-  facet_grid(gam~thet, labeller = label_both, scales="free")
+  facet_grid(gam~thet, labeller = label_both, scales="free") +
+  geom_hline(yintercept=0.0)
 plot_gg_gamthet
+
+#20.11.24
+fish_webuni<-read.delim("webuni.csv", sep=" ", header=T)
+plot_webuni <- ggplot(fish_webuni) + 
+  geom_point(aes(x=biast.,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biast.,y=meanp1,colour="p1")) +
+  facet_grid(b.~c., labeller = label_both,scales = "free") +
+  geom_hline(yintercept=0.0)
+plot_webuni
+
+fish_gam_n5<-read.delim("gamfive.csv", sep=" ", header=T)
+plot_fishgam5 <- ggplot(fish_gam_n5) + 
+  geom_point(aes(x=gamma.,y=meant1,colour="t1")) + 
+  geom_point(aes(x=gamma.,y=meanp1,colour="p1")) +
+  geom_point(aes(x=gamma.,y=meanp2,colour="p2")) +
+  geom_point(aes(x=gamma.,y=meant2,colour="t2")) +
+  geom_point(aes(x=gamma.,y=meant3,colour="t3")) + 
+  geom_point(aes(x=gamma.,y=meanp3,colour="p3")) +
+  geom_point(aes(x=gamma.,y=meant4,colour="t4")) + 
+  geom_point(aes(x=gamma.,y=meanp4,colour="p4")) +
+  geom_point(aes(x=gamma.,y=meant5,colour="t5")) + 
+  geom_point(aes(x=gamma.,y=meanp5,colour="p5")) +
+  facet_grid(c.~b., labeller = label_both,scales = "free") +
+  geom_hline(yintercept=0.0)
+plot_fishgam5
+
+
 
 
 bias<-read.delim("oe_web_bias_n2.csv", sep=" ", header=T)
