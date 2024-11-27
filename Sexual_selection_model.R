@@ -658,6 +658,68 @@ plot_fishgam5 <- ggplot(fish_gam_n5) +
   geom_hline(yintercept=0.0)
 plot_fishgam5
 
+fish_thet_n5<-read.delim("thetfive.csv", sep=" ", header=T)
+plot_fishthet5 <- ggplot(fish_thet_n5) + 
+  geom_point(aes(x=theta.,y=meant1,colour="t1")) + 
+  geom_point(aes(x=theta.,y=meanp1,colour="p1")) +
+  geom_point(aes(x=theta.,y=meanp2,colour="p2")) +
+  geom_point(aes(x=theta.,y=meant2,colour="t2")) +
+  geom_point(aes(x=theta.,y=meant3,colour="t3")) + 
+  geom_point(aes(x=theta.,y=meanp3,colour="p3")) +
+  geom_point(aes(x=theta.,y=meant4,colour="t4")) + 
+  geom_point(aes(x=theta.,y=meanp4,colour="p4")) +
+  geom_point(aes(x=theta.,y=meant5,colour="t5")) + 
+  geom_point(aes(x=theta.,y=meanp5,colour="p5")) +
+  facet_grid(c.~b., labeller = label_both,scales = "free") +
+  geom_hline(yintercept=0.0)
+plot_fishthet5
+
+#21.22.24
+gg_gamthet_update<-read.delim("gg_gam_thet_web.csv", sep=" ", header=T)
+plot_gg_gamthet_oe <- ggplot(subset(gg_gamthet_update,pref==0)) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
+  geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
+  facet_grid(gam~thet, labeller = label_both, scales="free") +
+  geom_hline(yintercept=0.0)
+plot_gg_gamthet_oe
+plot_gg_gamthet_web <- ggplot(subset(gg_gamthet_update,pref==1)) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
+  geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
+  facet_grid(gam~thet, labeller = label_both, scales="free") +
+  geom_hline(yintercept=0.0)
+plot_gg_gamthet_web
+
+#27.11.24
+fish_webuni_rep<-read.delim("unirep10.csv", sep=" ", header=T)
+plot_webuni_rep <- ggplot(fish_webuni_rep) + 
+  geom_point(aes(x=biast.,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biast.,y=meanp1,colour="p1")) +
+  facet_grid(b.~c., labeller = label_both,scales = "free") +
+  geom_hline(yintercept=0.0)
+plot_webuni_rep
+
+gg_gamthet_rep<-read.delim("gg_rep10.csv", sep=" ", header=T)
+plot_gg_rep_oe <- ggplot(subset(gg_gamthet_rep,pref==0)) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
+  geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
+  facet_grid(gam~thet, labeller = label_both, scales="free") +
+  geom_hline(yintercept=0.0)
+plot_gg_rep_oe
+plot_gg_rep_web <- ggplot(subset(gg_gamthet_rep,pref==1)) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
+  geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
+  facet_grid(gam~thet, labeller = label_both, scales="free") +
+  geom_hline(yintercept=0.0)
+plot_gg_rep_web
+
 
 
 
