@@ -10,7 +10,7 @@ b = 0.0025
 c = 0.5
 
 gam = c(0.1,1.0,2.0,3.0) 
-thet = c(0.01,0.2,0.6,1.0)
+thet = c(0.59,0.61)
 
 init_t = 1
 init_p = 3
@@ -18,7 +18,7 @@ nrep = 10
 
 maxgen = 20000
 
-pref = c(0,1)
+pref = 0
 ntrait = 2
 
 

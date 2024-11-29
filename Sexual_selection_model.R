@@ -701,25 +701,86 @@ plot_webuni_rep <- ggplot(fish_webuni_rep) +
   facet_grid(b.~c., labeller = label_both,scales = "free") +
   geom_hline(yintercept=0.0)
 plot_webuni_rep
+plot_webuni_rep_cov <- ggplot(fish_webuni_rep) + 
+  geom_point(aes(x=biast.,y=covpt1,colour="covpt"),size=1) + 
+  facet_grid(b.~c., labeller = label_both,scales = "free") +
+  geom_hline(yintercept=0.0)
+plot_webuni_rep_cov
+ggsave(filename="plot_cov.pdf",width = 10,height = 7)
 
 gg_gamthet_rep<-read.delim("gg_rep10.csv", sep=" ", header=T)
-plot_gg_rep_oe <- ggplot(subset(gg_gamthet_rep,pref==0)) + 
+plot_gg_rep_oe <- ggplot(subset(gg_gamthet_rep,pref==0&(gam==2|gam==3)&(thet==0.01|thet==0.2|thet==1))) + 
   geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
   geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
   geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
   geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
   facet_grid(gam~thet, labeller = label_both, scales="free") +
-  geom_hline(yintercept=0.0)
+  geom_hline(yintercept=0.0, colour="darkgrey")
 plot_gg_rep_oe
-plot_gg_rep_web <- ggplot(subset(gg_gamthet_rep,pref==1)) + 
+plot_gg_rep_web <- ggplot(subset(gg_gamthet_rep,pref==1&(gam==2|gam==3)&(thet==0.01|thet==0.2|thet==1))) + 
   geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
   geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
   geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
   geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
   facet_grid(gam~thet, labeller = label_both, scales="free") +
-  geom_hline(yintercept=0.0)
+  geom_hline(yintercept=0.0, colour="darkgrey")
 plot_gg_rep_web
 
+#Some plots for manuscript:
+plot_webuni <- ggplot(subset(fish_webuni_rep, c.==0.2&(b.==0.0005|b.==0.01))) + 
+  geom_point(aes(x=biast.,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biast.,y=meanp1,colour="p1")) +
+  facet_grid(b.~c., labeller = label_both,scales = "free") +
+  geom_hline(yintercept=0.0, colour="darkgrey")
+plot_webuni
+ggsave(filename="plot_web.pdf",width =5,height = 7)
+fish_oeuni<-read.delim("fish_narrowweb.csv", sep=" ", header=T)
+plot_oeuni <- ggplot(subset(fish_oeuni, b.==0.0005|b.==0.01)) + 
+  geom_point(aes(x=biast.,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biast.,y=meanp1,colour="p1")) +
+  facet_grid(b.~c., labeller = label_both,scales = "free") +
+  geom_hline(yintercept=0.0, colour="darkgrey")
+plot_oeuni
+par(mfrow=c(1,2))
+plot_webcov <- ggplot(subset(fish_webuni_rep, c.==0.2&(b.==0.0005|b.==0.01))) + 
+  geom_point(aes(x=biast.,y=covpt1,colour="covpt")) + 
+  facet_grid(b.~c., labeller = label_both,scales = "free") +
+  geom_hline(yintercept=0.0, colour="darkgrey")
+plot_webcov
+plot_oecov <- ggplot(subset(fish_oeuni, b.==0.0005|b.==0.01)) + 
+  geom_point(aes(x=biast.,y=covpt1,colour="covpt")) + 
+  facet_grid(b.~c., labeller = label_both,scales = "free") +
+  geom_hline(yintercept=0.0, colour="darkgrey")
+plot_oecov
+
+#28.11.24
+fish_thetwide<-read.delim("multithetawide.csv", sep=" ", header=T)
+plot_thetwide <- ggplot(fish_thetwide) + 
+  geom_point(aes(x=theta.,y=meant1,colour="t1")) + 
+  geom_point(aes(x=theta.,y=meanp1,colour="p1")) +
+  geom_point(aes(x=theta.,y=meanp2,colour="p2")) +
+  geom_point(aes(x=theta.,y=meant2,colour="t2")) +
+  facet_grid(c.~b., labeller = label_both,scales = "free") +
+  geom_hline(yintercept=0.0, colour="darkgrey")
+plot_thetwide
+plot_thetwidecov <- ggplot(fish_thetwide) + 
+  geom_point(aes(x=theta.,y=covpt1,colour="covpt1")) + 
+  geom_point(aes(x=theta.,y=covpt2,colour="covpt2")) +
+  facet_grid(c.~b., labeller = label_both,scales = "free") +
+  geom_hline(yintercept=0.0, colour="darkgrey")
+plot_thetwidecov
+
+gg_atest<-read.delim("gg_atest.csv", sep=" ", header=T)
+plot_gg_webatest <- ggplot(gg_atest) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  geom_point(aes(x=biasv,y=meant2,colour="t2")) + 
+  geom_point(aes(x=biasv,y=meanp2,colour="p2")) +
+  facet_grid(gam~thet, labeller = label_both, scales="free") +
+  geom_hline(yintercept=0.0, colour="darkgrey")
+plot_gg_webatest
+
+#29.11.24
 
 
 
