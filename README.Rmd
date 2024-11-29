@@ -1,11 +1,8 @@
 # Individual-based models of sexual selection, adding in a Weber preference function to determine how the outputs change
 
-# Current parameters that seem to work:
-#   a       b                  c             biast             mu_p    mu_t    sdmu_p    sdmu_t   sex-limited p       sex-limited t
-#  1         0.001             0.2            0.9             0.05    0.05    0.05        0.05        1                 1  
-#Starting with various initial p values (p=3 for example)
+#All models currently set to run as multidimensional - to run a unidimensional model, simply set ntrait=1
 
-#Parameters that work for multidimensional:
+#Working parameters:
 
 #parameter_object$a <- 1  
 #parameter_object$b <- 0.001   
