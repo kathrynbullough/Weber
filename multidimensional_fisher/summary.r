@@ -13,4 +13,4 @@ all.bloody.data <- summarize.sims(simulations_path="."
         )
 
 # some shizzle like this to get the file on disk
-write_delim(file="fish_narrowweb.csv", x=all.bloody.data)
+write_delim(file="fish_n5cb.csv", x=all.bloody.data)
