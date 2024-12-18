@@ -72,6 +72,8 @@ plot_pt_pub <- ggplot(data=sim_data, aes(x=meanp1, y=meant1)) +
   geom_point(aes(x = meanp2[1], y = meant2[1]), shape = 17, color = "red", size = 6) +
   geom_point(aes(x = meanp1[nrow(sim_data)], y = meant1[nrow(sim_data)]), shape = 21, fill = "white", color = "darkblue", size = 5) +
   geom_point(aes(x = meanp2[nrow(sim_data)], y = meant2[nrow(sim_data)]), shape = 21, fill = "white", color = "red", size = 5) +
+  geom_hline(yintercept=0.0, colour="darkgrey") +
+  geom_vline(xintercept=0.0, colour="darkgrey") +
   theme_classic()
     
 #Plot dynamics between p2 and t2

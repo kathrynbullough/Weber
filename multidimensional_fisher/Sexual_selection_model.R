@@ -72,10 +72,10 @@ plot_pt_pub <- ggplot(data=sim_data, aes(x=meanp1, y=meant1)) +
   geom_point(aes(x = meanp2[1], y = meant2[1]), shape = 17, color = "red", size = 6) +
   geom_point(aes(x = meanp1[nrow(sim_data)], y = meant1[nrow(sim_data)]), shape = 21, fill = "white", color = "darkblue", size = 5) +
   geom_point(aes(x = meanp2[nrow(sim_data)], y = meant2[nrow(sim_data)]), shape = 21, fill = "white", color = "red", size = 5) +
-  geom_hline(yintercept=0.0) +
-  geom_vline(xintercept=0.0) +
-  xlim(-1.5,3.5) +
-  ylim(-1.5,2.5) +
+  geom_hline(yintercept=0.0,colour="darkgrey") +
+  geom_vline(xintercept=0.0,colour="darkgrey") +
+  xlim(-0.3,3.5) +
+  ylim(-0.3,2.0) +
   theme_classic()
     
 #Plot dynamics between p2 and t2
@@ -164,7 +164,7 @@ plot_cov2 <- ggplot(data=sim_data
 #plot_mean_t1 / plot_mean_p1 / plot_p_t / plot_cov
 plot_pt_pub
 
-ggsave(file=paste0("model_graph2_",basename(file.name),".pdf"))
+ggsave(file=paste0("model_graph4_",basename(file.name),".pdf"))
     
 stop()
 
