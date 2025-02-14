@@ -170,28 +170,28 @@ void mutate(double &G, double mu, double sdmu, double bias=0.5)
 void WriteParameters(std::ofstream &DataFile)
 {
 	DataFile << std::endl
-		<< std::endl
-		<< "type:;" << "gonochorist_fisherian" << ";" << std::endl
-		<< "popsize_init:;" << N << ";" << std::endl
-		<< "n_mate_sample:;" << N_mate_sample << ";"<< std::endl
-		<< "init_t:;" << init_t[6] << ";" << std::endl
-		<< "init_p:;" << init_p[7] << ";" << std::endl
-		<< "a:;" <<  a << ";"<< std::endl
-		<< "b:;" <<  b << ";"<< std::endl
-		<< "c:;" <<  c[0] << ";"<< std::endl
-		<< "pref:;" <<  pref << ";"<< std::endl
-		<< "k:;" <<  k << ";"<< std::endl
-		<< "mu_p:;" <<  mu_p[4] << ";" << std::endl
-		<< "mu_t:;" <<  mu_t[5] << ";" << std::endl
-		<< "mu_std_p:;" <<  sdmu_p[0] << ";" << std::endl
-		<< "mu_std_t:;" <<  sdmu_t[0] << ";"<< std::endl
-		<< "biast:;" <<  biast[0] << ";" << std::endl
-		<< "sexlimp:;" <<  sexlimp << ";"<< std::endl
-		<< "sexlimt:;" <<  sexlimt << ";"<< std::endl
-    		<< "gamma:;" <<  gam << ";"<< std::endl
-    		<< "theta:;" <<  thet << ";"<< std::endl
-       <<"ntrait:;" << ntrait << ";" << std::endl
-		<< "seed:;" << seed << ";"<< std::endl;
+        << std::endl
+        << "type:;" << "gonochorist_fisherian" << ";" << std::endl
+        << "popsize_init:;" << N << ";" << std::endl
+        << "n_mate_sample:;" << N_mate_sample << ";"<< std::endl
+        << "init_t:;" << init_t[6] << ";" << std::endl
+        << "init_p:;" << init_p[7] << ";" << std::endl
+        << "a:;" <<  a << ";"<< std::endl
+        << "b:;" <<  b << ";"<< std::endl
+        << "c:;" <<  c[0] << ";"<< std::endl
+        << "pref:;" <<  pref << ";"<< std::endl
+        << "k:;" <<  k << ";"<< std::endl
+        << "mu_p:;" <<  mu_p[4] << ";" << std::endl
+        << "mu_t:;" <<  mu_t[5] << ";" << std::endl
+        << "mu_std_p:;" <<  sdmu_p[0] << ";" << std::endl
+        << "mu_std_t:;" <<  sdmu_t[0] << ";"<< std::endl
+        << "biast:;" <<  biast[0] << ";" << std::endl
+        << "sexlimp:;" <<  sexlimp << ";"<< std::endl
+        << "sexlimt:;" <<  sexlimt << ";"<< std::endl
+        << "gamma:;" <<  gam << ";"<< std::endl
+        << "theta:;" <<  thet << ";"<< std::endl
+        <<"ntrait:;" << ntrait << ";" << std::endl
+        << "seed:;" << seed << ";"<< std::endl;
 }
 
 // initialize all the phenotypes
