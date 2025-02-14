@@ -88,7 +88,7 @@ void GoodGenes::survival()
         {
             p = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
 
-            sum_p += std::fabs(pow(par.lambda*p,thet_inv));
+            sum_p += std::fabs(pow(par.lambda * p,thet_inv));
        }
         
         sum_surv = par.baseline_survival + (1.0 - par.baseline_survival) * 
