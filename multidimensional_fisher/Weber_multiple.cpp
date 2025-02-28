@@ -1,8 +1,5 @@
 //      Fisherian sexual selection for gonochorists with addition of a Weber preference function
 
-//KATHRYN EDIT TEST
-
-
 // load some libraries that we need
 #include <ctime>
 #include <iostream>

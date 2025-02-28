@@ -116,24 +116,6 @@ void GoodGenes::survival()
                 females[female_survival_distribution(rng_r)]
                 );
 
-//        // individual dies
-//        if (uniform(rng_r) > sum_surv)
-//        {
-//            Individual last = females.back();
-//
-//            std::swap(*female_iter, females.back()); // swap this female with final elmt
-//        
-//            assert(female_iter->p[0][0] == last.p[0][0]);
-//            assert(female_iter->v[0] == last.v[0]);
-//            assert(female_iter->v[1] == last.v[1]);
-//
-//            females.pop_back(); // remove final elmt
-//                                // this is way faster than std::erase() 
-//        }
-//        else
-//        {
-//            ++female_iter;
-//        }
     } // end for females
 
     females = surviving_females;
@@ -162,25 +144,6 @@ void GoodGenes::survival()
         mean_p_survive_m += sum_surv;
 
         survival_distribution.push_back(sum_surv);
-//
-//      // individual dies
-//        if (uniform(rng_r) > sum_surv)
-//        {
-//            Individual last = males.back();
-//            std::swap(*male_iter, males.back()); // swap this male with final elmt
-//            
-//            assert(male_iter->p[0][0] == last.p[0][0]);
-//            assert(male_iter->t[0][0] == last.t[0][0]);
-//            assert(male_iter->v[0] == last.v[0]);
-//            assert(male_iter->v[1] == last.v[1]);
-//            
-//            males.pop_back(); // remove final elmt
-//                                // this is way faster than std::erase() 
-//        }
-//        else
-//        {
-//            ++male_iter;
-//        }
     }
     
 
@@ -199,24 +162,6 @@ void GoodGenes::survival()
                 males[male_survival_distribution(rng_r)]
                 );
 
-//        // individual dies
-//        if (uniform(rng_r) > sum_surv)
-//        {
-//            Individual last = females.back();
-//
-//            std::swap(*female_iter, females.back()); // swap this female with final elmt
-//        
-//            assert(female_iter->p[0][0] == last.p[0][0]);
-//            assert(female_iter->v[0] == last.v[0]);
-//            assert(female_iter->v[1] == last.v[1]);
-//
-//            females.pop_back(); // remove final elmt
-//                                // this is way faster than std::erase() 
-//        }
-//        else
-//        {
-//            ++female_iter;
-//        }
     } // end for females
 
     males = surviving_males;
@@ -304,6 +249,7 @@ void GoodGenes::write_parameters()
         << "init_t;" << par.init_t << ";" << std::endl
         << "init_p;" << par.init_p << ";" << std::endl
         << "init_v;" << par.init_v << ";" << std::endl
+        << "weber_k;" << par.weber_k << ";" << std::endl
         << "v_opt;" << par.v_opt << ";" << std::endl
         << "max_num_gen;" << par.max_num_gen << ";" << std::endl
         << "numoutgen;" << par.numoutgen << ";" << std::endl;
@@ -533,19 +479,25 @@ unsigned GoodGenes::choose(Individual const &female)
                     ++inspected_male_idx)
             {
                 sum_fitness = 0.0;
-
+                
                 sampled_male_idx = male_sampler(rng_r);
 
                 for (unsigned trait_idx  = 0; trait_idx < par.ntrait; ++trait_idx)
                 {
-                    x = males[sampled_male_idx].x[trait_idx];
+                    x = males[sampled_male_idx].x[trait_idx] + 
+                            males[sampled_male_idx].x[trait_idx] * par.weber_k * 
+                                standard_normal(rng_r);
 
-                    sum_fitness += par.a * (x / (x + p[trait_idx]));
+                    sum_fitness += par.a * p[trait_idx] * x;
                 }
-                
+
+                sum_fitness = std::exp(sum_fitness);
+
+                assert(std::isnormal(sum_fitness));
+
                 male_idxs.push_back(sampled_male_idx);
                 male_fitness.push_back(sum_fitness);
-            }
+           }
         } 
         break;
 

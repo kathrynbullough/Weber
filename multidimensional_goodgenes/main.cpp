@@ -17,7 +17,8 @@ int main(int argc, char **argv)
     parameters.max_num_gen = std::stoi(argv[9]);
     parameters.pref = std::stoi(argv[10]);
     parameters.ntrait = std::stoi(argv[11]);
-    parameters.file_name = argv[12];
+    parameters.weber_k = std::stod(argv[12]);
+    parameters.file_name = argv[13];
     GoodGenes gg(parameters);
 
 } // end main
