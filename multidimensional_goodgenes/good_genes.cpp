@@ -24,13 +24,13 @@ GoodGenes::GoodGenes(Parameters const &params) :
     for (time_step = 0; 
             time_step <= par.max_num_gen; ++time_step)
     {
-//        std::cout << "time: " << time_step << std::endl;
+        // individuals survive...
         survival();
+        
+        // ... then reproduce
         reproduction();
 
-        // move the expression of the male phenotype 
-        // out of the survival function and put it in a separate
-        // function, say, phenotypes()
+        // then next generation expresses its phenotypes (x)
         phenotypes();
 
         if (time_step % par.numoutgen == 0)
@@ -39,6 +39,8 @@ GoodGenes::GoodGenes(Parameters const &params) :
         }
     }
 
+    // then finally after everything is  over,
+    // write parameters to output file
     write_parameters();
 
 } // end GoodGenes() constructor
