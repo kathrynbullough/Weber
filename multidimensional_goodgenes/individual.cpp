@@ -76,11 +76,6 @@ Individual::Individual(
             t[allele_idx][trait_idx] = t[allele_idx][trait_idx] + 
                 (uniform(rng_r) < 0.5 ? -incr : incr);
 
-	    if (t[allele_idx][trait_idx] < 0)
-	    {
-		    t[allele_idx][trait_idx] = 0;
-	    }
-            
         }
        }
         
