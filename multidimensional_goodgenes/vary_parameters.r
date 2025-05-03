@@ -15,7 +15,7 @@ thet = 1.0 #c(0.1,0.2,0.5,0.8)  #c(0.59,0.61)
 weber_k <- c(0)
 
 init_t = 0
-init_p = 3
+init_p = 1
 nrep = 20
 
 maxgen = 50000
