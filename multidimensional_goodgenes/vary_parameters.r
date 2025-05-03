@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-biasv = 0.99 #c(seq(0.5,0.9,0.1),0.99)
+biasv = c(seq(0.5,0.9,0.1),0.99)
 #c(seq(0.5,0.9,0.1),0.99)
 #biasv = 0.99
 #c = c(0.01,0.255,0.5,0.745,0.99)
@@ -12,15 +12,15 @@ c = 0.5  #0.2  #0.5
 gam = 2.0 #c(0.1,1.0,2.0,3.0) 
 thet = 1.0 #c(0.1,0.2,0.5,0.8)  #c(0.59,0.61)
 
-weber_k <- c(0)
+weber_k <- c(1)
 
-init_t = -5
-init_p = -3
+init_t = 0
+init_p = 1
 nrep = 20
 
 maxgen = 50000
 
-pref = c(0)
+pref = c(1)
 ntrait = 1
 
 
