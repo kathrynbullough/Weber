@@ -1,7 +1,11 @@
 library("tidyverse")
 library("patchwork")
 
-the_data <- read_delim("summary_weber.csv",delim=";")
+#the_data <- read_delim("summary_good_genes_multivar.csv",delim=";")
+#the_data <- read_delim("summary_weber0.csv",delim=";")
+the_data <- read_delim("summary_multidimensional_open_ended.csv",delim=";")
+
+the_data <- the_data %>% filter(pref < 1)
 
 the_data_l <- pivot_longer(the_data
                            ,cols=c(meant1,meanp1)
