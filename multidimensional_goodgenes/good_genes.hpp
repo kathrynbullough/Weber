@@ -14,6 +14,7 @@ class GoodGenes
 
         std::ofstream data_file;
         std::uniform_real_distribution<double> uniform;
+        std::normal_distribution<double> standard_normal{0.0,1.0};
 
         std::random_device rd;
         unsigned seed;
@@ -30,7 +31,7 @@ class GoodGenes
 
         void reproduction();
         void survival();
-	void phenotypes();
+        void phenotypes();
         unsigned choose(Individual const &female);
 
         void write_data();

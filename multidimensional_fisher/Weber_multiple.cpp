@@ -1,8 +1,5 @@
 //      Fisherian sexual selection for gonochorists with addition of a Weber preference function
 
-//KATHRYN EDIT TEST
-
-
 // load some libraries that we need
 #include <ctime>
 #include <iostream>
@@ -28,6 +25,7 @@ std::mt19937 rng_r(seed);
 // allocate a uniform [0,1] random number distribution
 std::uniform_real_distribution <double> uniform(0.0,1.0);
 std::uniform_real_distribution <double> uniform_mutation(0.0,0.4);
+std::normal_distribution standard_normal(0.0,1.0);
 std::bernoulli_distribution segregator(0.5);
 
 
@@ -62,6 +60,7 @@ const double NumGen = 150000; // number of generations
 const int skip = 10; // n generations interval before data is printed
 double sexlimp = 0; // degree of sex-limited expression in p,t
 double sexlimt = 0;
+double k = 0.0;
 int pref = 0;
 int web = 3;
 double meanornsurv[ntrait_max];
@@ -99,7 +98,9 @@ int Parents[N*clutch_size][2];
 // for definitions of the various parameters see top of the file
 void initArguments(int argc, char *argv[])
 {
-  ntrait = std::stoi(argv[17]);
+    ntrait = std::stoi(argv[17]);
+    k = std::stod(argv[18]);
+    file_name = argv[19];
 
   for (int trait_idx = 0; trait_idx < ntrait; ++trait_idx)
   {
@@ -120,7 +121,6 @@ void initArguments(int argc, char *argv[])
     	init_p[trait_idx] = std::stod(argv[14]);
     	gam = std::stod(argv[15]);
     	thet = std::stod(argv[16]);
-    	file_name = argv[18];
     //Maybe add another one to allow the change of ntraits to something other than 2? - NEED TO DO THIS
     //Get rid of fixed vector initalisation above, then use pushbacks here to keep them open-ended?
     //c = c.push_back(std::stod(argv[4]));
@@ -138,7 +138,6 @@ void initArguments(int argc, char *argv[])
     	  pref = std::stoi(argv[12]);
     	  gam = std::stod(argv[15]);
     	  thet = std::stod(argv[16]);
-    	  file_name = argv[18];
      
 	      c[trait_idx] = 0.0;
         biast[trait_idx] = 0.5;
@@ -168,27 +167,28 @@ void mutate(double &G, double mu, double sdmu, double bias=0.5)
 void WriteParameters(std::ofstream &DataFile)
 {
 	DataFile << std::endl
-		<< std::endl
-		<< "type:;" << "gonochorist_fisherian" << ";" << std::endl
-		<< "popsize_init:;" << N << ";" << std::endl
-		<< "n_mate_sample:;" << N_mate_sample << ";"<< std::endl
-		<< "init_t:;" << init_t[0] << ";" << std::endl
-		<< "init_p:;" << init_p[0] << ";" << std::endl
-		<< "a:;" <<  a << ";"<< std::endl
-		<< "b:;" <<  b << ";"<< std::endl
-		<< "c:;" <<  c[0] << ";"<< std::endl
-		<< "pref:;" <<  pref << ";"<< std::endl
-		<< "mu_p:;" <<  mu_p[0] << ";" << std::endl
-		<< "mu_t:;" <<  mu_t[0] << ";" << std::endl
-		<< "mu_std_p:;" <<  sdmu_p[0] << ";" << std::endl
-		<< "mu_std_t:;" <<  sdmu_t[0] << ";"<< std::endl
-		<< "biast:;" <<  biast[0] << ";" << std::endl
-		<< "sexlimp:;" <<  sexlimp << ";"<< std::endl
-		<< "sexlimt:;" <<  sexlimt << ";"<< std::endl
-    		<< "gamma:;" <<  gam << ";"<< std::endl
-    		<< "theta:;" <<  thet << ";"<< std::endl
-       <<"ntrait:;" << ntrait << ";" << std::endl
-		<< "seed:;" << seed << ";"<< std::endl;
+        << std::endl
+        << "type:;" << "gonochorist_fisherian" << ";" << std::endl
+        << "popsize_init:;" << N << ";" << std::endl
+        << "n_mate_sample:;" << N_mate_sample << ";"<< std::endl
+        << "init_t:;" << init_t[6] << ";" << std::endl
+        << "init_p:;" << init_p[7] << ";" << std::endl
+        << "a:;" <<  a << ";"<< std::endl
+        << "b:;" <<  b << ";"<< std::endl
+        << "c:;" <<  c[0] << ";"<< std::endl
+        << "pref:;" <<  pref << ";"<< std::endl
+        << "k:;" <<  k << ";"<< std::endl
+        << "mu_p:;" <<  mu_p[4] << ";" << std::endl
+        << "mu_t:;" <<  mu_t[5] << ";" << std::endl
+        << "mu_std_p:;" <<  sdmu_p[0] << ";" << std::endl
+        << "mu_std_t:;" <<  sdmu_t[0] << ";"<< std::endl
+        << "biast:;" <<  biast[0] << ";" << std::endl
+        << "sexlimp:;" <<  sexlimp << ";"<< std::endl
+        << "sexlimt:;" <<  sexlimt << ";"<< std::endl
+        << "gamma:;" <<  gam << ";"<< std::endl
+        << "theta:;" <<  thet << ";"<< std::endl
+        <<"ntrait:;" << ntrait << ";" << std::endl
+        << "seed:;" << seed << ";"<< std::endl;
 }
 
 // initialize all the phenotypes
@@ -443,11 +443,26 @@ double relative_prefs(Individual &female, Individual &male)
 double weber_prefs(Individual &female, Individual &male)
 {
     double sum_odds = 0.0;
-    
+
+    double t,p;
+
     for (int trait_idx  = 0; trait_idx < ntrait; ++trait_idx)
     {
-        sum_odds += a * (male.t_expr[trait_idx] / (male.t_expr[trait_idx] + female.p_expr[trait_idx]));
+        // t_observed = t + t * k * stdev_t_obs * z
+        // where t is the actual ornament phenotype
+        // k is the Weber coefficient that can just be a parameter
+        // stdev_t_obs is the standard deviation of the observational noise (here
+        // assumed to be unity, as it is already scaled by the Weber coefficient)
+        // and z is a variable sampled from a standard normal distribution
+        //
+        // key point is that the observational noise increases with the size of 
+        // the ornament
+        t = male.t_expr[trait_idx] + male.t_expr[trait_idx] * k * standard_normal(rng_r);
+        p = female.p_expr[trait_idx];
+        sum_odds += a * p * t;
     }
+
+    sum_odds = exp(sum_odds);
 
     return(sum_odds);
 } // end weber_prefs()
@@ -471,7 +486,7 @@ void Choose(Individual &mother, int &father)
         N_mate_sample;
 
     // distribution of number of survivors
-    	std::uniform_int_distribution <int> 
+    std::uniform_int_distribution <int> 
         msurvivor_sampler(0, msurvivors - 1);
 
     // mate choice among the sample of males
@@ -722,19 +737,19 @@ void WriteData(std::ofstream &DataFile)
 			p[trait_idx] = 0.5 * ( Males[i].p[trait_idx][0] + Males[i].p[trait_idx][1]);
 			t[trait_idx] = 0.5 * ( Males[i].t[trait_idx][0] + Males[i].t[trait_idx][1]);
 
-        		meanp[trait_idx] += p[trait_idx];
-        		meant[trait_idx] += t[trait_idx];
+            meanp[trait_idx] += p[trait_idx];
+            meant[trait_idx] += t[trait_idx];
 
-        		ssp[trait_idx] += p[trait_idx] * p[trait_idx];
-        		sst[trait_idx] += t[trait_idx] * t[trait_idx];
-        		spt[trait_idx] += t[trait_idx] * p[trait_idx];
-    		}
+            ssp[trait_idx] += p[trait_idx] * p[trait_idx];
+            sst[trait_idx] += t[trait_idx] * t[trait_idx];
+            spt[trait_idx] += t[trait_idx] * p[trait_idx];
+        }
 
-        	if (i < msurvivors)
-        	{
-            		summrs += father_eggs[i];
-            		ssmrs += father_eggs[i] * father_eggs[i];
-        	}
+        if (i < msurvivors)
+        {
+                summrs += father_eggs[i];
+                ssmrs += father_eggs[i] * father_eggs[i];
+        }
 	}
 
     // calculate means and variances for the females
@@ -745,19 +760,19 @@ void WriteData(std::ofstream &DataFile)
 			p[trait_idx] = 0.5 * ( Females[i].p[trait_idx][0] + Females[i].p[trait_idx][1]);
 			t[trait_idx] = 0.5 * ( Females[i].t[trait_idx][0] + Females[i].t[trait_idx][1]);
 
-        		meanp[trait_idx] += p[trait_idx];
-        		meant[trait_idx] += t[trait_idx];
+            meanp[trait_idx] += p[trait_idx];
+            meant[trait_idx] += t[trait_idx];
 
-        		ssp[trait_idx] += p[trait_idx] * p[trait_idx];
-        		sst[trait_idx] += t[trait_idx] * t[trait_idx];
-        		spt[trait_idx] += t[trait_idx] * p[trait_idx];
-    		}
+            ssp[trait_idx] += p[trait_idx] * p[trait_idx];
+            sst[trait_idx] += t[trait_idx] * t[trait_idx];
+            spt[trait_idx] += t[trait_idx] * p[trait_idx];
+        }
         
-        	if (i < fsurvivors)
-        	{
-            		sumfrs += mother_eggs[i];
-            		ssfrs += mother_eggs[i] * mother_eggs[i];
-        	}
+        if (i < fsurvivors)
+        {
+                sumfrs += mother_eggs[i];
+                ssfrs += mother_eggs[i] * mother_eggs[i];
+        }
 	} 
 
     double varp[ntrait_max]; 
@@ -831,8 +846,8 @@ void WriteDataHeaders(std::ofstream &DataFile)
         << ";varmrs"
         << ";surviving_males"
         << ";surviving_females"
-	<< ";N;"
-	<< std::endl;
+        << ";N;"
+        << std::endl;
 } // end WriteDataHeaders
 
 // the core part of the code

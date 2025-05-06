@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <vector>
 #include <cmath>
+#include <array>
 #include <iostream>
 #include "good_genes.hpp"
 #include "parameters.hpp"
@@ -24,13 +25,13 @@ GoodGenes::GoodGenes(Parameters const &params) :
     for (time_step = 0; 
             time_step <= par.max_num_gen; ++time_step)
     {
-//        std::cout << "time: " << time_step << std::endl;
+        // individuals survive...
         survival();
+        
+        // ... then reproduce
         reproduction();
 
-        // move the expression of the male phenotype 
-        // out of the survival function and put it in a separate
-        // function, say, phenotypes()
+        // then next generation expresses its phenotypes (x)
         phenotypes();
 
         if (time_step % par.numoutgen == 0)
@@ -39,6 +40,8 @@ GoodGenes::GoodGenes(Parameters const &params) :
         }
     }
 
+    // then finally after everything is  over,
+    // write parameters to output file
     write_parameters();
 
 } // end GoodGenes() constructor
@@ -88,11 +91,10 @@ void GoodGenes::survival()
         {
             p = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
 
-            sum_p += std::fabs(pow(par.lambda*p,thet_inv));
+            sum_p += std::fabs(pow(par.lambda * p,thet_inv));
        }
         
-        sum_surv = par.baseline_survival + (1.0 - par.baseline_survival) * 
-            std::exp(-par.b*pow(sum_p,(par.gam*par.thet))-std::fabs(par.v_opt - v));
+        sum_surv = std::exp(-par.b *pow(sum_p,(par.gam*par.thet))-std::fabs(par.v_opt - v));
 
         survival_distribution.push_back(sum_surv);
 
@@ -104,7 +106,8 @@ void GoodGenes::survival()
             survival_distribution.begin(),
             survival_distribution.end());
 
-    unsigned max_survivors_per_sex = 0.25 * par.n;
+    unsigned max_survivors_per_sex = par.fraction_survivors * 
+        survival_distribution.size();
 
     std::vector <Individual> surviving_females;
 
@@ -116,24 +119,6 @@ void GoodGenes::survival()
                 females[female_survival_distribution(rng_r)]
                 );
 
-//        // individual dies
-//        if (uniform(rng_r) > sum_surv)
-//        {
-//            Individual last = females.back();
-//
-//            std::swap(*female_iter, females.back()); // swap this female with final elmt
-//        
-//            assert(female_iter->p[0][0] == last.p[0][0]);
-//            assert(female_iter->v[0] == last.v[0]);
-//            assert(female_iter->v[1] == last.v[1]);
-//
-//            females.pop_back(); // remove final elmt
-//                                // this is way faster than std::erase() 
-//        }
-//        else
-//        {
-//            ++female_iter;
-//        }
     } // end for females
 
     females = surviving_females;
@@ -156,31 +141,11 @@ void GoodGenes::survival()
             sum_cxx += (par.c/(1.0 + par.k*v))*x*x;
        }
 
-        sum_surv = par.baseline_survival + (1 - par.baseline_survival) * 
-            std::exp(-sum_cxx - std::fabs(par.v_opt - v));
+        sum_surv = std::exp(-sum_cxx - std::fabs(par.v_opt - v));
 
         mean_p_survive_m += sum_surv;
 
         survival_distribution.push_back(sum_surv);
-//
-//      // individual dies
-//        if (uniform(rng_r) > sum_surv)
-//        {
-//            Individual last = males.back();
-//            std::swap(*male_iter, males.back()); // swap this male with final elmt
-//            
-//            assert(male_iter->p[0][0] == last.p[0][0]);
-//            assert(male_iter->t[0][0] == last.t[0][0]);
-//            assert(male_iter->v[0] == last.v[0]);
-//            assert(male_iter->v[1] == last.v[1]);
-//            
-//            males.pop_back(); // remove final elmt
-//                                // this is way faster than std::erase() 
-//        }
-//        else
-//        {
-//            ++male_iter;
-//        }
     }
     
 
@@ -189,7 +154,10 @@ void GoodGenes::survival()
             survival_distribution.begin(),
             survival_distribution.end());
 
-    std::vector <Individual> surviving_males;
+    max_survivors_per_sex = par.fraction_survivors * 
+        survival_distribution.size();
+
+   std::vector <Individual> surviving_males;
 
     for (unsigned surviving_male_idx{0};
             surviving_male_idx < max_survivors_per_sex;
@@ -199,24 +167,6 @@ void GoodGenes::survival()
                 males[male_survival_distribution(rng_r)]
                 );
 
-//        // individual dies
-//        if (uniform(rng_r) > sum_surv)
-//        {
-//            Individual last = females.back();
-//
-//            std::swap(*female_iter, females.back()); // swap this female with final elmt
-//        
-//            assert(female_iter->p[0][0] == last.p[0][0]);
-//            assert(female_iter->v[0] == last.v[0]);
-//            assert(female_iter->v[1] == last.v[1]);
-//
-//            females.pop_back(); // remove final elmt
-//                                // this is way faster than std::erase() 
-//        }
-//        else
-//        {
-//            ++female_iter;
-//        }
     } // end for females
 
     males = surviving_males;
@@ -295,6 +245,7 @@ void GoodGenes::write_parameters()
         << "biasv;" << par.biasv << ";" << std::endl
         << "pref;" << par.pref << ";" << std::endl
         << "ntrait;" << par.ntrait << ";" << std::endl
+        << "fraction_survivors;" << par.fraction_survivors << ";" << std::endl
         << "a;" << par.a << ";" << std::endl
         << "b;" << par.b << ";" << std::endl
         << "c;" << par.c << ";" << std::endl
@@ -304,6 +255,7 @@ void GoodGenes::write_parameters()
         << "init_t;" << par.init_t << ";" << std::endl
         << "init_p;" << par.init_p << ";" << std::endl
         << "init_v;" << par.init_v << ";" << std::endl
+        << "weber_k;" << par.weber_k << ";" << std::endl
         << "v_opt;" << par.v_opt << ";" << std::endl
         << "max_num_gen;" << par.max_num_gen << ";" << std::endl
         << "numoutgen;" << par.numoutgen << ";" << std::endl;
@@ -311,50 +263,31 @@ void GoodGenes::write_parameters()
 
 void GoodGenes::write_data()
 {
-    double meanp[par.ntrait];
-    double ssp[par.ntrait];
-    double meant[par.ntrait];
-    double sst[par.ntrait];
+    std::vector <double> meanp(par.ntrait,0.0);
+    std::vector <double> ssp(par.ntrait,0.0);
+    std::vector <double> meant(par.ntrait,0.0);
+    std::vector <double> sst(par.ntrait,0.0);
     double meanv{0.0};
     double ssv{0.0};
-    double meanx[par.ntrait];
-    double ssx[par.ntrait];
-    double varp[par.ntrait];
-    double vart[par.ntrait];
-    double varx[par.ntrait];
-    double stv[par.ntrait];
-    double stp[par.ntrait];
-    double spv[par.ntrait];
-    double covtp[par.ntrait];
-    double covtv[par.ntrait];
-    double covpv[par.ntrait];
+    std::vector <double> meanx(par.ntrait,0.0);
+    std::vector <double> ssx(par.ntrait,0.0);
+    std::vector <double> varp(par.ntrait,0.0);
+    std::vector <double> vart(par.ntrait,0.0);
+    std::vector <double> varx(par.ntrait,0.0);
+    std::vector <double> stv(par.ntrait,0.0);
+    std::vector <double> stp(par.ntrait,0.0);
+    std::vector <double> spv(par.ntrait,0.0);
+    std::vector <double> covtp(par.ntrait,0.0);
+    std::vector <double> covtv(par.ntrait,0.0);
+    std::vector <double> covpv(par.ntrait,0.0);
 
 
     // keep track of population sizes
     unsigned long nf{females.size()};
     unsigned long nm{males.size()};
 
-    for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
-    {
-        meanp[trait_idx] = 0.0;
-	ssp[trait_idx] = 0.0;
-	meant[trait_idx] = 0.0;
-	sst[trait_idx] = 0.0;
-	meanx[trait_idx] = 0.0;
-   	ssx[trait_idx] = 0.0;
-   	varp[trait_idx] = 0.0;
-	vart[trait_idx] = 0.0;
-    	varx[trait_idx] = 0.0;
-    	stv[trait_idx] = 0.0;
-    	stp[trait_idx] = 0.0;
-    	spv[trait_idx] = 0.0;
-    	covtp[trait_idx] = 0.0;
-    	covtv[trait_idx] = 0.0;
-    	covpv[trait_idx] = 0.0;
-    }
-
     // aux variables to store trait values
-    double p[par.ntrait],t[par.ntrait],v,x[par.ntrait];
+    double v, p, t, x;
 
     for (auto female_iter{females.begin()};
             female_iter != females.end();
@@ -366,17 +299,17 @@ void GoodGenes::write_data()
 
         for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
         {
-            p[trait_idx] = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
-            meanp[trait_idx] += p[trait_idx];
-            ssp[trait_idx] += p[trait_idx]*p[trait_idx];
+            p = 0.5 * (female_iter->p[0][trait_idx] + female_iter->p[1][trait_idx]);
+            meanp[trait_idx] += p;
+            ssp[trait_idx] += p*p;
         
-            t[trait_idx] = 0.5 * (female_iter->t[0][trait_idx] + female_iter->t[1][trait_idx]);
-            meant[trait_idx] += t[trait_idx];
-            sst[trait_idx] += t[trait_idx]*t[trait_idx];
+            t = 0.5 * (female_iter->t[0][trait_idx] + female_iter->t[1][trait_idx]);
+            meant[trait_idx] += t;
+            sst[trait_idx] += t*t;
 
-            stp[trait_idx] += t[trait_idx] * p[trait_idx];
-            spv[trait_idx] += p[trait_idx] * v;
-            stv[trait_idx] += t[trait_idx] * v;
+            stp[trait_idx] += t * p;
+            spv[trait_idx] += p * v;
+            stv[trait_idx] += t * v;
         }
     }
     
@@ -390,21 +323,21 @@ void GoodGenes::write_data()
 
           for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
          {
-            p[trait_idx] = 0.5 * (male_iter->p[0][trait_idx] + male_iter->p[1][trait_idx]);
-            meanp[trait_idx] += p[trait_idx];
-            ssp[trait_idx] += p[trait_idx]*p[trait_idx];
+            p = 0.5 * (male_iter->p[0][trait_idx] + male_iter->p[1][trait_idx]);
+            meanp[trait_idx] += p;
+            ssp[trait_idx] += p*p;
             
-            t[trait_idx] = 0.5 * (male_iter->t[0][trait_idx] + male_iter->t[1][trait_idx]);
-            meant[trait_idx] += t[trait_idx];
-            sst[trait_idx] += t[trait_idx]*t[trait_idx];
+            t = 0.5 * (male_iter->t[0][trait_idx] + male_iter->t[1][trait_idx]);
+            meant[trait_idx] += t;
+            sst[trait_idx] += t*t;
             
-            x[trait_idx] = male_iter->x[trait_idx];
-            meanx[trait_idx] += x[trait_idx];
-            ssx[trait_idx] += x[trait_idx]*x[trait_idx];
+            x = male_iter->x[trait_idx];
+            meanx[trait_idx] += x;
+            ssx[trait_idx] += x*x;
           
-            stp[trait_idx] += t[trait_idx] * p[trait_idx];
-            spv[trait_idx] += p[trait_idx] * v;
-            stv[trait_idx] += t[trait_idx] * v;
+            stp[trait_idx] += t * p;
+            spv[trait_idx] += p * v;
+            stv[trait_idx] += t * v;
         }
        
     }
@@ -412,18 +345,18 @@ void GoodGenes::write_data()
     meanv /= (nf + nm);
     double varv = ssv / (nf + nm) - meanv * meanv;
 
-  for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
-	     {
-            meanp[trait_idx] /= (nf + nm);
-            meant[trait_idx] /= (nf + nm);
-            meanx[trait_idx] /= nm;
-            varp[trait_idx] = ssp[trait_idx] / (nf + nm) - meanp[trait_idx] * meanp[trait_idx];
-            vart[trait_idx] = sst[trait_idx] / (nf + nm) - meant[trait_idx] * meant[trait_idx];
-            varx[trait_idx] = ssx[trait_idx] / nm - meanx[trait_idx] * meanx[trait_idx];
-            covtp[trait_idx] = stp[trait_idx] / (nf + nm) - meant[trait_idx] * meanp[trait_idx];
-            covtv[trait_idx] = stv[trait_idx] / (nf + nm) - meant[trait_idx] * meanv;
-            covpv[trait_idx] = spv[trait_idx] / (nf + nm) - meanp[trait_idx] * meanv;
-	     }
+    for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
+    {
+        meanp[trait_idx] /= (nf + nm);
+        meant[trait_idx] /= (nf + nm);
+        meanx[trait_idx] /= nm;
+        varp[trait_idx] = ssp[trait_idx] / (nf + nm) - meanp[trait_idx] * meanp[trait_idx];
+        vart[trait_idx] = sst[trait_idx] / (nf + nm) - meant[trait_idx] * meant[trait_idx];
+        varx[trait_idx] = ssx[trait_idx] / nm - meanx[trait_idx] * meanx[trait_idx];
+        covtp[trait_idx] = stp[trait_idx] / (nf + nm) - meant[trait_idx] * meanp[trait_idx];
+        covtv[trait_idx] = stv[trait_idx] / (nf + nm) - meant[trait_idx] * meanv;
+        covpv[trait_idx] = spv[trait_idx] / (nf + nm) - meanp[trait_idx] * meanv;
+	}
 
     data_file << time_step << ";";
     for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
@@ -488,7 +421,7 @@ unsigned GoodGenes::choose(Individual const &female)
 
     double x, sum_fitness;
 
-    double p[par.ntrait];
+    std::vector <double> p(par.ntrait, 0.0);
 
     for (unsigned trait_idx = 0; trait_idx < par.ntrait; ++trait_idx)
     {
@@ -533,19 +466,25 @@ unsigned GoodGenes::choose(Individual const &female)
                     ++inspected_male_idx)
             {
                 sum_fitness = 0.0;
-
+                
                 sampled_male_idx = male_sampler(rng_r);
 
                 for (unsigned trait_idx  = 0; trait_idx < par.ntrait; ++trait_idx)
                 {
-                    x = males[sampled_male_idx].x[trait_idx];
+                    x = males[sampled_male_idx].x[trait_idx] + 
+                            males[sampled_male_idx].x[trait_idx] * par.weber_k * 
+                                standard_normal(rng_r);
 
-                    sum_fitness += par.a * (x / (x + p[trait_idx]));
+                    sum_fitness += par.a * p[trait_idx] * x;
                 }
-                
+
+                sum_fitness = std::exp(sum_fitness);
+
+                assert(std::isnormal(sum_fitness));
+
                 male_idxs.push_back(sampled_male_idx);
                 male_fitness.push_back(sum_fitness);
-            }
+           }
         } 
         break;
 

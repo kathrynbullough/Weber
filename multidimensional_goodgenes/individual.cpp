@@ -55,34 +55,23 @@ Individual::Individual(
   
     for (unsigned allele_idx{0}; allele_idx < 2; ++allele_idx)
     {
-      for (unsigned trait_idx = 0; trait_idx < params.ntrait; ++trait_idx)
-	     {
-        if (uniform(rng_r) < params.mu_p)
+        for (unsigned trait_idx = 0; trait_idx < params.ntrait; ++trait_idx)
         {
-            incr = uniform(rng_r) * params.max_mut_p;
-            p[allele_idx][trait_idx] = p[allele_idx][trait_idx] + 
-                (uniform(rng_r) < 0.5 ? -incr : incr);
+            if (uniform(rng_r) < params.mu_p)
+            {
+                incr = uniform(rng_r) * params.max_mut_p;
+                p[allele_idx][trait_idx] = p[allele_idx][trait_idx] + 
+                    (uniform(rng_r) < 0.5 ? -incr : incr);
+            }
 
-	    if (p[allele_idx][trait_idx] < 0)
-	    {
-		    p[allele_idx][trait_idx] = 0;
-	    }
-           
+            if (uniform(rng_r) < params.mu_t)
+            {
+                incr = uniform(rng_r) * params.max_mut_t;
+                t[allele_idx][trait_idx] = t[allele_idx][trait_idx] + 
+                    (uniform(rng_r) < 0.5 ? -incr : incr);
+
+            }
         }
-
-        if (uniform(rng_r) < params.mu_t)
-        {
-            incr = uniform(rng_r) * params.max_mut_t;
-            t[allele_idx][trait_idx] = t[allele_idx][trait_idx] + 
-                (uniform(rng_r) < 0.5 ? -incr : incr);
-
-	    if (t[allele_idx][trait_idx] < 0)
-	    {
-		    t[allele_idx][trait_idx] = 0;
-	    }
-            
-        }
-       }
         
         if (uniform(rng_r) < params.mu_v)
         {
@@ -98,11 +87,11 @@ void Individual::operator=(Individual const &other)
     for (unsigned allele_idx{0}; allele_idx < 2; ++allele_idx)
     {
 
-      for (unsigned trait_idx = 0; trait_idx < other.t[0].size(); ++trait_idx)
-	     {
-        p[allele_idx][trait_idx] = other.p[allele_idx][trait_idx];
-        t[allele_idx][trait_idx] = other.t[allele_idx][trait_idx];
-       }
+        for (unsigned trait_idx = 0; trait_idx < other.t[0].size(); ++trait_idx)
+        {
+            p[allele_idx][trait_idx] = other.p[allele_idx][trait_idx];
+            t[allele_idx][trait_idx] = other.t[allele_idx][trait_idx];
+        }
         v[allele_idx] = other.v[allele_idx];
     }
 

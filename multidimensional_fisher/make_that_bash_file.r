@@ -17,12 +17,13 @@ parameter_object$sdmu_p <- 0.05
 parameter_object$sdmu_t <- 0.05
 parameter_object$sex_limited_p <- 1.0
 parameter_object$sex_limited_t <- 1.0
-parameter_object$pref_type <- c(0,3)
-parameter_object$init_t <- 1
+parameter_object$pref_type <- 3
+parameter_object$init_t <- 0
 parameter_object$init_p <- 3
-parameter_object$gam <- c(2,3)
-parameter_object$thet <- c(0.01,0.2,1.0)
-parameter_object$ntrait <- 2
+parameter_object$gam <-  2
+parameter_object$thet <- 1 #seq(0.05,0.8,0.05)  
+parameter_object$ntrait <- 1
+parameter_object$k <- c(1.0,0.0)
 
 #purlease continue adding all the parameters, except for the output file
 # (this will be done by the function itself)
@@ -31,7 +32,7 @@ parameter_object$ntrait <- 2
    
 make.batch.file(parameter_list=parameter_object
                      ,executable_path="./Weber_multiple.exe"
-                     ,n_replicates=10)
+                     ,n_replicates=20)
                      
                      
 #seq(0,0.5,0.1)
