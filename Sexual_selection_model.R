@@ -885,6 +885,34 @@ plot_ggp0bc <- ggplot(subset(gg_p0bc, pref==1)) +
   geom_hline(yintercept=0.0, colour="darkgrey")
 plot_ggp0bc
 
+#20.12.24 - Trying some alternative starting params for paper
+
+gg_bctry2<-read.delim("gg_bctry2.csv", sep=" ", header=T)
+plot_ggbctry2 <- ggplot(subset(gg_bctry2, pref==1)) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  facet_grid(b~c, labeller = label_both,scales = "free") +
+  geom_hline(yintercept=0.0, colour="darkgrey")
+plot_ggbctry2
+
+fish_gamthettry2<-read.delim("fish_gamthetry2.csv", sep=" ", header=T)
+plot_fish_gamthettry2 <- ggplot(subset(fish_gamthettry2, pref.==3)) + 
+  geom_point(aes(x=biast.,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biast.,y=meanp1,colour="p1")) +
+  geom_point(aes(x=biast.,y=meant2,colour="t2")) + 
+  geom_point(aes(x=biast.,y=meanp2,colour="p2")) +
+  facet_grid(gamma.~theta., labeller = label_both, scales="free") +
+  geom_hline(yintercept=0.0, colour="darkgrey")
+plot_fish_gamthettry2
+
+#24.12.24 - SEND TO BRAM AFTER CHRISTMAS
+gg_abspt<-read.delim("gg_abspt.csv", sep=" ", header=T)
+plot_abspt <- ggplot(subset(gg_abspt, pref==1)) + 
+  geom_point(aes(x=biasv,y=meant1,colour="t1")) + 
+  geom_point(aes(x=biasv,y=meanp1,colour="p1")) +
+  facet_grid(b~c, labeller = label_both,scales = "free") +
+  geom_hline(yintercept=0.0, colour="darkgrey")
+plot_abspt
 
 
 
