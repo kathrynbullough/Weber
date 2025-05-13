@@ -23,7 +23,7 @@ parameter_object$init_p <- 3
 parameter_object$gam <-  c(2,3)
 parameter_object$thet <- c(0.01,0.2,1.0)  #seq(0.05,0.85,0.2)  
 parameter_object$ntrait <- 2
-parameter_object$k <- c(1.4,1.5,1.6)
+parameter_object$k <- c(0.5,1.0,2.0)
 
 #purlease continue adding all the parameters, except for the output file
 # (this will be done by the function itself)
