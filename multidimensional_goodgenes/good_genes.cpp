@@ -80,7 +80,9 @@ void GoodGenes::survival()
 
     std::vector <double> survival_distribution;
     
-    for (auto female_iter{females.begin()}; female_iter != females.end(); ++female_iter)
+    for (auto female_iter{females.begin()}; 
+            female_iter != females.end(); 
+            ++female_iter)
     {
       sum_surv = 0.0;
       sum_p = 0.0;
