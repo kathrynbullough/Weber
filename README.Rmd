@@ -10,6 +10,7 @@ To run:
 - For Fisher models, './make_that_batch_file.r' to generate starting parameters
 - For good genes models, './vary_parameters.r > batch_file.sh' to generate starting parameters
 - '~/jobeater.sh batch_file.sh [number of cores]' to run the models
+- './summary.r' to summarize the final line of each model into one excel doc
 
 All models currently set to run as multidimensional - to run a unidimensional model, simply set ntrait=1
 
