@@ -1,17 +1,17 @@
-## Code belonging to:
-# Bullough, K., Kelley, L., Kuijper, B.
+# Code belonging to:
+Bullough, K., Kelley, L., Kuijper, B.
 
-## Description:
-# Individual-based models of sexual selection, adding in a Weber preference function to determine how coevolution of preferences and ornaments change.
-# A bash shell environment with gcc and c++ 2020 standard is required to run this code.
+# Description:
+Individual-based models of sexual selection, adding in a Weber preference function to determine how coevolution of preferences and ornaments change.
+A bash shell environment with gcc and c++ 2020 standard is required to run this code.
 
-## How to run:
-# - Git clone repository
-# - Navigate to either the Fisher or good genes model directories (/multidimensional_fisher or /multidimensional_goodgenes)
-# - 'make' to compile the code
-# - For Fisher models, './make_that_batch_file.r' to generate starting parameters
-# - For good genes models, './vary_parameters.r > batch_file.sh' to generate starting parameters
-# - '~/jobeater.sh batch_file.sh [number of cores]' to run the models
-# - './summary.r' to summarize the final line of each model into one excel doc
+# How to run:
+- Git clone repository
+- Navigate to either the Fisher or good genes model directories (/multidimensional_fisher or /multidimensional_goodgenes)
+- 'make' to compile the code
+- For Fisher models, './make_that_batch_file.r' to generate starting parameters
+- For good genes models, './vary_parameters.r > batch_file.sh' to generate starting parameters
+- '~/jobeater.sh batch_file.sh [number of cores]' to run the models
+- './summary.r' to summarize the final line of each model into one excel doc
 
-# All models currently set to run as multidimensional - to run a unidimensional model, simply set ntrait=1
+All models currently set to run as multidimensional - to run a unidimensional model, simply set ntrait=1
