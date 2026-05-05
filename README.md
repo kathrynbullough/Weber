@@ -1,5 +1,3 @@
-# Code belonging to:
-Bullough, K., Kelley, L., Kuijper, B.
 
 # Description:
 Individual-based models of sexual selection, adding in a Weber preference function to determine how coevolution of preferences and ornaments change.
