@@ -1,5 +1,6 @@
 #!/usr/bin/env Rscript
 
+
 biasv = 0.5 #c(0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99)
 a = 1.0
 b = 0.0025 #c(0.0005,0.001,0.0025,0.01,0.05,0.1,0.15) #c(0.001,0.01)   #c(0.0005,0.0025,0.01)  #0.0025
@@ -17,7 +18,7 @@ nrep = 10
 maxgen = 50000
 
 pref = c(1)
-ntrait = 1
+ntrait = 2
 
 
 # generate a date_time stamp as a character
