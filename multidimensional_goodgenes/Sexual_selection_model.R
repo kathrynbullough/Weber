@@ -65,15 +65,17 @@ filtered_sim_data <- sim_data %>%
 
 plot_pt_pub <- ggplot(data=sim_data, aes(x=meanp1, y=meant1)) + 
   geom_path(mapping=aes(x=meanp1,y=meant1), colour="deepskyblue") +
-  geom_path(mapping=aes(x=meanp2,y=meant2), colour="pink") +
+  #geom_path(mapping=aes(x=meanp2,y=meant2), colour="pink") +
   geom_point(data = filtered_sim_data, aes(x=meanp1, y=meant1), size=1, colour="darkblue") +
-  geom_point(data = filtered_sim_data, mapping=aes(x=meanp2,y=meant2), size=1,  colour="red") +
+  #geom_point(data = filtered_sim_data, mapping=aes(x=meanp2,y=meant2), size=1,  colour="red") +
   geom_point(aes(x = meanp1[1], y = meant1[1]), shape = 17, color = "darkblue", size = 6) +
-  geom_point(aes(x = meanp2[1], y = meant2[1]), shape = 17, color = "red", size = 6) +
+  #geom_point(aes(x = meanp2[1], y = meant2[1]), shape = 17, color = "red", size = 6) +
   geom_point(aes(x = meanp1[nrow(sim_data)], y = meant1[nrow(sim_data)]), shape = 21, fill = "white", color = "darkblue", size = 5) +
-  geom_point(aes(x = meanp2[nrow(sim_data)], y = meant2[nrow(sim_data)]), shape = 21, fill = "white", color = "red", size = 5) +
+  #geom_point(aes(x = meanp2[nrow(sim_data)], y = meant2[nrow(sim_data)]), shape = 21, fill = "white", color = "red", size = 5) +
   geom_hline(yintercept=0.0, colour="darkgrey") +
   geom_vline(xintercept=0.0, colour="darkgrey") +
+  xlim(0,5) +
+  ylim(0,4) +
   theme_classic()
     
 #Plot dynamics between p2 and t2

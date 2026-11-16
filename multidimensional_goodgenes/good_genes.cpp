@@ -19,6 +19,8 @@ GoodGenes::GoodGenes(Parameters const &params) :
 {
     write_data_headers();
 
+
+
     // set phenotypes for first generation
     phenotypes();
 

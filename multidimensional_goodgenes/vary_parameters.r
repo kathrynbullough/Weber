@@ -1,22 +1,18 @@
 #!/usr/bin/env Rscript
 
-biasv = c(seq(0.5,0.9,0.1),0.99)
-#c(seq(0.5,0.9,0.1),0.99)
-#biasv = 0.99
-#c = c(0.01,0.255,0.5,0.745,0.99)
-#b = c(0.01,0.07,0.013,0.019,0.025)
+biasv = 0.5 #c(0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99)
 a = 1.0
-b = c(0.0025)  #0.0025
-c = 0.5  #0.2  #0.5
+b = 0.0025 #c(0.0005,0.001,0.0025,0.01,0.05,0.1,0.15) #c(0.001,0.01)   #c(0.0005,0.0025,0.01)  #0.0025
+c = c(0.5)  #0.5
 
-gam = 2.0 #c(0.1,1.0,2.0,3.0) 
-thet = 1.0 #c(0.1,0.2,0.5,0.8)  #c(0.59,0.61)
+gam = 2.0 #c(1.0,3.5)  #2.0 #c(0.1,1.0,2.0,3.0) 
+thet = 1.0  #c(0.01,0.2,1.0)   #c(0.1,0.2,0.5,0.8)  #c(0.59,0.61)
 
-weber_k <- c(0)
+weber_k <- c(0.0,1.0,2.0,2.5)
 
 init_t = 0
 init_p = 1
-nrep = 20
+nrep = 10
 
 maxgen = 50000
 
@@ -27,8 +23,7 @@ ntrait = 1
 # generate a date_time stamp as a character
 date_str <- format(Sys.time(), "%d%m%Y_%H%M%S")
 
-# generate names for the output file based on date and time 
-# to ensure some sort of uniqueness, to avoiding that output
+# generate names for the output file based on date and time # to ensure some sort of uniqueness, to avoiding that output
 # files from different runs overwrite eachother
 output_file_prefix = paste0("sim_good_genes_",date_str)
 

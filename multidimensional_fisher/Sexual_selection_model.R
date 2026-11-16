@@ -65,17 +65,17 @@ filtered_sim_data <- sim_data %>%
 
 plot_pt_pub <- ggplot(data=sim_data, aes(x=meanp1, y=meant1)) + 
   geom_path(mapping=aes(x=meanp1,y=meant1), colour="deepskyblue", alpha=0.6) +
-  geom_path(mapping=aes(x=meanp2,y=meant2), colour="pink", alpha=0.6) +
+  #geom_path(mapping=aes(x=meanp2,y=meant2), colour="pink", alpha=0.6) +
   geom_point(data = filtered_sim_data, aes(x=meanp1, y=meant1), size=1, colour="darkblue") +
-  geom_point(data = filtered_sim_data, mapping=aes(x=meanp2,y=meant2), size=1,  colour="red") +
+  #geom_point(data = filtered_sim_data, mapping=aes(x=meanp2,y=meant2), size=1,  colour="red") +
   geom_point(aes(x = meanp1[1], y = meant1[1]), shape = 17, color = "darkblue", size = 6) +
-  geom_point(aes(x = meanp2[1], y = meant2[1]), shape = 17, color = "red", size = 6) +
+  #geom_point(aes(x = meanp2[1], y = meant2[1]), shape = 17, color = "red", size = 6) +
   geom_point(aes(x = meanp1[nrow(sim_data)], y = meant1[nrow(sim_data)]), shape = 21, fill = "white", color = "darkblue", size = 5) +
-  geom_point(aes(x = meanp2[nrow(sim_data)], y = meant2[nrow(sim_data)]), shape = 21, fill = "white", color = "red", size = 5) +
+  #geom_point(aes(x = meanp2[nrow(sim_data)], y = meant2[nrow(sim_data)]), shape = 21, fill = "white", color = "red", size = 5) +
   geom_hline(yintercept=0.0,colour="darkgrey") +
   geom_vline(xintercept=0.0,colour="darkgrey") +
-  xlim(-0.3,3.5) +
-  ylim(-0.3,2.0) +
+  #xlim(-0.5,4) +
+  #ylim(-0.5,3) +
   theme_classic()
     
 #Plot dynamics between p2 and t2
@@ -164,7 +164,7 @@ plot_cov2 <- ggplot(data=sim_data
 #plot_mean_t1 / plot_mean_p1 / plot_p_t / plot_cov
 plot_pt_pub
 
-ggsave(file=paste0("model_graph4_",basename(file.name),".pdf"))
+ggsave(file=paste0("model_graphNEG_",basename(file.name),".pdf"))
     
 stop()
 
