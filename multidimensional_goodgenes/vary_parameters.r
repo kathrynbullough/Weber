@@ -18,7 +18,7 @@ nrep = 10
 maxgen = 50000
 
 pref = c(1)
-ntrait = 2
+ntrait = 1
 
 
 # generate a date_time stamp as a character
