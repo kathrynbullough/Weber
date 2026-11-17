@@ -9,7 +9,7 @@ c = c(0.5)  #0.5
 gam = 2.0 #c(1.0,3.5)  #2.0 #c(0.1,1.0,2.0,3.0) 
 thet = 1.0  #c(0.01,0.2,1.0)   #c(0.1,0.2,0.5,0.8)  #c(0.59,0.61)
 
-weber_k <- c(0.0,1.0,2.0,2.5)
+weber_k <- c(3.0,3.5,4.0,4.5,5.0)
 
 init_t = 0
 init_p = 1
@@ -18,7 +18,7 @@ nrep = 10
 maxgen = 50000
 
 pref = c(1)
-ntrait = 1
+ntrait = 2
 
 
 # generate a date_time stamp as a character
